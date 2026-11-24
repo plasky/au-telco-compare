@@ -51,6 +51,25 @@ Mobile plan:
   cis_url       str?
   requires      str?   "internet" | "energy" when the plan is only sold with that service
 Account-level discounts (extra lines, family plans) live in overrides/bundles.toml, not here.
+
+Phone listing (one per seller, handset variant and way to pay):
+  id            str    "<provider>-<handset>-<storage>" plus "-<term>m" for repayment offers
+  provider      str    seller id (telstra, optus, vodafone, apple, samsung, google, ...)
+  handset       str    model key shared by every seller: slug of "<brand> <model>", lowercase and
+                       hyphenated, no storage or colour, e.g. "apple-iphone-17-pro",
+                       "samsung-galaxy-s26-ultra", "google-pixel-10-pro-xl"
+  brand, model  str    display names, e.g. "Apple", "iPhone 17 Pro"
+  storage_gb    int
+  outright      float? price to buy it outright from this seller
+  term          int?   repayment months (12 | 24 | 36 | 48); None for an outright-only listing
+  monthly       float? device repayment a month before discounts and credits
+  discounts     [{off, text, plans?, requires_trade_in?, until?}]  one-off $ off the device on the
+                repayment path (kept if you leave early); never applied to `outright`
+  credits       [{per_month, months, text, plans?, requires_trade_in?, until?}]  monthly bill
+                credits, which stop if you leave early
+  plans         [str]? mobile plan ids the deal needs (None = any of the seller's postpaid plans);
+                discount/credit `plans` narrow a reward to some of them
+  url, source, captured, verified, notes   as above
 """
 
 KINDS = {"nbn", "fixed_wireless", "satellite", "5g", "starlink", "private"}
@@ -115,6 +134,38 @@ def check_internet(r):
     for b in r.get("bundle") or []:
         if b.get("with") not in ("mobile", "energy") or not _num(b.get("off")):
             errs.append(f"bad bundle {b}")
+    return errs
+
+
+def check_phone(r):
+    errs = []
+    for k in ("id", "provider", "handset", "brand", "model", "source", "captured"):
+        if not isinstance(r.get(k), str) or not r.get(k):
+            errs.append(f"missing {k}")
+    if not isinstance(r.get("verified"), bool):
+        errs.append("verified must be bool")
+    if r.get("handset") and (r["handset"] != r["handset"].lower() or " " in r["handset"]):
+        errs.append(f"handset key must be a lowercase slug, got {r['handset']}")
+    if not isinstance(r.get("storage_gb"), int) or r["storage_gb"] <= 0:
+        errs.append(f"bad storage_gb {r.get('storage_gb')}")
+    out, term, monthly = r.get("outright"), r.get("term"), r.get("monthly")
+    if out is None and term is None:
+        errs.append("needs an outright price or a repayment offer")
+    if out is not None and not (_num(out) and 50 <= out <= 7000):
+        errs.append(f"outright {out} outside 50-7000")
+    if term is not None:
+        if term not in (12, 24, 36, 48):
+            errs.append(f"bad term {term}")
+        if not (_num(monthly) and 1 <= monthly <= 600):
+            errs.append(f"bad monthly {monthly}")
+    for d in r.get("discounts") or []:
+        if not (_num(d.get("off")) and d["off"] > 0):
+            errs.append(f"bad discount {d}")
+    for c in r.get("credits") or []:
+        if not (_num(c.get("per_month")) and c["per_month"] > 0 and isinstance(c.get("months"), int) and c["months"] > 0):
+            errs.append(f"bad credit {c}")
+    if r.get("plans") is not None and not (isinstance(r["plans"], list) and all(isinstance(x, str) for x in r["plans"])):
+        errs.append("plans must be a list of plan ids")
     return errs
 
 

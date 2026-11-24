@@ -10,6 +10,7 @@
 "1st-energy" = { name = "1st Energy" }
 activ8me = { name = "Activ8me" }
 agl = { name = "AGL" }
+apple = { name = "Apple" }
 aldi-mobile = { name = "ALDI Mobile", mvno_of = "telstra" }
 amaysim = { name = "amaysim", mvno_of = "optus" }
 ascensa = { name = "Ascensa" }
@@ -29,6 +30,7 @@ exetel = { name = "Exetel" }
 ezee-mobile = { name = "Ezee Mobile" }
 felix-mobile = { name = "Felix Mobile", mvno_of = "vodafone" }
 flip = { name = "Flip" }
+google = { name = "Google Store" }
 freedom-broadband = { name = "Freedom Broadband" }
 freedom-internet = { name = "Freedom Internet" }
 future-broadband = { name = "Future Broadband" }
@@ -58,6 +60,7 @@ pentanet = { name = "Pentanet" }
 pivotel-pty = { name = "Pivotel" }
 skymesh = { name = "SkyMesh" }
 southern-phone = { name = "Southern Phone" }
+samsung = { name = "Samsung" }
 spintel = { name = "Spintel" }
 starlink = { name = "Starlink" }
 splash-internet = { name = "Splash Internet" }

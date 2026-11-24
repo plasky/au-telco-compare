@@ -112,6 +112,29 @@ ok(hh.lines[0].every(x => !x.p.requires), "bundle-only plans aren't offered for 
 hh = E.household({ internet: [{ ...iB, bundle: [{ with: "energy", off: 15 }] }], lines: [], mobile: [], months: 12, energy: "B" });
 ok(near(hh.independent.total, 60 * 12), "energy bundle applies when your energy retailer is the internet provider");
 
+// --- Phones ---------------------------------------------------------------------------------
+const PH = [
+  { id: "apple-x-128-outright", provider: "apple", handset: "brand-x", brand: "Brand", model: "X", storage_gb: 128, outright: 1200 },
+  { id: "tel-x-128-24m", provider: "tel", handset: "brand-x", brand: "Brand", model: "X", storage_gb: 128, term: 24, monthly: 50, plans: ["tel-ess"],
+    discounts: [{ off: 240, text: "$240 off on Essential", plans: ["tel-ess"] }], credits: [{ per_month: 10, months: 12, text: "Trade-in credit", requires_trade_in: true }] },
+  { id: "tel-x-256-24m", provider: "tel", handset: "brand-x", brand: "Brand", model: "X", storage_gb: 256, term: 24, monthly: 60 },
+];
+const TELESS = { id: "tel-ess", provider: "tel", network: "telstra", type: "postpaid", period_days: 30, price: 84, data_gb: 180, data_only: false };
+const SIMC = { id: "c-sim", provider: "c", network: "optus", type: "prepaid", period_days: 30, price: 20, data_gb: 50, data_only: false };
+const R24 = 24 * 365.25 / 12 / 30;
+let po = E.phoneOptions({ handset: "brand-x", storage: 128, term: 24, line: { dataGB: 30 }, phones: PH, mobile: [TELESS, SIMC] });
+ok(po[0].kind === "outright" && near(po[0].total, 1200 + 20 * R24), `outright $1200 + cheapest SIM over 24 months = $${po[0].total.toFixed(2)}`);
+const rp = po.find(x => x.kind === "repay");
+ok(rp && near(rp.total, 84 * R24 + 1200 - 240), `carrier: Essential plan + $50 x 24 - $240 = $${rp && rp.total.toFixed(2)}`);
+po = E.phoneOptions({ handset: "brand-x", storage: 128, term: 24, line: { dataGB: 30 }, phones: PH, mobile: [TELESS, SIMC], tradeIn: true });
+ok(near(po.find(x => x.kind === "repay").total, 84 * R24 + 1200 - 240 - 120), "trade-in credit counts only with a trade-in");
+po = E.phoneOptions({ handset: "brand-x", storage: 256, term: 24, line: { dataGB: 30 }, phones: PH, mobile: [TELESS, SIMC] });
+ok(po[0].kind === "outright" && near(po[0].deviceGross, 1440) && po[0].flags.length, "no outright listing: outright price from the full repayment total");
+ok(E.phoneOptions({ handset: "brand-x", storage: 128, term: 36, line: { dataGB: 30 }, phones: PH, mobile: [TELESS, SIMC] }).every(x => x.kind === "outright"),
+  "repayment offers only for the chosen term");
+const cat = E.handsetCatalogue(PH);
+ok(cat.length === 1 && cat[0].storages.join(",") === "128,256" && cat[0].terms.join(",") === "24", "catalogue groups storage sizes and terms per handset");
+
 // --- Mobile -----------------------------------------------------------------------------
 const p28 = { id: "m28", network: "optus", type: "prepaid", period_days: 28, price: 35, data_gb: 42, data_only: false, intl: ["NZ", "GB"] };
 let mc = E.mobileCost(p28, { dataGB: 30 }, { months: 12 });

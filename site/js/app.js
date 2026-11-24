@@ -61,7 +61,10 @@
     ["TW", "Taiwan"], ["TH", "Thailand"], ["GB", "United Kingdom"], ["US", "United States"], ["VN", "Vietnam"]];
   const countryName = c => (COUNTRIES.find(x => x[0] === c) || [c, c])[1];
   const TABS = ["internet", "mobile", "household"];
-  function newLine(gb) { return { name: "", dataGB: gb || 10, nets: [], intl: [], style: "any" }; }
+  function newLine(gb) { return { name: "", dataGB: gb || 10, nets: [], intl: [], style: "any", phone: newPhone() }; }
+  function newPhone() { return { want: false, handset: "", storage: 0, term: 24, tradeIn: false }; }
+  const CAT = E.handsetCatalogue(D.phones || []);
+  const storageText = g => g >= 1024 ? `${g / 1024} TB` : `${g} GB`;
 
   /* Energy retailer: read from Melbourne Energy Compare's saved settings when both sites share a
    * browser origin (plasky.github.io). Its plan ids start with the retailer's CDR brand code. */
@@ -112,6 +115,11 @@
       L.intl = Array.isArray(L.intl) ? L.intl.filter(c => typeof c === "string" && /^[A-Z]{2}$/.test(c)) : [];
       if (!LINE_STYLES.some(x => x[0] === L.style)) L.style = "any";
       if (!(L.dataGB > 0)) L.dataGB = 10;
+      L.phone = merge(newPhone(), L.phone || {});
+      if (![12, 24, 36].includes(L.phone.term)) L.phone.term = 24;
+      const c = CAT.find(x => x.handset === L.phone.handset);
+      if (!c) { L.phone.handset = ""; L.phone.want = false; }
+      else if (!c.storages.includes(L.phone.storage)) L.phone.storage = c.storages[0];
       return L;
     });
     st.mobile.count = Number.isInteger(st.mobile.count) ? Math.max(0, Math.min(MAX_LINES, st.mobile.count)) : DEFAULTS.mobile.count;
@@ -277,6 +285,47 @@
     } });
     return h("div", { class: "field" }, h("div", { class: "lab" }, h("span", {}, "Included international calls to")), chips, sel);
   }
+  function phoneSection(i) {
+    const ph = () => S.mobile.lines[i].phone;
+    if (!CAT.length) return h("div", { class: "hint" }, "Phone prices aren't in the data yet.");
+    const want = h("input", { type: "checkbox" });
+    want.addEventListener("change", () => {
+      const p = ph(); p.want = want.checked;
+      if (p.want && !p.handset) { p.handset = CAT[0].handset; p.storage = CAT[0].storages[0]; }
+      changed();
+    });
+    fields.push({ update() { want.checked = !!ph().want; } });
+    const hs = h("select", { "aria-label": `Phone for line ${i + 1}` });
+    const brands = [...new Set(CAT.map(c => c.brand))];
+    for (const b of brands) hs.append(h("optgroup", { label: b }, CAT.filter(c => c.brand === b).map(c => h("option", { value: c.handset }, c.model))));
+    hs.addEventListener("change", () => {
+      const p = ph(), c = CAT.find(x => x.handset === hs.value);
+      p.handset = hs.value; p.storage = c ? c.storages[0] : 0; changed();
+    });
+    const st = h("select", { "aria-label": `Storage for line ${i + 1}` });
+    st.addEventListener("change", () => { ph().storage = +st.value; changed(); });
+    fields.push({ update() {
+      const p = ph(), c = CAT.find(x => x.handset === p.handset);
+      if (p.handset) hs.value = p.handset;
+      const key = c ? c.storages.join(",") : "";
+      if (st.dataset.k !== key) {
+        st.innerHTML = "";
+        for (const g of c ? c.storages : []) st.append(h("option", { value: g }, storageText(g)));
+        st.dataset.k = key;
+      }
+      st.value = String(p.storage);
+    } });
+    return h("div", { class: "sub-group" },
+      h("div", { class: "field" }, h("label", { class: "toggle" }, want, h("span", { class: "knob" }), h("span", {}, "New phone with this line"))),
+      showIf(h("div", { class: "sub-group-body" },
+        h("div", { class: "row2" },
+          h("div", { class: "field" }, h("div", { class: "lab" }, h("span", {}, "Phone")), hs),
+          h("div", { class: "field" }, h("div", { class: "lab" }, h("span", {}, "Storage")), st)),
+        seg(`mobile.lines.${i}.phone.term`, "Pay it off over", [[12, "12 months"], [24, "24 months"], [36, "36 months"]]),
+        toggle(`mobile.lines.${i}.phone.tradeIn`, "I have a phone to trade in", "Counts carrier trade-in bonuses. Your old phone's own trade-in value comes on top of any option.")),
+        () => ph().want));
+  }
+
   function lineRow(i) {
     const remove = h("button", { type: "button", class: "btn sm", "aria-label": `Remove line ${i + 1}`, onclick: () => {
       S.mobile.lines.splice(i, 1); S.mobile.lines.push(newLine(10));
@@ -287,7 +336,7 @@
       h("div", { class: "row-head" }, lineName(i), remove),
       dataSlider(i), lineNets(i),
       seg(`mobile.lines.${i}.style`, "Plan type", LINE_STYLES),
-      countryPicker(i)), () => i < S.mobile.count);
+      countryPicker(i), phoneSection(i)), () => i < S.mobile.count);
   }
   function addLineButton() {
     const b = h("button", { type: "button", class: "btn add", onclick: () => { S.mobile.lines[S.mobile.count] = newLine(10); S.mobile.count++; changed(); } });
@@ -472,7 +521,7 @@
     M.mob = buildMobile();
     renderReadout(); renderTiles(); renderMbar();
     renderPlanCard(); renderScatter(); renderRank();
-    renderLines(); renderMRank();
+    renderLines(); renderPhones(); renderMRank();
     renderSetup(); renderStack(); renderProviders();
   }
 
@@ -956,6 +1005,47 @@
     more.textContent = `Show more (${list.length - S.ui.mShown} left)`;
   }
 
+  /* ---- new phones */
+  function phoneOptionLabel(x) {
+    const L = x.listing;
+    if (x.kind === "outright") return `Buy outright${L ? ` from ${esc(provName(L.provider))}` : ""} + ${esc(provName(x.plan.p.provider))} SIM-only`;
+    return `${esc(provName(x.provider))} repayments, ${L.term} months at ${price(L.monthly)}`;
+  }
+  function renderPhones() {
+    const card = $("#phones-card");
+    if (!card) return;
+    if (!CAT.length) { card.innerHTML = `<h2>New phones</h2><p class="empty">Phone prices aren't in the data yet.</p>`; return; }
+    const want = activeLines().map((L, i) => ({ L, i })).filter(x => x.L.phone && x.L.phone.want && x.L.phone.handset);
+    if (!want.length) {
+      card.innerHTML = `<h2>New phones</h2><p class="card-sub">Getting a new phone? Switch on "New phone with this line" under Mobile lines to compare buying it outright plus a SIM-only plan with each carrier's repayment deal. ${CAT.length} phones from ${new Set((D.phones || []).map(x => x.provider)).size} sellers.</p>`;
+      return;
+    }
+    let out = `<h2>New phones</h2><p class="card-sub">Each option counts the phone and a plan for that line over the repayment term, so outright and repayments compare like for like. Carrier deals use that carrier's cheapest plan that fits the line, after discounts and bill credits.</p>`;
+    for (const { L, i } of want) {
+      const c = CAT.find(x => x.handset === L.phone.handset);
+      const line = { dataGB: L.dataGB, networks: L.nets, intl: L.intl, style: L.style };
+      const opts = E.phoneOptions({ handset: L.phone.handset, storage: L.phone.storage, term: L.phone.term, line, phones: D.phones || [], mobile: M.mob.pool, tradeIn: L.phone.tradeIn });
+      out += `<h3 class="ph-h">${esc(lineLabel(i))}: ${esc(c ? `${c.brand} ${c.model}` : L.phone.handset)} ${esc(storageText(L.phone.storage))}, over ${L.phone.term} months</h3>`;
+      if (!opts.length) {
+        out += `<p class="empty">No seller lists this phone in this size${c && c.terms.length && !c.terms.includes(L.phone.term) ? ` on ${L.phone.term}-month repayments (try ${c.terms.join(" or ")} months)` : ""}, or no plan fits the line.</p>`;
+        continue;
+      }
+      const best = opts[0].total;
+      out += `<div class="table-wrap"><table class="rank phones"><thead><tr><th>Option</th><th>Plan</th><th class="r">Phone</th><th class="r">Plan cost</th><th class="r">Total</th></tr></thead><tbody>` +
+        opts.map((x, k) => {
+          const L2 = x.listing, rw = x.rewards.map(r => `${esc(r.text)} −${money(r.amount)}`).join("; ");
+          return `<tr class="${k === 0 ? "sel" : ""}"><td><div class="pn">${phoneOptionLabel(x)}</div>
+              <div class="pr">${x.flags.map(esc).join(" · ")}${L2 && !L2.verified ? ' · <span class="warn-t">not yet checked</span>' : ""}${L2 && L2.url ? ` · <a href="${esc(L2.url)}" target="_blank" rel="noopener">details ↗</a>` : ""}</div>
+              ${rw ? `<div class="pr">${rw}</div>` : ""}</td>
+            <td><div>${esc(x.plan.p.name)}</div><div class="pr">${esc(planLine(x.plan.p))} · ${esc(dataText(x.plan.p))}</div></td>
+            <td class="r">${money(x.device)}${x.device !== x.deviceGross ? `<div class="pr">of ${money(x.deviceGross)}</div>` : ""}</td>
+            <td class="r">${money(x.plan.c.total)}</td>
+            <td class="r"><b>${money(x.total)}</b><div class="pr">${money(x.perMonth)}/month${k ? ` · +${money(x.total - best)}` : " · cheapest"}</div></td></tr>`;
+        }).join("") + `</tbody></table></div>`;
+    }
+    card.innerHTML = out;
+  }
+
   /* ------------------------------------------------------------------ household tab */
   function solSummary(sol) {
     const bits = [];
@@ -1017,8 +1107,9 @@
     const why = best.provider
       ? `Taking ${best.internetWithP ? "your internet and " : ""}${best.lines.filter(x => x && x.onP).length} line${best.lines.filter(x => x && x.onP).length === 1 ? "" : "s"} with ${esc(provName(best.provider))} unlocks bundle discounts worth more than shopping around.`
       : "The cheapest plans bought separately beat every bundle on offer.";
+    const phones = activeLines().some(L => L.phone && L.phone.want) ? " New phones aren't included here: see New phones on the Mobile tab." : "";
     card.innerHTML = `<h2>Your cheapest setup</h2>
-      <p class="card-sub">${why} Total over ${horizon()}, staying on each plan after its intro offer.${M.mob.energy ? ` Your energy retailer (${esc(provName(M.mob.energy))}) is counted for energy bundles.` : ""}</p>
+      <p class="card-sub">${why} Total over ${horizon()}, staying on each plan after its intro offer.${phones}${M.mob.energy ? ` Your energy retailer (${esc(provName(M.mob.energy))}) is counted for energy bundles.` : ""}</p>
       <div class="setup"><table class="kv">${kv}<tr class="total"><td>Total over ${horizon()}</td><td>${money(best.total)}</td></tr>
       <tr><td>Per month on average</td><td>${money(best.total / S.cost.months)}</td></tr></table>${alt}</div>`;
   }
@@ -1106,6 +1197,8 @@
       <p>5G home internet runs over a mobile network, so whether you can get it, and how fast it is, depends on your address. Starlink works almost anywhere but costs more and needs its own dish. Both need the provider's hardware, which is always counted.</p>
       <h3>Mobile</h3>
       <p>Each line is matched to plans with enough data each month, on a network you've ticked (any if none), with included calls to the countries you add. Recharges are counted as they fall: a 28-day plan is 13 recharges a year, a 365-day plan is one. Intro offers count for the recharges they cover.</p>
+      <h3>New phones</h3>
+      <p>For a line getting a new phone, each option counts the phone and a plan over the repayment term: buying outright (the lowest listed price) plus the cheapest SIM-only plan that fits, or a carrier's repayments plus its cheapest eligible plan that fits, minus the discounts and bill credits that apply. Leaving a repayment deal early means paying out the rest of the phone, so only take one if you'll stay. Trade-in bonuses count only if you say you have a phone to trade.</p>
       <h3>Household and bundles</h3>
       <p>The Household tab tries every way of splitting your lines between each provider and the cheapest plans elsewhere, with that provider's internet or the cheapest other internet. It counts bundle discounts only when their conditions are met: a mobile line with the same provider, its internet, or your energy retailer. Bundles assume you stay put, so promo-chasing is left out here.</p>
       <h3>Where the data comes from</h3>

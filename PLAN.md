@@ -335,6 +335,15 @@ tools/test_engine.js         cost-model tests
     refreshed by hand (`tools/import-billhero.sh`). Its long-expiry mobile plans are now read as
     365/180/90-day recharges when the plan name's price gives them away.
 
+- **Phase 4 (25 Nov 2026):** phones built.
+  - Each mobile line can take a new phone (model, storage, 12/24/36-month term, trade-in). The
+    Mobile tab's New phones card compares, over the term, buying outright (lowest listed price)
+    plus the cheapest SIM-only plan against each carrier's repayments plus its cheapest eligible
+    plan, minus discounts (kept if you leave) and bill credits (lost if you leave).
+  - Data: 5 phone adapters (Telstra, Optus, Apple, Samsung, Google), 29 handsets, ~380 listings.
+    Vodafone (site in maintenance), JB Hi-Fi (rate-limited) and Officeworks (JS-only) aren't
+    covered. Phones aren't added into the Household totals.
+
 ## 7. Risks
 
 - **Scraper breakage and bot protection.** This is the main ongoing cost. Mitigations: Bill

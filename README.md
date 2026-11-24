@@ -4,8 +4,8 @@ A static website that ranks Australian home internet (NBN, 5G home, Starlink) an
 against a household's needs at their true cost over time. Companion to Melbourne Energy
 Compare. See [PLAN.md](PLAN.md) for the research, design and build phases.
 
-**Status:** phases 1–3 built: home internet, mobile lines, and the whole household with bundle
-discounts. Phones on plans are phase 4.
+**Status:** phases 1–4 built: home internet, mobile lines, the whole household with bundle
+discounts, and new phones (outright vs carrier repayments). Phase 5 is hardening.
 
 ## Layout
 
@@ -21,7 +21,8 @@ discounts. Phones on plans are phase 4.
     with promos/setup/modem/bundles, promo-chasing, the best-value frontier, mobile cost per
     line, account-level discounts, and `household()`, which finds the cheapest way to buy
     internet plus every line (it tries every split of the lines between each provider and the
-    cheapest plans elsewhere).
+    cheapest plans elsewhere), and `phoneOptions()`, which compares buying a phone outright
+    plus a SIM-only plan with each carrier's repayments plus its plan over the repayment term.
   - `data/plans.js`: generated data (`window.TELCO_DATA`); `plans.json` is the same data for
     diffs and fallback; `report.json` is the last build report.
 - `sources/`: one adapter per data source, each writing `data-raw/normalised/<source>.json`.
@@ -39,6 +40,10 @@ discounts. Phones on plans are phase 4.
     (`tpg_mobile.py`), Felix, Aussie Broadband, Superloop, Spintel, Mate, Tangerine, More,
     Exetel, ALDI, Lebara, Moose and Coles. They emit only mobile records, so a broken mobile
     page never takes a provider's internet plans with it.
+  - Phone adapters, `<seller>_phones.py`: Telstra (one JSON feed, every phone, colour, storage
+    and term), Optus (one page per phone, so each night refreshes 9 phones and carries the rest
+    over for up to 7 days), and the manufacturers' outright prices: Apple, Samsung and Google.
+    Outright prices are today's price (a sale price while one runs), refreshed nightly.
 - Entered by hand in `overrides/plans.toml` (sites that need JavaScript or refuse automated
   clients): Starlink, Belong, iiNet, Internode, AGL and Tangerine's copper-only plans, and
   Lycamobile's SIM plans. Circles.Life is excluded (it has left Australia). Each
@@ -46,7 +51,8 @@ discounts. Phones on plans are phase 4.
 - Not covered yet, so still on Bill Hero's data (marked "not yet checked" on the site): Origin
   (refuses our client), Leaptel (Cloudflare challenge), Kogan Internet and Kogan Mobile
   (DataDome challenge), Launtel (prices only after an address check), Belong mobile, Vodafone
-  mobile (site was down for maintenance when probed), Everyday Mobile/Woolworths (robots.txt
+  mobile and phones (site was down for maintenance when probed), JB Hi-Fi (rate-limits
+  plain clients) and Officeworks (prices load by script), Everyday Mobile/Woolworths (robots.txt
   asks for visits between 04:00 and 08:45 UTC only, outside the nightly run) and the long tail.
 - `overrides/plans.toml`: manual excludes, patches and added plans, each with a reason, a
   source URL and (for patches and additions) an expiry date.

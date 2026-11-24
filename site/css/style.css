@@ -408,3 +408,21 @@ table.rank.lines td.need { color: var(--ink-2); font-size: 12.5px; }
 @container (max-width: 460px) {
   table.rank.lines th:nth-child(5), table.rank.lines td:nth-child(5) { display: table-cell; }
 }
+
+/* ---------- phase 4: phones */
+.sub-group-body { display: grid; gap: 12px; }
+.ph-h { font-size: 14px; margin: 14px 0 6px; }
+table.rank.phones { min-width: 560px; }
+table.rank.phones tbody tr { cursor: default; }
+table.rank.phones a { color: var(--accent-ink); }
+@container (max-width: 560px) {
+  table.rank.phones th:nth-child(2), table.rank.phones td:nth-child(2),
+  table.rank.phones th:nth-child(4), table.rank.phones td:nth-child(4) { display: none; }
+  table.rank.phones { min-width: 0; }
+}
+@container (max-width: 460px) {
+  table.rank.phones th:nth-child(5), table.rank.phones td:nth-child(5) { display: table-cell; }
+}
+@container (max-width: 460px) {
+  table.rank.phones th:nth-child(3), table.rank.phones td:nth-child(3) { display: none; }
+}

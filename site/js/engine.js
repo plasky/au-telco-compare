@@ -11,6 +11,8 @@
  *   mobileCost(plan, line, opts)         per-line cost over a horizon, or why the plan doesn't fit
  *   accountDiscount(rules, ctx)          multi-line and bundle rules for one provider's account
  *   household(input)                     cheapest mix of internet + mobile lines, best per provider
+ *   handsetCatalogue(phones)             models with their storage sizes and repayment terms
+ *   phoneOptions(input)                  outright + SIM-only vs each carrier's repayments + plan
  * Prices in the data already include GST. Months are averaged (365.25 / 12 days).
  */
 (function (root) {
@@ -404,7 +406,74 @@
     return { lines: lineOpts, independent, best: bestSol, byProvider, singles };
   }
 
-  const api = { neededSpeed, techOk, meets, activePromo, hardwareCost, hardwareMonthly, internetCost, reswitchCost, atLeastAsFast, frontier, mobileCost, accountDiscount, household, monthlyData,
+  /* Phones. The catalogue: one entry per handset with its storage sizes and repayment terms. */
+  function handsetCatalogue(phones) {
+    const m = new Map();
+    for (const x of phones || []) {
+      let h = m.get(x.handset);
+      if (!h) { h = { handset: x.handset, brand: x.brand, model: x.model, storages: new Set(), terms: new Set(), sellers: new Set() }; m.set(x.handset, h); }
+      h.storages.add(x.storage_gb); if (x.term) h.terms.add(x.term); h.sellers.add(x.provider);
+    }
+    return [...m.values()].map(h => ({ handset: h.handset, brand: h.brand, model: h.model,
+      storages: [...h.storages].sort((a, b) => a - b), terms: [...h.terms].sort((a, b) => a - b), sellers: [...h.sellers] }))
+      .sort((a, b) => a.brand.localeCompare(b.brand) || a.model.localeCompare(b.model, "en", { numeric: true }));
+  }
+
+  /* Ways to get one phone with a plan for a line, costed over `term` months:
+   *   outright: the cheapest outright price (any seller) + the cheapest SIM-only plan that fits;
+   *   repay:    each seller's repayment offer for that term + its cheapest eligible plan that fits
+   *             (offer.plans, else any of its postpaid phone plans), minus the discounts and bill
+   *             credits that apply to that plan (trade-in ones only if tradeIn).
+   * With no outright listing, the outright price is taken as the lowest full repayment total.
+   * input: { handset, storage, term, line, phones, mobile, tradeIn }
+   * Returns options cheapest first: { kind, provider, listing, plan: {p, c}, deviceGross, device,
+   *   rewards: [{text, amount}], total, perMonth, flags }. */
+  function phoneOptions(input) {
+    const o = Object.assign({ term: 24, tradeIn: false, phones: [], mobile: [], line: {} }, input);
+    const months = o.term;
+    const listings = o.phones.filter(x => x.handset === o.handset && x.storage_gb === o.storage);
+    const sims = o.mobile.filter(p => !p.requires).map(p => ({ p, c: mobileCost(p, o.line, { months }) }))
+      .filter(x => x.c.ok).sort((a, b) => a.c.total - b.c.total);
+    const out = [];
+    const outs = listings.filter(x => x.outright != null).sort((a, b) => a.outright - b.outright);
+    const repays = listings.filter(x => x.term === months && x.monthly);
+    if (sims.length) {
+      if (outs.length) {
+        const b = outs[0];
+        out.push({ kind: "outright", provider: b.provider, listing: b, plan: sims[0], deviceGross: b.outright, device: b.outright,
+          rewards: [], total: b.outright + sims[0].c.total, flags: [], sellers: outs });
+      } else {
+        const all = listings.filter(x => x.term && x.monthly).map(x => ({ x, t: x.monthly * x.term })).sort((a, b) => a.t - b.t);
+        if (all.length) out.push({ kind: "outright", provider: all[0].x.provider, listing: all[0].x, plan: sims[0], deviceGross: all[0].t,
+          device: all[0].t, rewards: [], total: all[0].t + sims[0].c.total, flags: ["Outright price taken from the full repayment total"], sellers: [] });
+      }
+    }
+    for (const L of repays) {
+      const eligible = o.mobile.filter(p => p.provider === L.provider && !p.data_only && !p.requires &&
+        (L.plans ? L.plans.includes(p.id) : p.type === "postpaid"));
+      let best = null;
+      for (const p of eligible) {
+        const c = mobileCost(p, o.line, { months });
+        if (!c.ok) continue;
+        const applies = r => (!r.plans || r.plans.includes(p.id)) && (!r.requires_trade_in || o.tradeIn);
+        const rewards = [];
+        let credited = false;
+        for (const d of L.discounts || []) if (applies(d)) rewards.push({ text: d.text || "Discount", amount: d.off });
+        for (const cr of L.credits || []) if (applies(cr)) { rewards.push({ text: cr.text || "Bill credit", amount: cr.per_month * Math.min(cr.months, months) }); credited = true; }
+        const gross = L.monthly * L.term, reward = rewards.reduce((a, x) => a + x.amount, 0);
+        const total = c.total + gross - reward;
+        if (!best || total < best.total - 1e-9) {
+          best = { kind: "repay", provider: L.provider, listing: L, plan: { p, c }, deviceGross: gross, device: gross - reward, rewards, total,
+            flags: [`Leave before ${L.term} months and you pay out the rest of the phone${credited ? " and lose the remaining credits" : ""}`] };
+        }
+      }
+      if (best) out.push(best);
+    }
+    for (const x of out) x.perMonth = x.total / months;
+    return out.sort((a, b) => a.total - b.total);
+  }
+
+  const api = { neededSpeed, techOk, meets, activePromo, hardwareCost, hardwareMonthly, internetCost, reswitchCost, atLeastAsFast, frontier, mobileCost, accountDiscount, household, handsetCatalogue, phoneOptions, monthlyData,
     RATES, HEADROOM, NBN_TIERS, FIXED_LINE, DAYS_PER_MONTH };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.TelcoEngine = api;

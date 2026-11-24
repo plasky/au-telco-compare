@@ -1,20 +1,20 @@
 {
- "built": "2026-11-24T23:25:41Z",
+ "built": "2026-11-24T23:57:01Z",
  "issues": [
   "dodo: kept previously published data (adapter failed: urllib.error.HTTPError: HTTP Error 403: Forbidden)",
   "iprimus: kept previously published data (adapter failed: urllib.error.HTTPError: HTTP Error 403: Forbidden)",
   "vodafone: kept previously published data (adapter failed: urllib.error.HTTPError: HTTP Error 503: Service Temporarily Unavailable)"
  ],
- "notes": [
-  "3 price moves over 30%: vodafone-prepaid-plus-180: $14.79 -> $180.0; vodafone-prepaid-plus-250: $20.55 -> $250.0; vodafone-prepaid-plus-350: $28.77 -> $350.0"
- ],
+ "notes": [],
  "counts": {
   "internet": 328,
-  "mobile": 282
+  "mobile": 282,
+  "phones": 366
  },
  "verified": {
   "internet": 160,
-  "mobile": 134
+  "mobile": 134,
+  "phones": 366
  },
  "sources": [
   {
@@ -28,7 +28,8 @@
    "attribution": null,
    "records": {
     "internet": 0,
-    "mobile": 9
+    "mobile": 9,
+    "phones": 0
    }
   },
   {
@@ -42,7 +43,23 @@
    "attribution": null,
    "records": {
     "internet": 6,
-    "mobile": 13
+    "mobile": 13,
+    "phones": 0
+   }
+  },
+  {
+   "id": "apple_phones",
+   "name": "Apple Store Australia (buy iPhone)",
+   "url": "https://www.apple.com/au/shop/buy-iphone",
+   "status": "ok",
+   "fetched": "2026-11-24T23:51:48Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 0,
+    "mobile": 0,
+    "phones": 19
    }
   },
   {
@@ -56,7 +73,8 @@
    "attribution": null,
    "records": {
     "internet": 14,
-    "mobile": 0
+    "mobile": 0,
+    "phones": 0
    }
   },
   {
@@ -70,7 +88,8 @@
    "attribution": null,
    "records": {
     "internet": 0,
-    "mobile": 7
+    "mobile": 7,
+    "phones": 0
    }
   },
   {
@@ -84,7 +103,8 @@
    "attribution": "Data via Bill Hero (billhero.com.au)",
    "records": {
     "internet": 173,
-    "mobile": 148
+    "mobile": 148,
+    "phones": 0
    }
   },
   {
@@ -98,7 +118,8 @@
    "attribution": null,
    "records": {
     "internet": 0,
-    "mobile": 9
+    "mobile": 9,
+    "phones": 0
    }
   },
   {
@@ -112,7 +133,8 @@
    "attribution": null,
    "records": {
     "internet": 0,
-    "mobile": 7
+    "mobile": 7,
+    "phones": 0
    }
   },
   {
@@ -126,7 +148,8 @@
    "attribution": null,
    "records": {
     "internet": 6,
-    "mobile": 0
+    "mobile": 0,
+    "phones": 0
    }
   },
   {
@@ -140,7 +163,8 @@
    "attribution": null,
    "records": {
     "internet": 1,
-    "mobile": 0
+    "mobile": 0,
+    "phones": 0
    }
   },
   {
@@ -154,7 +178,8 @@
    "attribution": null,
    "records": {
     "internet": 0,
-    "mobile": 1
+    "mobile": 1,
+    "phones": 0
    }
   },
   {
@@ -168,7 +193,8 @@
    "attribution": null,
    "records": {
     "internet": 0,
-    "mobile": 4
+    "mobile": 4,
+    "phones": 0
    }
   },
   {
@@ -182,7 +208,23 @@
    "attribution": null,
    "records": {
     "internet": 5,
-    "mobile": 0
+    "mobile": 0,
+    "phones": 0
+   }
+  },
+  {
+   "id": "google_phones",
+   "name": "Google Store Australia",
+   "url": "https://store.google.com/au/category/phones?hl=en-GB",
+   "status": "ok",
+   "fetched": "2026-11-24T23:54:54Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 0,
+    "mobile": 0,
+    "phones": 15
    }
   },
   {
@@ -196,7 +238,8 @@
    "attribution": null,
    "records": {
     "internet": 6,
-    "mobile": 0
+    "mobile": 0,
+    "phones": 0
    }
   },
   {
@@ -210,7 +253,8 @@
    "attribution": null,
    "records": {
     "internet": 0,
-    "mobile": 11
+    "mobile": 11,
+    "phones": 0
    }
   },
   {
@@ -224,7 +268,8 @@
    "attribution": null,
    "records": {
     "internet": 9,
-    "mobile": 0
+    "mobile": 0,
+    "phones": 0
    }
   },
   {
@@ -238,7 +283,8 @@
    "attribution": null,
    "records": {
     "internet": 0,
-    "mobile": 4
+    "mobile": 4,
+    "phones": 0
    }
   },
   {
@@ -252,7 +298,8 @@
    "attribution": null,
    "records": {
     "internet": 0,
-    "mobile": 4
+    "mobile": 4,
+    "phones": 0
    }
   },
   {
@@ -266,7 +313,8 @@
    "attribution": null,
    "records": {
     "internet": 4,
-    "mobile": 0
+    "mobile": 0,
+    "phones": 0
    }
   },
   {
@@ -280,7 +328,8 @@
    "attribution": null,
    "records": {
     "internet": 0,
-    "mobile": 6
+    "mobile": 6,
+    "phones": 0
    }
   },
   {
@@ -294,7 +343,8 @@
    "attribution": null,
    "records": {
     "internet": 8,
-    "mobile": 0
+    "mobile": 0,
+    "phones": 0
    }
   },
   {
@@ -308,7 +358,23 @@
    "attribution": null,
    "records": {
     "internet": 0,
-    "mobile": 14
+    "mobile": 14,
+    "phones": 0
+   }
+  },
+  {
+   "id": "optus_phones",
+   "name": "Optus phones on device payments (listing + phone pages)",
+   "url": "https://www.optus.com.au/mobile/phones",
+   "status": "ok",
+   "fetched": "2026-11-24T23:49:13Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 0,
+    "mobile": 0,
+    "phones": 137
    }
   },
   {
@@ -322,7 +388,23 @@
    "attribution": null,
    "records": {
     "internet": 33,
-    "mobile": 8
+    "mobile": 8,
+    "phones": 0
+   }
+  },
+  {
+   "id": "samsung_phones",
+   "name": "Samsung Australia online store",
+   "url": "https://www.samsung.com/au/smartphones/all-smartphones/",
+   "status": "ok",
+   "fetched": "2026-11-24T23:54:35Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 0,
+    "mobile": 0,
+    "phones": 18
    }
   },
   {
@@ -336,7 +418,8 @@
    "attribution": null,
    "records": {
     "internet": 6,
-    "mobile": 0
+    "mobile": 0,
+    "phones": 0
    }
   },
   {
@@ -350,7 +433,8 @@
    "attribution": null,
    "records": {
     "internet": 0,
-    "mobile": 7
+    "mobile": 7,
+    "phones": 0
    }
   },
   {
@@ -364,7 +448,8 @@
    "attribution": null,
    "records": {
     "internet": 10,
-    "mobile": 0
+    "mobile": 0,
+    "phones": 0
    }
   },
   {
@@ -378,7 +463,8 @@
    "attribution": null,
    "records": {
     "internet": 0,
-    "mobile": 5
+    "mobile": 5,
+    "phones": 0
    }
   },
   {
@@ -392,7 +478,8 @@
    "attribution": null,
    "records": {
     "internet": 3,
-    "mobile": 0
+    "mobile": 0,
+    "phones": 0
    }
   },
   {
@@ -406,7 +493,8 @@
    "attribution": null,
    "records": {
     "internet": 0,
-    "mobile": 6
+    "mobile": 6,
+    "phones": 0
    }
   },
   {
@@ -420,7 +508,8 @@
    "attribution": null,
    "records": {
     "internet": 23,
-    "mobile": 0
+    "mobile": 0,
+    "phones": 0
    }
   },
   {
@@ -434,7 +523,23 @@
    "attribution": null,
    "records": {
     "internet": 0,
-    "mobile": 13
+    "mobile": 13,
+    "phones": 0
+   }
+  },
+  {
+   "id": "telstra_phones",
+   "name": "Telstra phones on repayments (device grid feed)",
+   "url": "https://www.telstra.com.au/mobile-phones/mobiles-on-a-plan",
+   "status": "ok",
+   "fetched": "2026-11-24T23:53:39Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 0,
+    "mobile": 0,
+    "phones": 177
    }
   },
   {
@@ -448,7 +553,8 @@
    "attribution": null,
    "records": {
     "internet": 12,
-    "mobile": 0
+    "mobile": 0,
+    "phones": 0
    }
   },
   {
@@ -462,7 +568,8 @@
    "attribution": null,
    "records": {
     "internet": 0,
-    "mobile": 6
+    "mobile": 6,
+    "phones": 0
    }
   },
   {
@@ -476,7 +583,8 @@
    "attribution": null,
    "records": {
     "internet": 9,
-    "mobile": 0
+    "mobile": 0,
+    "phones": 0
    }
   }
  ]

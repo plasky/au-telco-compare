@@ -28,14 +28,14 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import NORM, RAW, ROOT, SITE_DATA, load_providers, now_iso, provider_name  # noqa: E402
-from schema import check_internet, check_mobile  # noqa: E402
+from schema import check_internet, check_mobile, check_phone  # noqa: E402
 
 BACKBONE = "billhero"
 DROP_LIMIT = 0.40
 MOVE_LIMIT = 0.30
 STALE_DAYS = 3
-KINDS = ("internet", "mobile")
-CHECK = {"internet": check_internet, "mobile": check_mobile}
+KINDS = ("internet", "mobile", "phones")
+CHECK = {"internet": check_internet, "mobile": check_mobile, "phones": check_phone}
 
 
 def today_aest():
@@ -167,7 +167,7 @@ def main():
                 continue
             seen.add(r["id"])
             keep.append(r)
-        merged[k] = sorted(keep, key=lambda r: (r["provider"], r["price"]))
+        merged[k] = sorted(keep, key=lambda r: (r["provider"], r.get("price") or r.get("outright") or r.get("monthly") or 0))
         total = len(keep) + sum(1 for d in dropped if d["kind"] == k)
         if total and len(keep) < total * 0.9:
             issues.append(f"{k}: {total - len(keep)} of {total} records failed validation")
@@ -180,8 +180,9 @@ def main():
         old = {r["id"]: r for r in prev.get(k, [])}
         for r in merged[k]:
             o = old.get(r["id"])
-            if o and o.get("price") and abs(r["price"] - o["price"]) / o["price"] > MOVE_LIMIT:
-                moves.append(f"{r['id']}: ${o['price']} -> ${r['price']}")
+            f = "price" if k != "phones" else ("outright" if r.get("outright") else "monthly")
+            if o and o.get(f) and r.get(f) and abs(r[f] - o[f]) / o[f] > MOVE_LIMIT:
+                moves.append(f"{r['id']}: ${o[f]} -> ${r[f]}")
     if moves:
         notes.append(f"{len(moves)} price moves over {int(MOVE_LIMIT * 100)}%: " + "; ".join(moves[:20]))
 
