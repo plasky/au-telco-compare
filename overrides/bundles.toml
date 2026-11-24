@@ -1,0 +1,22 @@
+# Provider-level bundle discounts, used from phase 3 (mobile + bundles).
+# Each rule: provider, what it applies to, the discount, and when it was checked at the source.
+#   [[bundle]]
+#   provider = "vodafone"
+#   applies_to = "internet"          # the service that gets cheaper
+#   with = "mobile"                  # what you must also have with the same provider
+#   off = 10.0                       # $ per month (or pct = 10 for a percentage)
+#   text = "nbn Bundle & Save"
+#   source = "https://www.vodafone.com.au/plans/bundle"
+#   checked = "2026-11-24"
+#   verified = true
+#
+# Candidates from the 24 Nov 2026 research, NOT yet checked on the providers' own pages
+# (verify each before enabling):
+#   Vodafone  $10/month off NBN with a mobile plan (from 1 Jul 2026; may be a tier upgrade instead)
+#   Mate      $10/month off when internet and mobile are bundled
+#   Tangerine 10% off NBN with a SIM-only plan
+#   TPG, iiNet, Superloop, Exetel  from $5/month off bundles (TPG excludes its smallest SIM)
+#   AGL       $15/month off NBN while an AGL energy plan is active (same account name)
+#   Origin    $10/month off internet with Origin electricity and/or gas
+#   Dodo      $12/month (NBN + 2 other services) or $15/month (NBN + mobile + electricity + gas)
+#   amaysim   handled by the adapter ($10/month off NBN with an active amaysim SIM)

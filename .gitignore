@@ -1,0 +1,6 @@
+# Raw downloads and run state are regenerated on every refresh; the published data in
+# site/data/ is what's committed (and is the fail-safe fallback for the next run).
+data-raw/
+__pycache__/
+.DS_Store
+my-settings/

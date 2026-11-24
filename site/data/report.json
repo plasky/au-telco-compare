@@ -1,0 +1,253 @@
+{
+ "built": "2026-11-24T03:11:17Z",
+ "issues": [],
+ "notes": [],
+ "counts": {
+  "internet": 328,
+  "mobile": 301
+ },
+ "verified": {
+  "internet": 160,
+  "mobile": 13
+ },
+ "sources": [
+  {
+   "id": "amaysim",
+   "name": "amaysim plan catalogue",
+   "url": "https://www.amaysim.com.au/products/catalogue/plans",
+   "status": "ok",
+   "fetched": "2026-11-24T03:10:52Z",
+   "generated": "2026-11-23 08:00:46",
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 6,
+    "mobile": 13
+   }
+  },
+  {
+   "id": "aussie_broadband",
+   "name": "Aussie Broadband nbn plans page",
+   "url": "https://www.aussiebroadband.com.au/internet/nbn-plans/",
+   "status": "ok",
+   "fetched": "2026-11-24T03:10:52Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 14,
+    "mobile": 0
+   }
+  },
+  {
+   "id": "billhero",
+   "name": "Bill Hero open data",
+   "url": "https://billhero.com.au/data",
+   "status": "ok",
+   "fetched": "2026-11-24T03:11:00Z",
+   "generated": "2026-11-24T03:10:57.940Z",
+   "licence": "CC-BY-4.0",
+   "attribution": "Data via Bill Hero (billhero.com.au)",
+   "records": {
+    "internet": 173,
+    "mobile": 288
+   }
+  },
+  {
+   "id": "dodo",
+   "name": "Dodo nbn plans page",
+   "url": "https://www.dodo.com/nbn",
+   "status": "ok",
+   "fetched": "2026-11-24T03:11:01Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 6,
+    "mobile": 0
+   }
+  },
+  {
+   "id": "exetel",
+   "name": "Exetel nbn plan page",
+   "url": "https://www.exetel.com.au/broadband/nbn",
+   "status": "ok",
+   "fetched": "2026-11-24T03:11:01Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 1,
+    "mobile": 0
+   }
+  },
+  {
+   "id": "flip",
+   "name": "Flip per-tier nbn pages (prerendered)",
+   "url": "https://flipconnect.com.au",
+   "status": "ok",
+   "fetched": "2026-11-24T03:11:01Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 5,
+    "mobile": 0
+   }
+  },
+  {
+   "id": "iprimus",
+   "name": "iPrimus nbn plans page and CIS",
+   "url": "https://www.iprimus.com.au/nbn-plans",
+   "status": "ok",
+   "fetched": "2026-11-24T03:11:07Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 6,
+    "mobile": 0
+   }
+  },
+  {
+   "id": "mate",
+   "name": "MATE nbn plans page",
+   "url": "https://www.letsbemates.com.au/nbn/",
+   "status": "ok",
+   "fetched": "2026-11-24T03:11:09Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 9,
+    "mobile": 0
+   }
+  },
+  {
+   "id": "more",
+   "name": "More nbn plans page",
+   "url": "https://www.more.com.au/personal/nbn-plans",
+   "status": "ok",
+   "fetched": "2026-11-24T03:11:10Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 4,
+    "mobile": 0
+   }
+  },
+  {
+   "id": "optus",
+   "name": "Optus nbn and 5G Home Internet pages",
+   "url": "https://www.optus.com.au/internet/nbn",
+   "status": "ok",
+   "fetched": "2026-11-24T03:11:10Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 8,
+    "mobile": 0
+   }
+  },
+  {
+   "id": "override",
+   "name": "Manual entries, checked by hand",
+   "url": null,
+   "status": "ok",
+   "fetched": null,
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 33,
+    "mobile": 0
+   }
+  },
+  {
+   "id": "spintel",
+   "name": "Spintel home internet pages",
+   "url": "https://www.spintel.net.au/home-internet/nbn",
+   "status": "ok",
+   "fetched": "2026-11-24T03:11:12Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 6,
+    "mobile": 0
+   }
+  },
+  {
+   "id": "superloop",
+   "name": "Superloop nbn plans page",
+   "url": "https://www.superloop.com/internet/nbn/",
+   "status": "ok",
+   "fetched": "2026-11-24T03:11:14Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 10,
+    "mobile": 0
+   }
+  },
+  {
+   "id": "tangerine",
+   "name": "Tangerine nbn plans page (plans shown before an address check)",
+   "url": "https://www.tangerine.com.au/nbn/nbn-broadband",
+   "status": "ok",
+   "fetched": "2026-11-24T03:11:14Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 3,
+    "mobile": 0
+   }
+  },
+  {
+   "id": "telstra",
+   "name": "Telstra home internet plans",
+   "url": "https://www.telstra.com.au/internet/plans",
+   "status": "ok",
+   "fetched": "2026-11-24T03:11:15Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 23,
+    "mobile": 0
+   }
+  },
+  {
+   "id": "tpg",
+   "name": "TPG nbn plan catalogue (setVars JSON on the nbn page)",
+   "url": "https://www.tpg.com.au/nbn",
+   "status": "ok",
+   "fetched": "2026-11-24T03:11:15Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 12,
+    "mobile": 0
+   }
+  },
+  {
+   "id": "vodafone",
+   "name": "Vodafone home internet pages (__NEXT_DATA__)",
+   "url": "https://www.vodafone.com.au/home-internet/nbn",
+   "status": "ok",
+   "fetched": "2026-11-24T03:11:15Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 9,
+    "mobile": 0
+   }
+  }
+ ]
+}

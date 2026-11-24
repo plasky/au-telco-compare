@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Australian Telco Compare</title>
+<meta name="description" content="Compare Australian home internet plans (NBN, 5G home internet, Starlink) against what your household needs, at their real cost over the time you'll keep them.">
+<link rel="stylesheet" href="css/style.css?v=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232a78d6'/%3E%3Cpath d='M6 13a14 14 0 0 1 20 0M9.5 16.5a9 9 0 0 1 13 0M13 20a4 4 0 0 1 6 0' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='24' r='2' fill='%23fff'/%3E%3C/svg%3E">
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <h1>Australian Telco Compare</h1>
+      <p class="sub">Home internet plans, costed over the time you'll actually keep them: intro offers, setup fees and modems included.</p>
+    </div>
+    <div class="where">
+      <nav class="tabs" aria-label="Services">
+        <a href="#" aria-current="page">Home internet</a>
+        <span class="soon" title="Coming next">Mobile <small>soon</small></span>
+      </nav>
+      <span class="chip" id="data-date"></span>
+    </div>
+  </div>
+</header>
+
+<main class="layout">
+  <section class="tiles" id="tiles" aria-live="polite"></section>
+
+  <aside class="inputs" id="inputs" aria-label="Household settings">
+    <div class="usage-readout" id="readout"></div>
+    <!-- input sections are rendered by app.js -->
+  </aside>
+
+  <section class="results" id="results">
+    <article class="card" id="plan-card"></article>
+
+    <article class="card">
+      <div class="card-head">
+        <h2>Price against evening speed</h2>
+      </div>
+      <p class="card-sub" id="scatter-sub"></p>
+      <div id="scatter" class="chart"></div>
+      <div id="scatter-legend" class="legend"></div>
+      <details class="table-view"><summary>Show the best-value plans as a table</summary><div id="scatter-table"></div></details>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <h2>All plans that fit</h2>
+        <div class="controls">
+          <div class="seg" id="rank-sort" role="group" aria-label="Sort by"></div>
+          <label class="check"><input type="checkbox" id="best-per-provider" checked> Best plan per provider</label>
+        </div>
+      </div>
+      <p class="card-sub" id="rank-sub"></p>
+      <div class="table-wrap"><table class="rank" id="rank"></table></div>
+      <button class="more" id="rank-more" hidden>Show more</button>
+    </article>
+
+    <article class="card notes">
+      <h2>How this works</h2>
+      <div id="notes"></div>
+    </article>
+  </section>
+</main>
+
+<footer id="foot"></footer>
+
+<div id="tip" class="tip" role="tooltip" hidden></div>
+<div id="mbar" class="mbar" aria-live="polite" hidden></div>
+
+<script src="data/plans.js?v=1"></script>
+<script src="js/engine.js?v=1"></script>
+<script src="js/app.js?v=1"></script>
+</body>
+</html>

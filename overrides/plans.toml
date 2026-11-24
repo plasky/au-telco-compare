@@ -1,0 +1,853 @@
+# Manual corrections and additions, applied after the adapters. Every entry needs a reason
+# and a source URL; patches and added plans need an `expires` date (YYYY-MM-DD) after which
+# they stop applying and the build report flags them for review.
+#
+# Remove a record:
+#   [[exclude]]
+#   id = "pentanet-elite"
+#   reason = "Feed puts a speed figure in the price field"
+#   source = "https://billhero.com.au/data/broadband"
+#
+# Change fields on a record (any schema field; nested tables replace the whole field):
+#   [[patch]]
+#   id = "telstra-premium-nbn"
+#   set = { price = 115.0, verified = true }
+#   reason = "Price checked on telstra.com.au"
+#   source = "https://www.telstra.com.au/internet/plans"
+#   expires = "2027-02-28"
+#
+# Add a plan no adapter covers (e.g. Starlink, 5G home), as a full record. Its `source` is set
+# to "override"; put the page the facts came from in `source_url`. Leave out fields that are
+# null (TOML has no null): tier, promo, data_gb, credit, network.
+#   [[internet]]
+#   id = "starlink-residential"
+#   provider = "starlink"
+#   ...all schema fields...
+#   reason = "Prices read from Starlink's Critical Information Summary"
+#   source_url = "https://starlink.com/legal/documents/..."
+#   expires = "2027-01-31"
+
+[[exclude]]
+id = "pentanet-elite"
+reason = "Bill Hero lists the price as $750/month, a speed figure in the price field"
+source = "https://billhero.com.au/data/broadband"
+
+[[exclude]]
+id = "pentanet-prime"
+reason = "Bill Hero lists the price as $1000/month, a speed figure in the price field"
+source = "https://billhero.com.au/data/broadband"
+
+# ---- Starlink (JavaScript site, no automatable source). Facts from Starlink's Australian
+# Critical Information Summaries, read 24 Nov 2026. Starlink publishes speed ranges, not typical
+# evening speeds, so `down`/`up` are the middle of each range. Plan prices on starlink.com/au
+# depend on the address; the 100 and 200 Mbps plans are only offered in some areas.
+
+[[internet]]
+id = "starlink-residential-100"
+provider = "starlink"
+name = "Residential 100 Mbps"
+kind = "starlink"
+techs = []
+down = 90.0
+up = 30.0
+price = 75.0
+setup = 0.0
+contract = 0
+modem = { offer = "purchase", cost = 549.0 }
+bundle = []
+url = "https://www.starlink.com/au/residential"
+cis_url = "https://starlink.com/legal/documents/DOC-1197-21635-71"
+notes = "Only offered in some areas. Starlink quotes 80-100 Mbps down and 20-40 up (the middle is shown). $549 Starlink kit; optional professional installation $99; a demand surcharge may apply where the network is near capacity. 30-day trial."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "Starlink's site needs JavaScript and has no structured plan data"
+source_url = "https://starlink.com/legal/documents/DOC-1197-21635-71"
+expires = "2027-02-28"
+
+[[internet]]
+id = "starlink-residential-200"
+provider = "starlink"
+name = "Residential 200 Mbps"
+kind = "starlink"
+techs = []
+down = 140.0
+up = 30.0
+price = 110.0
+setup = 0.0
+contract = 0
+modem = { offer = "purchase", cost = 549.0 }
+bundle = []
+url = "https://www.starlink.com/au/residential"
+cis_url = "https://starlink.com/legal/documents/DOC-1197-21635-71"
+notes = "Only offered in some areas. Starlink quotes 80-200 Mbps down and 20-40 up (the middle is shown). $549 Starlink kit; optional professional installation $99; a demand surcharge may apply where the network is near capacity. 30-day trial."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "Starlink's site needs JavaScript and has no structured plan data"
+source_url = "https://starlink.com/legal/documents/DOC-1197-21635-71"
+expires = "2027-02-28"
+
+[[internet]]
+id = "starlink-residential-max"
+provider = "starlink"
+name = "Residential Max"
+kind = "starlink"
+techs = []
+down = 250.0
+up = 30.0
+price = 150.0
+setup = 0.0
+contract = 0
+modem = { offer = "purchase", cost = 549.0 }
+bundle = []
+url = "https://www.starlink.com/au/residential"
+cis_url = "https://starlink.com/legal/documents/DOC-1546-97522-77"
+notes = "Starlink quotes 150-350 Mbps down and 20-40 up (the middle is shown), with top network priority. $549 Starlink kit; professional installation included; a demand surcharge may apply where the network is near capacity. 30-day trial."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "Starlink's site needs JavaScript and has no structured plan data"
+source_url = "https://starlink.com/legal/documents/DOC-1546-97522-77"
+expires = "2027-02-28"
+
+# ---- Belong (www.belong.com.au refuses automated clients; read in a browser 24 Nov 2026).
+# Bill Hero lists the Black Friday prices as the ongoing price. Ongoing prices, offers and
+# typical evening speeds below are from https://www.belong.com.au/go/internet. The offer
+# sign-up date is 30 Nov 2026; after that the build drops the promo and the ongoing price stays.
+
+[[patch]]
+id = "belong-starter-plan-nbn-25"
+set = { price = 75.0, promo = { price = 55.0, months = 12, until = "2026-11-30", text = "$20/month off for 12 months" }, down = 25.0, up = 8.0, setup = 0.0, modem = { offer = "purchase", cost = 132.0 }, verified = true, url = "https://www.belong.com.au/go/internet", cis_url = "https://dam.belong.com.au/assets/belong-nbn-cis.pdf", notes = "No lock-in. Modem $132 (or $11/month for 12 months), or bring your own. $0 standard activation." }
+reason = "Belong's site refuses automated clients; Bill Hero shows the offer price as ongoing"
+source = "https://www.belong.com.au/go/internet"
+expires = "2027-01-31"
+
+[[patch]]
+id = "belong-standard-plus-plan-nbn-50"
+set = { price = 91.0, promo = { price = 69.0, months = 12, until = "2026-11-30", text = "$22/month off for 12 months" }, down = 50.0, up = 17.0, setup = 0.0, modem = { offer = "purchase", cost = 132.0 }, verified = true, url = "https://www.belong.com.au/go/internet", cis_url = "https://dam.belong.com.au/assets/belong-nbn-cis.pdf", notes = "No lock-in. Modem $132 (or $11/month for 12 months), or bring your own. $0 standard activation." }
+reason = "Belong's site refuses automated clients; Bill Hero shows the offer price as ongoing"
+source = "https://www.belong.com.au/go/internet"
+expires = "2027-01-31"
+
+[[patch]]
+id = "belong-premium-plan-nbn-100"
+set = { price = 95.0, promo = { price = 70.0, months = 12, until = "2026-11-30", text = "$25/month off for 12 months" }, down = 100.0, up = 17.0, techs = ["fttc", "fttn", "fttb"], setup = 0.0, modem = { offer = "purchase", cost = 132.0 }, verified = true, url = "https://www.belong.com.au/go/internet", cis_url = "https://dam.belong.com.au/assets/belong-nbn-cis.pdf", notes = "Sold on FTTN, FTTB and FTTC; FTTP and HFC homes get the Fast plan (NBN 500) for the same price. No lock-in. Modem $132 or bring your own." }
+reason = "Belong's site refuses automated clients; Bill Hero shows the offer price as ongoing"
+source = "https://www.belong.com.au/go/internet"
+expires = "2027-01-31"
+
+[[patch]]
+id = "belong-fast-plan-nbn-500"
+set = { price = 95.0, promo = { price = 70.0, months = 12, until = "2026-11-30", text = "$25/month off for 12 months" }, down = 500.0, up = 40.0, setup = 0.0, modem = { offer = "purchase", cost = 132.0 }, verified = true, url = "https://www.belong.com.au/go/internet", cis_url = "https://dam.belong.com.au/assets/belong-nbn-cis.pdf", notes = "FTTP and HFC only. No lock-in. Modem $132 or bring your own (check it handles 500 Mbps)." }
+reason = "Belong's site refuses automated clients; Bill Hero shows the offer price as ongoing"
+source = "https://www.belong.com.au/go/internet"
+expires = "2027-01-31"
+
+[[patch]]
+id = "belong-ultrafast-plan-nbn-1000"
+set = { price = 110.0, promo = { price = 85.0, months = 12, until = "2026-11-30", text = "$25/month off for 12 months" }, down = 875.0, up = 80.0, setup = 0.0, modem = { offer = "purchase", cost = 132.0 }, verified = true, url = "https://www.belong.com.au/go/internet", cis_url = "https://dam.belong.com.au/assets/belong-nbn-cis.pdf", notes = "FTTP and HFC only. No lock-in. Modem $132 or bring your own (check it handles the speed)." }
+reason = "Belong's site refuses automated clients; Bill Hero shows the offer price as ongoing"
+source = "https://www.belong.com.au/go/internet"
+expires = "2027-01-31"
+
+# ---- iiNet and Internode (TPG group). Plan prices are drawn by a JavaScript configurator with
+# no public structured source. Facts from the providers' Critical Information Summaries (read
+# 24 Nov 2026); iiNet's prices and offers were also checked on its plans page in a browser.
+# Providers with entries here replace Bill Hero's records for them (Bill Hero lists intro prices).
+
+[[internet]]
+id = "iinet-nbn25"
+provider = "iinet"
+name = "NBN25"
+kind = "nbn"
+tier = 25
+techs = ["fttp", "hfc", "fttc", "fttn", "fttb"]
+down = 25.0
+up = 8.0
+price = 79.99
+promo = { price = 59.99, months = 6, text = "$20/month off for 6 months" }
+setup = 10.0
+contract = 0
+modem = { offer = "included_contract", fee = 200.0, months = 24 }
+bundle = []
+url = "https://www.iinet.net.au/internet-product/broadband/nbn/plans/fibre"
+cis_url = "https://assets.iinet.net.au/website/about/legal/cis/cis-iinet-nbn-fibre-20260708.pdf"
+notes = "New customers, until withdrawn; use the advertised promo code. Modem $0 if you stay 24 months or return it, otherwise $200; $10 modem delivery (shown as setup). No lock-in."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "iiNet's plan prices need JavaScript; no structured source"
+source_url = "https://www.iinet.net.au/internet-product/broadband/nbn/plans/fibre"
+expires = "2027-01-31"
+
+[[internet]]
+id = "iinet-nbn50"
+provider = "iinet"
+name = "NBN50"
+kind = "nbn"
+tier = 50
+techs = ["fttp", "hfc", "fttc", "fttn", "fttb"]
+down = 50.0
+up = 17.0
+price = 89.99
+promo = { price = 69.99, months = 6, text = "$20/month off for 6 months" }
+setup = 10.0
+contract = 0
+modem = { offer = "included_contract", fee = 200.0, months = 24 }
+bundle = []
+url = "https://www.iinet.net.au/internet-product/broadband/nbn/plans/fibre"
+cis_url = "https://assets.iinet.net.au/website/about/legal/cis/cis-iinet-nbn-fibre-20260708.pdf"
+notes = "New customers, until withdrawn; use the advertised promo code. Modem $0 if you stay 24 months or return it, otherwise $200; $10 modem delivery (shown as setup). No lock-in."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "iiNet's plan prices need JavaScript; no structured source"
+source_url = "https://www.iinet.net.au/internet-product/broadband/nbn/plans/fibre"
+expires = "2027-01-31"
+
+[[internet]]
+id = "iinet-nbn100"
+provider = "iinet"
+name = "NBN100"
+kind = "nbn"
+tier = 100
+techs = ["fttc", "fttn", "fttb"]
+down = 98.0
+up = 17.0
+price = 94.99
+promo = { price = 69.99, months = 6, text = "$25/month off for 6 months" }
+setup = 10.0
+contract = 0
+modem = { offer = "included_contract", fee = 200.0, months = 24 }
+bundle = []
+url = "https://www.iinet.net.au/internet-product/broadband/nbn/plans/fibre"
+cis_url = "https://assets.iinet.net.au/website/about/legal/cis/cis-iinet-nbn-fibre-20260708.pdf"
+notes = "New customers, until withdrawn; use the advertised promo code. Sold on FTTN, FTTB and FTTC; FTTP and HFC homes get NBN500 for the same price. Modem $0 if you stay 24 months or return it, otherwise $200; $10 modem delivery (shown as setup). No lock-in."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "iiNet's plan prices need JavaScript; no structured source"
+source_url = "https://www.iinet.net.au/internet-product/broadband/nbn/plans/fibre"
+expires = "2027-01-31"
+
+[[internet]]
+id = "iinet-nbn500"
+provider = "iinet"
+name = "NBN500"
+kind = "nbn"
+tier = 500
+techs = ["fttp", "hfc"]
+down = 500.0
+up = 42.0
+price = 94.99
+promo = { price = 69.99, months = 6, text = "$25/month off for 6 months" }
+setup = 10.0
+contract = 0
+modem = { offer = "included_contract", fee = 200.0, months = 24 }
+bundle = []
+url = "https://www.iinet.net.au/internet-product/broadband/nbn/plans/fibre"
+cis_url = "https://assets.iinet.net.au/website/about/legal/cis/cis-iinet-nbn-fibre-20260708.pdf"
+notes = "New customers, until withdrawn; use the advertised promo code. Modem $0 if you stay 24 months or return it, otherwise $200; $10 modem delivery (shown as setup). No lock-in."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "iiNet's plan prices need JavaScript; no structured source"
+source_url = "https://www.iinet.net.au/internet-product/broadband/nbn/plans/fibre"
+expires = "2027-01-31"
+
+[[internet]]
+id = "iinet-nbn-superfast"
+provider = "iinet"
+name = "NBN Superfast"
+kind = "nbn"
+tier = 750
+techs = ["fttp", "hfc"]
+down = 740.0
+up = 42.0
+price = 104.99
+promo = { price = 74.99, months = 6, text = "$30/month off for 6 months" }
+setup = 10.0
+contract = 0
+modem = { offer = "included_contract", fee = 200.0, months = 24 }
+bundle = []
+url = "https://www.iinet.net.au/internet-product/broadband/nbn/plans/fibre"
+cis_url = "https://assets.iinet.net.au/website/about/legal/cis/cis-iinet-nbn-fibre-20260708.pdf"
+notes = "New customers, until withdrawn; use the advertised promo code. Modem $0 if you stay 24 months or return it, otherwise $200; $10 modem delivery (shown as setup). No lock-in."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "iiNet's plan prices need JavaScript; no structured source"
+source_url = "https://www.iinet.net.au/internet-product/broadband/nbn/plans/fibre"
+expires = "2027-01-31"
+
+[[internet]]
+id = "iinet-nbn-ultrafast"
+provider = "iinet"
+name = "NBN Ultrafast"
+kind = "nbn"
+tier = 1000
+techs = ["fttp", "hfc"]
+down = 850.0
+up = 85.0
+price = 114.99
+promo = { price = 84.99, months = 6, text = "$30/month off for 6 months" }
+setup = 10.0
+contract = 0
+modem = { offer = "included_contract", fee = 200.0, months = 24 }
+bundle = []
+url = "https://www.iinet.net.au/internet-product/broadband/nbn/plans/fibre"
+cis_url = "https://assets.iinet.net.au/website/about/legal/cis/cis-iinet-nbn-fibre-20260708.pdf"
+notes = "New customers, until withdrawn; use the advertised promo code. Modem $0 if you stay 24 months or return it, otherwise $200; $10 modem delivery (shown as setup). No lock-in."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "iiNet's plan prices need JavaScript; no structured source"
+source_url = "https://www.iinet.net.au/internet-product/broadband/nbn/plans/fibre"
+expires = "2027-01-31"
+
+[[internet]]
+id = "iinet-nbn25-fixed-wireless"
+provider = "iinet"
+name = "NBN25 Fixed Wireless"
+kind = "fixed_wireless"
+tier = 25
+techs = ["fw"]
+down = 20.0
+up = 3.8
+price = 79.99
+setup = 10.0
+contract = 0
+modem = { offer = "included_contract", fee = 200.0, months = 24 }
+bundle = []
+url = "https://www.iinet.net.au/internet-product/broadband/nbn/plans/fibre"
+cis_url = "https://assets.iinet.net.au/website/about/legal/cis/cis-iinet-nbn-wireless-20260527.pdf"
+notes = "Modem $0 if you stay 24 months or return it, otherwise $200; $10 modem delivery (shown as setup). No lock-in."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "iiNet's plan prices need JavaScript; no structured source"
+source_url = "https://assets.iinet.net.au/website/about/legal/cis/cis-iinet-nbn-wireless-20260527.pdf"
+expires = "2027-01-31"
+
+[[internet]]
+id = "iinet-5g-plus"
+provider = "iinet"
+name = "5G Plus"
+kind = "5g"
+techs = []
+down = 50.0
+up = 16.0
+price = 59.99
+promo = { price = 39.99, months = 12, text = "$20/month off for 12 months" }
+setup = 10.0
+contract = 0
+modem = { offer = "included_contract", fee = 300.0, months = 36 }
+bundle = []
+network = "vodafone"
+url = "https://www.iinet.net.au/internet-product/broadband/5g"
+cis_url = "https://assets.iinet.net.au/website/about/legal/cis/cis-iiNet-5g-home-broadband_2026-07.pdf"
+notes = "New customers, until withdrawn; use the advertised promo code. 5G modem $0 if you stay 36 months or return it, otherwise $300; $10 delivery. Coverage depends on your address. No lock-in."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "iiNet's plan prices need JavaScript; no structured source"
+source_url = "https://assets.iinet.net.au/website/about/legal/cis/cis-iiNet-5g-home-broadband_2026-07.pdf"
+expires = "2027-01-31"
+
+[[internet]]
+id = "iinet-5g-premium"
+provider = "iinet"
+name = "5G Premium"
+kind = "5g"
+techs = []
+down = 100.0
+up = 18.0
+price = 69.99
+promo = { price = 49.99, months = 12, text = "$20/month off for 12 months" }
+setup = 10.0
+contract = 0
+modem = { offer = "included_contract", fee = 300.0, months = 36 }
+bundle = []
+network = "vodafone"
+url = "https://www.iinet.net.au/internet-product/broadband/5g"
+cis_url = "https://assets.iinet.net.au/website/about/legal/cis/cis-iiNet-5g-home-broadband_2026-07.pdf"
+notes = "New customers, until withdrawn; use the advertised promo code. 5G modem $0 if you stay 36 months or return it, otherwise $300; $10 delivery. Coverage depends on your address. No lock-in."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "iiNet's plan prices need JavaScript; no structured source"
+source_url = "https://assets.iinet.net.au/website/about/legal/cis/cis-iiNet-5g-home-broadband_2026-07.pdf"
+expires = "2027-01-31"
+
+[[internet]]
+id = "iinet-fttb25"
+provider = "iinet"
+name = "ULTRA FTTB25"
+kind = "private"
+techs = []
+down = 25.0
+up = 4.0
+price = 39.99
+setup = 10.0
+contract = 0
+modem = { offer = "included_contract", fee = 200.0, months = 24 }
+bundle = []
+url = "https://www.iinet.net.au/internet-product/broadband/fttb"
+cis_url = "https://assets.iinet.net.au/website/about/legal/cis/cis_iinet_fttb_202606.pdf"
+notes = "iiNet's own building network (Vision Network): only in buildings it serves. Modem required."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "iiNet's plan prices need JavaScript; no structured source"
+source_url = "https://assets.iinet.net.au/website/about/legal/cis/cis_iinet_fttb_202606.pdf"
+expires = "2027-01-31"
+
+[[internet]]
+id = "iinet-fttb100"
+provider = "iinet"
+name = "ULTRA FTTB100"
+kind = "private"
+techs = []
+down = 100.0
+up = 25.0
+price = 74.99
+setup = 10.0
+contract = 0
+modem = { offer = "included_contract", fee = 200.0, months = 24 }
+bundle = []
+url = "https://www.iinet.net.au/internet-product/broadband/fttb"
+cis_url = "https://assets.iinet.net.au/website/about/legal/cis/cis_iinet_fttb_202606.pdf"
+notes = "iiNet's own building network (Vision Network): only in buildings it serves. Modem required."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "iiNet's plan prices need JavaScript; no structured source"
+source_url = "https://assets.iinet.net.au/website/about/legal/cis/cis_iinet_fttb_202606.pdf"
+expires = "2027-01-31"
+
+[[internet]]
+id = "iinet-fttb-max"
+provider = "iinet"
+name = "ULTRA FTTB Max"
+kind = "private"
+techs = []
+down = 700.0
+up = 25.0
+price = 79.99
+setup = 10.0
+contract = 0
+modem = { offer = "included_contract", fee = 200.0, months = 24 }
+bundle = []
+url = "https://www.iinet.net.au/internet-product/broadband/fttb"
+cis_url = "https://assets.iinet.net.au/website/about/legal/cis/cis_iinet_fttb_202606.pdf"
+notes = "iiNet's own building network (Vision Network): only in buildings it serves. Modem required."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "iiNet's plan prices need JavaScript; no structured source"
+source_url = "https://assets.iinet.net.au/website/about/legal/cis/cis_iinet_fttb_202606.pdf"
+expires = "2027-01-31"
+
+[[internet]]
+id = "internode-nbn25-silver"
+provider = "internode"
+name = "NBN25 Silver"
+kind = "nbn"
+tier = 25
+techs = ["fttp", "hfc", "fttc", "fttn", "fttb"]
+down = 25.0
+up = 8.0
+price = 79.99
+setup = 15.0
+contract = 0
+modem = { offer = "included_contract", fee = 200.0, months = 24 }
+bundle = []
+url = "https://www.internode.on.net/residential/internet/nbn/"
+cis_url = "https://www.internode.on.net/pdf/legal/cis/cis-internode-nbn-fibre-nv.pdf"
+notes = "Modem $0 if you stay 24 months or return it, otherwise $200; $15 modem delivery (shown as setup). No lock-in. Any current intro offer isn't included."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "Internode's plan prices need JavaScript; facts from its Critical Information Summaries"
+source_url = "https://www.internode.on.net/pdf/legal/cis/cis-internode-nbn-fibre-nv.pdf"
+expires = "2027-01-31"
+
+[[internet]]
+id = "internode-nbn50-gold"
+provider = "internode"
+name = "NBN50 Gold"
+kind = "nbn"
+tier = 50
+techs = ["fttp", "hfc", "fttc", "fttn", "fttb"]
+down = 50.0
+up = 17.0
+price = 89.99
+setup = 15.0
+contract = 0
+modem = { offer = "included_contract", fee = 200.0, months = 24 }
+bundle = []
+url = "https://www.internode.on.net/residential/internet/nbn/"
+cis_url = "https://www.internode.on.net/pdf/legal/cis/cis-internode-nbn-fibre-nv.pdf"
+notes = "Modem $0 if you stay 24 months or return it, otherwise $200; $15 modem delivery (shown as setup). No lock-in. Any current intro offer isn't included."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "Internode's plan prices need JavaScript; facts from its Critical Information Summaries"
+source_url = "https://www.internode.on.net/pdf/legal/cis/cis-internode-nbn-fibre-nv.pdf"
+expires = "2027-01-31"
+
+[[internet]]
+id = "internode-nbn100-platinum"
+provider = "internode"
+name = "NBN100 Platinum"
+kind = "nbn"
+tier = 100
+techs = ["fttc", "fttn", "fttb"]
+down = 98.0
+up = 17.0
+price = 94.99
+setup = 15.0
+contract = 0
+modem = { offer = "included_contract", fee = 200.0, months = 24 }
+bundle = []
+url = "https://www.internode.on.net/residential/internet/nbn/"
+cis_url = "https://www.internode.on.net/pdf/legal/cis/cis-internode-nbn-fibre-nv.pdf"
+notes = "Modem $0 if you stay 24 months or return it, otherwise $200; $15 modem delivery (shown as setup). No lock-in. Any current intro offer isn't included."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "Internode's plan prices need JavaScript; facts from its Critical Information Summaries"
+source_url = "https://www.internode.on.net/pdf/legal/cis/cis-internode-nbn-fibre-nv.pdf"
+expires = "2027-01-31"
+
+[[internet]]
+id = "internode-nbn500-platinum"
+provider = "internode"
+name = "NBN500 Platinum"
+kind = "nbn"
+tier = 500
+techs = ["fttp", "hfc"]
+down = 500.0
+up = 42.0
+price = 94.99
+setup = 15.0
+contract = 0
+modem = { offer = "included_contract", fee = 200.0, months = 24 }
+bundle = []
+url = "https://www.internode.on.net/residential/internet/nbn/"
+cis_url = "https://www.internode.on.net/pdf/legal/cis/cis-internode-nbn-fibre-nv.pdf"
+notes = "Modem $0 if you stay 24 months or return it, otherwise $200; $15 modem delivery (shown as setup). No lock-in. Any current intro offer isn't included."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "Internode's plan prices need JavaScript; facts from its Critical Information Summaries"
+source_url = "https://www.internode.on.net/pdf/legal/cis/cis-internode-nbn-fibre-nv.pdf"
+expires = "2027-01-31"
+
+[[internet]]
+id = "internode-nbn-superfast"
+provider = "internode"
+name = "NBN Superfast"
+kind = "nbn"
+tier = 750
+techs = ["fttp", "hfc"]
+down = 740.0
+up = 42.0
+price = 104.99
+setup = 15.0
+contract = 0
+modem = { offer = "included_contract", fee = 200.0, months = 24 }
+bundle = []
+url = "https://www.internode.on.net/residential/internet/nbn/"
+cis_url = "https://www.internode.on.net/pdf/legal/cis/cis-internode-nbn-fibre-nv.pdf"
+notes = "Modem $0 if you stay 24 months or return it, otherwise $200; $15 modem delivery (shown as setup). No lock-in. Any current intro offer isn't included."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "Internode's plan prices need JavaScript; facts from its Critical Information Summaries"
+source_url = "https://www.internode.on.net/pdf/legal/cis/cis-internode-nbn-fibre-nv.pdf"
+expires = "2027-01-31"
+
+[[internet]]
+id = "internode-nbn-ultrafast"
+provider = "internode"
+name = "NBN Ultrafast"
+kind = "nbn"
+tier = 1000
+techs = ["fttp", "hfc"]
+down = 850.0
+up = 85.0
+price = 114.99
+setup = 15.0
+contract = 0
+modem = { offer = "included_contract", fee = 200.0, months = 24 }
+bundle = []
+url = "https://www.internode.on.net/residential/internet/nbn/"
+cis_url = "https://www.internode.on.net/pdf/legal/cis/cis-internode-nbn-fibre-nv.pdf"
+notes = "Modem $0 if you stay 24 months or return it, otherwise $200; $15 modem delivery (shown as setup). No lock-in. Any current intro offer isn't included."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "Internode's plan prices need JavaScript; facts from its Critical Information Summaries"
+source_url = "https://www.internode.on.net/pdf/legal/cis/cis-internode-nbn-fibre-nv.pdf"
+expires = "2027-01-31"
+
+[[internet]]
+id = "internode-nbn25-fixed-wireless-silver"
+provider = "internode"
+name = "Fixed Wireless Silver NBN25"
+kind = "fixed_wireless"
+tier = 25
+techs = ["fw"]
+down = 20.0
+up = 3.8
+price = 79.99
+setup = 15.0
+contract = 0
+modem = { offer = "included_contract", fee = 200.0, months = 24 }
+bundle = []
+url = "https://www.internode.on.net/residential/internet/nbn/"
+cis_url = "https://www.internode.on.net/pdf/legal/cis/cis-internode-nbn-wireless-nv.pdf"
+notes = "Modem $0 if you stay 24 months or return it, otherwise $200; $15 modem delivery (shown as setup). No lock-in. Any current intro offer isn't included."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "Internode's plan prices need JavaScript; facts from its Critical Information Summaries"
+source_url = "https://www.internode.on.net/pdf/legal/cis/cis-internode-nbn-wireless-nv.pdf"
+expires = "2027-01-31"
+
+[[internet]]
+id = "internode-5g-plus"
+provider = "internode"
+name = "5G Plus"
+kind = "5g"
+techs = []
+down = 50.0
+up = 16.0
+price = 59.99
+setup = 0.0
+contract = 0
+modem = { offer = "purchase", cost = 300.0 }
+bundle = []
+network = "vodafone"
+url = "https://www.internode.on.net/residential/internet/nbn/"
+cis_url = "https://www.internode.on.net/pdf/legal/cis/cis-5G-home-broadband.pdf"
+notes = "5G modem: $300 (the CIS minimum cost includes it). Coverage depends on your address. No lock-in."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "Internode's plan prices need JavaScript; facts from its Critical Information Summaries"
+source_url = "https://www.internode.on.net/pdf/legal/cis/cis-5G-home-broadband.pdf"
+expires = "2027-01-31"
+
+[[internet]]
+id = "internode-5g-premium"
+provider = "internode"
+name = "5G Premium"
+kind = "5g"
+techs = []
+down = 100.0
+up = 18.0
+price = 69.99
+setup = 0.0
+contract = 0
+modem = { offer = "purchase", cost = 300.0 }
+bundle = []
+network = "vodafone"
+url = "https://www.internode.on.net/residential/internet/nbn/"
+cis_url = "https://www.internode.on.net/pdf/legal/cis/cis-5G-home-broadband.pdf"
+notes = "5G modem: $300 (the CIS minimum cost includes it). Coverage depends on your address. No lock-in."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "Internode's plan prices need JavaScript; facts from its Critical Information Summaries"
+source_url = "https://www.internode.on.net/pdf/legal/cis/cis-5G-home-broadband.pdf"
+expires = "2027-01-31"
+
+# ---- AGL (plan cards drawn by JavaScript; read in a browser 24 Nov 2026). Prices without AGL
+# energy are the ongoing price; with AGL energy they are $15/month less, and only then does the
+# 3-month intro offer apply (offer ends 1 Dec 2026, new and moving nbn connections only).
+
+[[internet]]
+id = "agl-home-basic"
+provider = "agl"
+name = "Home Basic"
+kind = "nbn"
+tier = 25
+techs = ["fttp", "hfc", "fttc", "fttn", "fttb"]
+down = 23.0
+up = 9.0
+price = 85.0
+promo = { price = 35.0, months = 3, until = "2026-12-01", requires = "energy", text = "With AGL energy and your own modem: $35/month for 3 months, then $70" }
+setup = 0.0
+contract = 0
+modem = { offer = "byo", cost = 0.0 }
+bundle = [{ with = "energy", off = 15.0, text = "$15/month off with AGL energy" }]
+url = "https://www.agl.com.au/residential/nbn-plans"
+notes = "No lock-in. Bring your own modem free, or buy one from AGL (from $216 plus $15 delivery). nbn connection fees may apply."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "AGL's plan cards need JavaScript (data from a POST API); read in a browser 24 Nov 2026"
+source_url = "https://www.agl.com.au/residential/nbn-plans"
+expires = "2027-01-31"
+
+[[internet]]
+id = "agl-home-standard"
+provider = "agl"
+name = "Home Standard"
+kind = "nbn"
+tier = 50
+techs = ["fttp", "hfc", "fttc", "fttn", "fttb"]
+down = 47.0
+up = 18.0
+price = 103.0
+setup = 0.0
+contract = 0
+modem = { offer = "byo", cost = 0.0 }
+bundle = [{ with = "energy", off = 15.0, text = "$15/month off with AGL energy" }]
+url = "https://www.agl.com.au/residential/nbn-plans"
+notes = "No lock-in. Bring your own modem free, or buy one from AGL (from $216 plus $15 delivery). nbn connection fees may apply."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "AGL's plan cards need JavaScript (data from a POST API); read in a browser 24 Nov 2026"
+source_url = "https://www.agl.com.au/residential/nbn-plans"
+expires = "2027-01-31"
+
+[[internet]]
+id = "agl-home-fast"
+provider = "agl"
+name = "Home Fast"
+kind = "nbn"
+tier = 100
+techs = ["fttc", "fttn", "fttb"]
+down = 94.0
+up = 18.0
+price = 110.0
+promo = { price = 47.0, months = 3, until = "2026-12-01", requires = "energy", text = "With AGL energy and your own modem: $47/month for 3 months, then $95" }
+setup = 0.0
+contract = 0
+modem = { offer = "byo", cost = 0.0 }
+bundle = [{ with = "energy", off = 15.0, text = "$15/month off with AGL energy" }]
+url = "https://www.agl.com.au/residential/nbn-plans"
+notes = "No lock-in. Bring your own modem free, or buy one from AGL (from $216 plus $15 delivery). nbn connection fees may apply."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "AGL's plan cards need JavaScript (data from a POST API); read in a browser 24 Nov 2026"
+source_url = "https://www.agl.com.au/residential/nbn-plans"
+expires = "2027-01-31"
+
+[[internet]]
+id = "agl-home-fast-fibre"
+provider = "agl"
+name = "Home Fast Fibre"
+kind = "nbn"
+tier = 500
+techs = ["fttp", "hfc"]
+down = 500.0
+up = 44.0
+price = 110.0
+promo = { price = 47.0, months = 3, until = "2026-12-01", requires = "energy", text = "With AGL energy and your own modem: $47/month for 3 months, then $95" }
+setup = 0.0
+contract = 0
+modem = { offer = "byo", cost = 0.0 }
+bundle = [{ with = "energy", off = 15.0, text = "$15/month off with AGL energy" }]
+url = "https://www.agl.com.au/residential/nbn-plans"
+notes = "No lock-in. Bring your own modem free, or buy one from AGL (from $216 plus $15 delivery). nbn connection fees may apply."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "AGL's plan cards need JavaScript (data from a POST API); read in a browser 24 Nov 2026"
+source_url = "https://www.agl.com.au/residential/nbn-plans"
+expires = "2027-01-31"
+
+[[internet]]
+id = "agl-home-ultrafast"
+provider = "agl"
+name = "Home Ultrafast"
+kind = "nbn"
+tier = 1000
+techs = ["fttp", "hfc"]
+down = 875.0
+up = 92.0
+price = 134.0
+setup = 0.0
+contract = 0
+modem = { offer = "byo", cost = 0.0 }
+bundle = [{ with = "energy", off = 15.0, text = "$15/month off with AGL energy" }]
+url = "https://www.agl.com.au/residential/nbn-plans"
+notes = "No lock-in. Bring your own modem free, or buy one from AGL (from $216 plus $15 delivery). nbn connection fees may apply."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "AGL's plan cards need JavaScript (data from a POST API); read in a browser 24 Nov 2026"
+source_url = "https://www.agl.com.au/residential/nbn-plans"
+expires = "2027-01-31"
+
+[[internet]]
+id = "agl-home-hyperfast-hfc"
+provider = "agl"
+name = "Home HyperFast HFC"
+kind = "nbn"
+tier = 2000
+techs = ["hfc"]
+down = 1780.0
+up = 92.0
+price = 194.0
+setup = 0.0
+contract = 0
+modem = { offer = "byo", cost = 0.0 }
+bundle = [{ with = "energy", off = 15.0, text = "$15/month off with AGL energy" }]
+url = "https://www.agl.com.au/residential/nbn-plans"
+notes = "No lock-in. Bring your own modem free, or buy one from AGL (from $216 plus $15 delivery). nbn connection fees may apply."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "AGL's plan cards need JavaScript (data from a POST API); read in a browser 24 Nov 2026"
+source_url = "https://www.agl.com.au/residential/nbn-plans"
+expires = "2027-01-31"
+
+
+# ---- Tangerine plans the adapter can't see (shown only after an address check).
+
+[[internet]]
+id = "tangerine-value-plus"
+provider = "tangerine"
+name = "Value Plus"
+kind = "nbn"
+tier = 50
+techs = ["fttc", "fttn", "fttb"]
+down = 50.0
+up = 17.0
+price = 89.9
+setup = 0.0
+contract = 0
+modem = { offer = "purchase", cost = 0.0 }
+bundle = []
+url = "https://www.tangerine.com.au/nbn/nbn-broadband"
+cis_url = "https://www.tangerine.com.au/unlimitednbncis"
+notes = "Sold on FTTN, FTTB and FTTC. Any intro discount for these plans isn't published before an address check. No lock-in; free standard connection."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "Tangerine shows these copper-only plans only after an address check (POST); facts from its CIS dated 8 Sep 2026"
+source_url = "https://www.tangerine.com.au/unlimitednbncis"
+expires = "2027-01-31"
+
+[[internet]]
+id = "tangerine-speedy"
+provider = "tangerine"
+name = "Speedy"
+kind = "nbn"
+tier = 100
+techs = ["fttc", "fttn", "fttb"]
+down = 100.0
+up = 17.0
+price = 92.9
+setup = 0.0
+contract = 0
+modem = { offer = "purchase", cost = 0.0 }
+bundle = []
+url = "https://www.tangerine.com.au/nbn/nbn-broadband"
+cis_url = "https://www.tangerine.com.au/unlimitednbncis"
+notes = "Sold on FTTN, FTTB and FTTC. Any intro discount for these plans isn't published before an address check. No lock-in; free standard connection."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "Tangerine shows these copper-only plans only after an address check (POST); facts from its CIS dated 8 Sep 2026"
+source_url = "https://www.tangerine.com.au/unlimitednbncis"
+expires = "2027-01-31"
+
+[[internet]]
+id = "tangerine-speedy-plus"
+provider = "tangerine"
+name = "Speedy Plus"
+kind = "nbn"
+tier = 100
+techs = ["fttc", "fttn", "fttb"]
+down = 100.0
+up = 34.0
+price = 98.9
+setup = 0.0
+contract = 0
+modem = { offer = "purchase", cost = 0.0 }
+bundle = []
+url = "https://www.tangerine.com.au/nbn/nbn-broadband"
+cis_url = "https://www.tangerine.com.au/unlimitednbncis"
+notes = "Sold on FTTN, FTTB and FTTC. Any intro discount for these plans isn't published before an address check. No lock-in; free standard connection."
+captured = "2026-11-24T00:00:00Z"
+verified = true
+reason = "Tangerine shows these copper-only plans only after an address check (POST); facts from its CIS dated 8 Sep 2026"
+source_url = "https://www.tangerine.com.au/unlimitednbncis"
+expires = "2027-01-31"

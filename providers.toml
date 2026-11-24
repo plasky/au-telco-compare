@@ -1,0 +1,75 @@
+# Provider registry: canonical id -> display name and hints.
+# Ids match Bill Hero's carrier slugs where possible. Unknown slugs fall back to a title-cased
+# name and are listed in the build report so they can be added here.
+#
+# own_network = true: the provider sells on its own network (private fibre or fixed wireless),
+# available only in particular estates or regions. Its plans are kind "private".
+# mvno_of: host mobile network for budget brands (Bill Hero also supplies this per plan).
+
+[providers]
+"1st-energy" = { name = "1st Energy" }
+activ8me = { name = "Activ8me" }
+agl = { name = "AGL" }
+aldi-mobile = { name = "ALDI Mobile", mvno_of = "telstra" }
+amaysim = { name = "amaysim", mvno_of = "optus" }
+ascensa = { name = "Ascensa" }
+aussie-broadband = { name = "Aussie Broadband" }
+axecom = { name = "Axecom" }
+belong = { name = "Belong", mvno_of = "telstra" }
+bendigo-telco = { name = "Bendigo Telco" }
+boost-mobile = { name = "Boost Mobile", mvno_of = "telstra" }
+catch-connect = { name = "Catch Connect" }
+circles-life = { name = "Circles.Life", mvno_of = "optus" }
+cmobile = { name = "CMobile" }
+coles-mobile = { name = "Coles Mobile" }
+crisp-wireless = { name = "Crisp Wireless", own_network = true }
+dodo = { name = "Dodo" }
+escapenet = { name = "Escapenet" }
+exetel = { name = "Exetel" }
+ezee-mobile = { name = "Ezee Mobile" }
+felix-mobile = { name = "Felix Mobile", mvno_of = "vodafone" }
+flip = { name = "Flip" }
+freedom-broadband = { name = "Freedom Broadband" }
+freedom-internet = { name = "Freedom Internet" }
+future-broadband = { name = "Future Broadband" }
+gtelecom = { name = "GTelecom" }
+iinet = { name = "iiNet" }
+internode = { name = "Internode" }
+iprimus = { name = "iPrimus" }
+kernwi-fi = { name = "KernWiFi", own_network = true }
+kogan-internet = { name = "Kogan Internet" }
+kogan-mobile = { name = "Kogan Mobile", mvno_of = "vodafone" }
+launtel = { name = "Launtel" }
+leaptel = { name = "Leaptel" }
+lebara = { name = "Lebara", mvno_of = "vodafone" }
+lightning-broadband = { name = "Lightning Broadband", own_network = true }
+lycamobile = { name = "Lycamobile" }
+mate = { name = "Mate" }
+mint-telecom = { name = "Mint Telecom" }
+moose-mobile = { name = "Moose Mobile" }
+more-telecom = { name = "More" }
+neptune = { name = "Neptune" }
+nodeone = { name = "NodeOne" }
+occom = { name = "Occom" }
+onthenet = { name = "OntheNet" }
+optus = { name = "Optus" }
+origin-broadband = { name = "Origin" }
+pentanet = { name = "Pentanet" }
+pivotel-pty = { name = "Pivotel" }
+skymesh = { name = "SkyMesh" }
+southern-phone = { name = "Southern Phone" }
+spintel = { name = "Spintel" }
+starlink = { name = "Starlink" }
+splash-internet = { name = "Splash Internet" }
+superloop = { name = "Superloop" }
+swoop = { name = "Swoop" }
+tangerine = { name = "Tangerine" }
+telstra = { name = "Telstra" }
+tpg = { name = "TPG" }
+uniti = { name = "Uniti" }
+uniti-internet = { name = "Uniti Internet" }
+uptime-isp = { name = "Uptime ISP" }
+vodafone = { name = "Vodafone" }
+woolworths-mobile = { name = "Woolworths Mobile", mvno_of = "telstra" }
+yless4u = { name = "Yless4U" }
+yomojo = { name = "Yomojo" }

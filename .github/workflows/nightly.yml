@@ -1,0 +1,76 @@
+name: Nightly data refresh
+
+on:
+  schedule:
+    # 20:30 UTC = 7:30am AEDT (6:30am AEST), after Bill Hero's daily refresh at 18:00 UTC
+    - cron: "30 20 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: nightly-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    outputs:
+      changed: ${{ steps.commit.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # refresh.py exits 0 (clean), 2 (published with fallbacks; needs a look) or 1 (failed).
+      - name: Fetch, build and test
+        id: refresh
+        run: |
+          set +e
+          python3 -I tools/refresh.py
+          code=$?
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          [ "$code" -ne 1 ]
+
+      - name: Commit refreshed data
+        id: commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add site/data
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "Nightly data refresh $(date -u +%F)"
+            git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Report data that needs attention
+        if: steps.refresh.outputs.code == '2' || failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          [ -f data-raw/build-report.md ] || echo "The refresh failed before the build report was written. See the workflow log." > data-raw/build-report.md
+          open=$(gh issue list --state open --search "Data refresh needs attention in:title" --json number --jq '.[0].number')
+          if [ -n "$open" ]; then
+            gh issue comment "$open" --body-file data-raw/build-report.md
+          else
+            gh issue create --title "Data refresh needs attention ($(date -u +%F))" --body-file data-raw/build-report.md
+          fi
+
+  deploy:
+    needs: refresh
+    if: needs.refresh.outputs.changed == 'true'
+    uses: ./.github/workflows/pages.yml
