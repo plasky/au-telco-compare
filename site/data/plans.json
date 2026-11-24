@@ -1,6 +1,6 @@
 {
  "meta": {
-  "built": "2026-11-24T03:11:17Z",
+  "built": "2026-11-24T03:35:52Z",
   "built_date_aest": "2026-11-24",
   "sources": [
    {
@@ -8,8 +8,8 @@
     "name": "amaysim plan catalogue",
     "url": "https://www.amaysim.com.au/products/catalogue/plans",
     "status": "ok",
-    "fetched": "2026-11-24T03:10:52Z",
-    "generated": "2026-11-23 08:00:46",
+    "fetched": "2026-11-24T03:34:53Z",
+    "generated": "2026-11-24 03:01:14",
     "licence": null,
     "attribution": null,
     "records": {
@@ -22,7 +22,7 @@
     "name": "Aussie Broadband nbn plans page",
     "url": "https://www.aussiebroadband.com.au/internet/nbn-plans/",
     "status": "ok",
-    "fetched": "2026-11-24T03:10:52Z",
+    "fetched": "2026-11-24T03:34:53Z",
     "generated": null,
     "licence": null,
     "attribution": null,
@@ -35,7 +35,7 @@
     "id": "billhero",
     "name": "Bill Hero open data",
     "url": "https://billhero.com.au/data",
-    "status": "ok",
+    "status": "fallback",
     "fetched": "2026-11-24T03:11:00Z",
     "generated": "2026-11-24T03:10:57.940Z",
     "licence": "CC-BY-4.0",
@@ -50,7 +50,7 @@
     "name": "Dodo nbn plans page",
     "url": "https://www.dodo.com/nbn",
     "status": "ok",
-    "fetched": "2026-11-24T03:11:01Z",
+    "fetched": "2026-11-24T03:35:08Z",
     "generated": null,
     "licence": null,
     "attribution": null,
@@ -64,7 +64,7 @@
     "name": "Exetel nbn plan page",
     "url": "https://www.exetel.com.au/broadband/nbn",
     "status": "ok",
-    "fetched": "2026-11-24T03:11:01Z",
+    "fetched": "2026-11-24T03:35:10Z",
     "generated": null,
     "licence": null,
     "attribution": null,
@@ -78,7 +78,7 @@
     "name": "Flip per-tier nbn pages (prerendered)",
     "url": "https://flipconnect.com.au",
     "status": "ok",
-    "fetched": "2026-11-24T03:11:01Z",
+    "fetched": "2026-11-24T03:35:10Z",
     "generated": null,
     "licence": null,
     "attribution": null,
@@ -92,7 +92,7 @@
     "name": "iPrimus nbn plans page and CIS",
     "url": "https://www.iprimus.com.au/nbn-plans",
     "status": "ok",
-    "fetched": "2026-11-24T03:11:07Z",
+    "fetched": "2026-11-24T03:35:22Z",
     "generated": null,
     "licence": null,
     "attribution": null,
@@ -106,7 +106,7 @@
     "name": "MATE nbn plans page",
     "url": "https://www.letsbemates.com.au/nbn/",
     "status": "ok",
-    "fetched": "2026-11-24T03:11:09Z",
+    "fetched": "2026-11-24T03:35:26Z",
     "generated": null,
     "licence": null,
     "attribution": null,
@@ -120,7 +120,7 @@
     "name": "More nbn plans page",
     "url": "https://www.more.com.au/personal/nbn-plans",
     "status": "ok",
-    "fetched": "2026-11-24T03:11:10Z",
+    "fetched": "2026-11-24T03:35:28Z",
     "generated": null,
     "licence": null,
     "attribution": null,
@@ -134,7 +134,7 @@
     "name": "Optus nbn and 5G Home Internet pages",
     "url": "https://www.optus.com.au/internet/nbn",
     "status": "ok",
-    "fetched": "2026-11-24T03:11:10Z",
+    "fetched": "2026-11-24T03:35:28Z",
     "generated": null,
     "licence": null,
     "attribution": null,
@@ -162,7 +162,7 @@
     "name": "Spintel home internet pages",
     "url": "https://www.spintel.net.au/home-internet/nbn",
     "status": "ok",
-    "fetched": "2026-11-24T03:11:12Z",
+    "fetched": "2026-11-24T03:35:33Z",
     "generated": null,
     "licence": null,
     "attribution": null,
@@ -176,7 +176,7 @@
     "name": "Superloop nbn plans page",
     "url": "https://www.superloop.com/internet/nbn/",
     "status": "ok",
-    "fetched": "2026-11-24T03:11:14Z",
+    "fetched": "2026-11-24T03:35:36Z",
     "generated": null,
     "licence": null,
     "attribution": null,
@@ -190,7 +190,7 @@
     "name": "Tangerine nbn plans page (plans shown before an address check)",
     "url": "https://www.tangerine.com.au/nbn/nbn-broadband",
     "status": "ok",
-    "fetched": "2026-11-24T03:11:14Z",
+    "fetched": "2026-11-24T03:35:41Z",
     "generated": null,
     "licence": null,
     "attribution": null,
@@ -204,7 +204,7 @@
     "name": "Telstra home internet plans",
     "url": "https://www.telstra.com.au/internet/plans",
     "status": "ok",
-    "fetched": "2026-11-24T03:11:15Z",
+    "fetched": "2026-11-24T03:35:42Z",
     "generated": null,
     "licence": null,
     "attribution": null,
@@ -218,7 +218,7 @@
     "name": "TPG nbn plan catalogue (setVars JSON on the nbn page)",
     "url": "https://www.tpg.com.au/nbn",
     "status": "ok",
-    "fetched": "2026-11-24T03:11:15Z",
+    "fetched": "2026-11-24T03:35:45Z",
     "generated": null,
     "licence": null,
     "attribution": null,
@@ -232,7 +232,7 @@
     "name": "Vodafone home internet pages (__NEXT_DATA__)",
     "url": "https://www.vodafone.com.au/home-internet/nbn",
     "status": "ok",
-    "fetched": "2026-11-24T03:11:15Z",
+    "fetched": "2026-11-24T03:35:45Z",
     "generated": null,
     "licence": null,
     "attribution": null,
@@ -943,7 +943,7 @@
    "setup": 0.0,
    "contract": 0,
    "modem": {
-    "offer": "byo",
+    "offer": "unknown",
     "cost": null
    },
    "data_gb": null,
@@ -957,7 +957,7 @@
    "url": "https://www.amaysim.com.au/home-internet/nbn&plan=nbn-25#nbn-25",
    "cis_url": null,
    "source": "amaysim",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": "Promo needs a coupon; new services only."
   },
@@ -986,7 +986,7 @@
    "setup": 0.0,
    "contract": 0,
    "modem": {
-    "offer": "byo",
+    "offer": "unknown",
     "cost": null
    },
    "data_gb": null,
@@ -1000,7 +1000,7 @@
    "url": "https://www.amaysim.com.au/home-internet/nbn&plan=nbn-50#nbn-50",
    "cis_url": null,
    "source": "amaysim",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": "Promo needs a coupon; new services only."
   },
@@ -1029,7 +1029,7 @@
    "setup": 0.0,
    "contract": 0,
    "modem": {
-    "offer": "byo",
+    "offer": "unknown",
     "cost": null
    },
    "data_gb": null,
@@ -1043,7 +1043,7 @@
    "url": "https://www.amaysim.com.au/home-internet/nbn&plan=nbn-100#nbn-100",
    "cis_url": null,
    "source": "amaysim",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": "Promo needs a coupon; new services only."
   },
@@ -1069,7 +1069,7 @@
    "setup": 0.0,
    "contract": 0,
    "modem": {
-    "offer": "byo",
+    "offer": "unknown",
     "cost": null
    },
    "data_gb": null,
@@ -1083,7 +1083,7 @@
    "url": "https://www.amaysim.com.au/home-internet/nbn&plan=nbn-500#nbn-500",
    "cis_url": null,
    "source": "amaysim",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": "Promo needs a coupon; new services only."
   },
@@ -1109,7 +1109,7 @@
    "setup": 0.0,
    "contract": 0,
    "modem": {
-    "offer": "byo",
+    "offer": "unknown",
     "cost": null
    },
    "data_gb": null,
@@ -1123,7 +1123,7 @@
    "url": "https://www.amaysim.com.au/home-internet/nbn&plan=nbn-750#nbn-750",
    "cis_url": null,
    "source": "amaysim",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": "Promo needs a coupon; new services only."
   },
@@ -1149,7 +1149,7 @@
    "setup": 0.0,
    "contract": 0,
    "modem": {
-    "offer": "byo",
+    "offer": "unknown",
     "cost": null
    },
    "data_gb": null,
@@ -1163,7 +1163,7 @@
    "url": "https://www.amaysim.com.au/home-internet/nbn&plan=nbn-1000#nbn-1000",
    "cis_url": null,
    "source": "amaysim",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": "Promo needs a coupon; new services only."
   },
@@ -1319,7 +1319,7 @@
    "url": "https://www.aussiebroadband.com.au/internet/nbn-plans/",
    "cis_url": "https://resources.aussiebroadband.com.au/assets/share/asset/653tli9szq",
    "source": "aussie_broadband",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": null
   },
@@ -1358,7 +1358,7 @@
    "url": "https://www.aussiebroadband.com.au/internet/nbn-plans/",
    "cis_url": "https://resources.aussiebroadband.com.au/assets/share/asset/653tli9szq",
    "source": "aussie_broadband",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": "Promo needs code BF30; new customers and eligible existing upgrading customers only."
   },
@@ -1392,7 +1392,7 @@
    "url": "https://www.aussiebroadband.com.au/internet/nbn-plans/",
    "cis_url": "https://resources.aussiebroadband.com.au/assets/share/asset/653tli9szq",
    "source": "aussie_broadband",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": null
   },
@@ -1429,7 +1429,7 @@
    "url": "https://www.aussiebroadband.com.au/internet/nbn-plans/",
    "cis_url": "https://resources.aussiebroadband.com.au/assets/share/asset/653tli9szq",
    "source": "aussie_broadband",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": "Promo needs code BF30; new customers and eligible existing upgrading customers only."
   },
@@ -1465,7 +1465,7 @@
    "url": "https://www.aussiebroadband.com.au/internet/nbn-plans/",
    "cis_url": "https://resources.aussiebroadband.com.au/assets/share/asset/aompquwwzi",
    "source": "aussie_broadband",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": "Promo needs code BF30; new customers and eligible existing upgrading customers only."
   },
@@ -1497,7 +1497,7 @@
    "url": "https://www.aussiebroadband.com.au/internet/nbn-plans/",
    "cis_url": "https://resources.aussiebroadband.com.au/assets/share/asset/653tli9szq",
    "source": "aussie_broadband",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": null
   },
@@ -1528,7 +1528,7 @@
    "url": "https://www.aussiebroadband.com.au/internet/nbn-plans/",
    "cis_url": "https://resources.aussiebroadband.com.au/assets/share/asset/aompquwwzi",
    "source": "aussie_broadband",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": null
   },
@@ -1559,7 +1559,7 @@
    "url": "https://www.aussiebroadband.com.au/internet/nbn-plans/",
    "cis_url": "https://resources.aussiebroadband.com.au/assets/share/asset/aompquwwzi",
    "source": "aussie_broadband",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": null
   },
@@ -1595,7 +1595,7 @@
    "url": "https://www.aussiebroadband.com.au/internet/nbn-plans/",
    "cis_url": "https://resources.aussiebroadband.com.au/assets/share/asset/aompquwwzi",
    "source": "aussie_broadband",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": "Promo needs code BF30; new customers and eligible existing upgrading customers only."
   },
@@ -1625,7 +1625,7 @@
    "url": "https://www.aussiebroadband.com.au/internet/nbn-plans/",
    "cis_url": "https://resources.aussiebroadband.com.au/assets/share/asset/aompquwwzi",
    "source": "aussie_broadband",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": null
   },
@@ -1655,7 +1655,7 @@
    "url": "https://www.aussiebroadband.com.au/internet/nbn-plans/",
    "cis_url": "https://resources.aussiebroadband.com.au/assets/share/asset/aompquwwzi",
    "source": "aussie_broadband",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": null
   },
@@ -1685,7 +1685,7 @@
    "url": "https://www.aussiebroadband.com.au/internet/nbn-plans/",
    "cis_url": "https://resources.aussiebroadband.com.au/assets/share/asset/aompquwwzi",
    "source": "aussie_broadband",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": null
   },
@@ -1715,7 +1715,7 @@
    "url": "https://www.aussiebroadband.com.au/internet/nbn-plans/",
    "cis_url": "https://resources.aussiebroadband.com.au/assets/share/asset/aompquwwzi",
    "source": "aussie_broadband",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": null
   },
@@ -1745,7 +1745,7 @@
    "url": "https://www.aussiebroadband.com.au/internet/nbn-plans/",
    "cis_url": "https://resources.aussiebroadband.com.au/assets/share/asset/aompquwwzi",
    "source": "aussie_broadband",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": null
   },
@@ -2682,7 +2682,7 @@
    "url": "https://www.dodo.com/nbn",
    "cis_url": "https://www.dodo.com/plan-summaries/nbn-cis",
    "source": "dodo",
-   "captured": "2026-11-24T03:11:01Z",
+   "captured": "2026-11-24T03:35:08Z",
    "verified": true,
    "notes": "Promo for new nbn customers only."
   },
@@ -2721,7 +2721,7 @@
    "url": "https://www.dodo.com/nbn",
    "cis_url": "https://www.dodo.com/plan-summaries/nbn-cis",
    "source": "dodo",
-   "captured": "2026-11-24T03:11:01Z",
+   "captured": "2026-11-24T03:35:08Z",
    "verified": true,
    "notes": "Promo for new nbn customers only."
   },
@@ -2758,7 +2758,7 @@
    "url": "https://www.dodo.com/nbn",
    "cis_url": "https://www.dodo.com/plan-summaries/nbn-cis",
    "source": "dodo",
-   "captured": "2026-11-24T03:11:01Z",
+   "captured": "2026-11-24T03:35:08Z",
    "verified": true,
    "notes": "Promo for new nbn customers only."
   },
@@ -2794,7 +2794,7 @@
    "url": "https://www.dodo.com/nbn",
    "cis_url": "https://www.dodo.com/plan-summaries/nbn-cis",
    "source": "dodo",
-   "captured": "2026-11-24T03:11:01Z",
+   "captured": "2026-11-24T03:35:08Z",
    "verified": true,
    "notes": "Promo for new nbn customers only."
   },
@@ -2830,7 +2830,7 @@
    "url": "https://www.dodo.com/nbn",
    "cis_url": "https://www.dodo.com/plan-summaries/nbn-cis",
    "source": "dodo",
-   "captured": "2026-11-24T03:11:01Z",
+   "captured": "2026-11-24T03:35:08Z",
    "verified": true,
    "notes": "Promo for new nbn customers only."
   },
@@ -2866,7 +2866,7 @@
    "url": "https://www.dodo.com/nbn",
    "cis_url": "https://www.dodo.com/plan-summaries/nbn-cis",
    "source": "dodo",
-   "captured": "2026-11-24T03:11:01Z",
+   "captured": "2026-11-24T03:35:08Z",
    "verified": true,
    "notes": "Promo for new nbn customers only."
   },
@@ -3083,7 +3083,7 @@
    "url": "https://www.exetel.com.au/broadband/nbn",
    "cis_url": "https://assets.exetel.com.au/files/terms/2507/exetel_cis_nbn_010725.pdf",
    "source": "exetel",
-   "captured": "2026-11-24T03:11:01Z",
+   "captured": "2026-11-24T03:35:10Z",
    "verified": true,
    "notes": "FTTP and HFC only; eligible FTTN/FTTC premises can get a free fibre upgrade."
   },
@@ -3122,7 +3122,7 @@
    "url": "https://flipconnect.com.au/nbn25",
    "cis_url": "https://flipconnect.com.au/storage/pdf/nbn/Flip-NBN-CIS-Promo-12months-OCT_2026%20_14-Day-Trial_.pdf",
    "source": "flip",
-   "captured": "2026-11-24T03:11:01Z",
+   "captured": "2026-11-24T03:35:10Z",
    "verified": true,
    "notes": "Promo for new customers only (not previous Flip customers at any address)."
   },
@@ -3161,7 +3161,7 @@
    "url": "https://flipconnect.com.au/nbn50",
    "cis_url": "https://flipconnect.com.au/storage/pdf/nbn/Flip-NBN-CIS-Promo-6months-OCT_2026%20_14-Day-Trial_.pdf",
    "source": "flip",
-   "captured": "2026-11-24T03:11:01Z",
+   "captured": "2026-11-24T03:35:10Z",
    "verified": true,
    "notes": "Promo for new customers only (not previous Flip customers at any address)."
   },
@@ -3197,7 +3197,7 @@
    "url": "https://flipconnect.com.au/nbn500",
    "cis_url": "https://flipconnect.com.au/storage/pdf/nbn/Flip-NBN-CIS-Promo-6months-OCT_2026%20_14-Day-Trial_.pdf",
    "source": "flip",
-   "captured": "2026-11-24T03:11:01Z",
+   "captured": "2026-11-24T03:35:10Z",
    "verified": true,
    "notes": "Promo for new customers only (not previous Flip customers at any address)."
   },
@@ -3233,7 +3233,7 @@
    "url": "https://flipconnect.com.au/nbn750",
    "cis_url": "https://flipconnect.com.au/storage/pdf/nbn/Flip-NBN-CIS-Promo-4months-OCT_2026%20_14-Day-Trial_.pdf",
    "source": "flip",
-   "captured": "2026-11-24T03:11:01Z",
+   "captured": "2026-11-24T03:35:10Z",
    "verified": true,
    "notes": "Promo for new customers only (not previous Flip customers at any address)."
   },
@@ -3269,7 +3269,7 @@
    "url": "https://flipconnect.com.au/nbn1000",
    "cis_url": "https://flipconnect.com.au/storage/pdf/nbn/Flip-NBN-CIS-Promo-4months-OCT_2026%20_14-Day-Trial_.pdf",
    "source": "flip",
-   "captured": "2026-11-24T03:11:01Z",
+   "captured": "2026-11-24T03:35:10Z",
    "verified": true,
    "notes": "Promo for new customers only (not previous Flip customers at any address)."
   },
@@ -4562,7 +4562,7 @@
    "url": "https://www.iprimus.com.au/nbn-plans",
    "cis_url": "https://www.iprimus.com.au/critical-information-summary/nbn-internet-plans-cis",
    "source": "iprimus",
-   "captured": "2026-11-24T03:11:07Z",
+   "captured": "2026-11-24T03:35:22Z",
    "verified": true,
    "notes": "Modem included; $180 balance (less $10 per month connected) is payable if you cancel within 18 months. Listed in plan details and the CIS but not in the main plan carousel."
   },
@@ -4596,7 +4596,7 @@
    "url": "https://www.iprimus.com.au/nbn-plans",
    "cis_url": "https://www.iprimus.com.au/critical-information-summary/nbn-internet-plans-cis",
    "source": "iprimus",
-   "captured": "2026-11-24T03:11:07Z",
+   "captured": "2026-11-24T03:35:22Z",
    "verified": true,
    "notes": "Modem included; $180 balance (less $10 per month connected) is payable if you cancel within 18 months."
   },
@@ -4628,7 +4628,7 @@
    "url": "https://www.iprimus.com.au/nbn-plans",
    "cis_url": "https://www.iprimus.com.au/critical-information-summary/nbn-internet-plans-cis",
    "source": "iprimus",
-   "captured": "2026-11-24T03:11:07Z",
+   "captured": "2026-11-24T03:35:22Z",
    "verified": true,
    "notes": "Modem included; $180 balance (less $10 per month connected) is payable if you cancel within 18 months."
   },
@@ -4659,7 +4659,7 @@
    "url": "https://www.iprimus.com.au/nbn-plans",
    "cis_url": "https://www.iprimus.com.au/critical-information-summary/nbn-internet-plans-cis",
    "source": "iprimus",
-   "captured": "2026-11-24T03:11:07Z",
+   "captured": "2026-11-24T03:35:22Z",
    "verified": true,
    "notes": "Modem included; $180 balance (less $10 per month connected) is payable if you cancel within 18 months."
   },
@@ -4690,7 +4690,7 @@
    "url": "https://www.iprimus.com.au/nbn-plans",
    "cis_url": "https://www.iprimus.com.au/critical-information-summary/nbn-internet-plans-cis",
    "source": "iprimus",
-   "captured": "2026-11-24T03:11:07Z",
+   "captured": "2026-11-24T03:35:22Z",
    "verified": true,
    "notes": "Modem included; $180 balance (less $10 per month connected) is payable if you cancel within 18 months."
   },
@@ -4721,7 +4721,7 @@
    "url": "https://www.iprimus.com.au/nbn-plans",
    "cis_url": "https://www.iprimus.com.au/critical-information-summary/nbn-internet-plans-cis",
    "source": "iprimus",
-   "captured": "2026-11-24T03:11:07Z",
+   "captured": "2026-11-24T03:35:22Z",
    "verified": true,
    "notes": "Modem included; $180 balance (less $10 per month connected) is payable if you cancel within 18 months."
   },
@@ -5517,7 +5517,7 @@
    "url": "https://www.letsbemates.com.au/nbn/",
    "cis_url": "https://mymate.letsbemates.com.au/cis/403.pdf",
    "source": "mate",
-   "captured": "2026-11-24T03:11:09Z",
+   "captured": "2026-11-24T03:35:26Z",
    "verified": true,
    "notes": "Promo needs code MATE25; new nbn services only."
   },
@@ -5562,7 +5562,7 @@
    "url": "https://www.letsbemates.com.au/nbn/",
    "cis_url": "https://mymate.letsbemates.com.au/cis/405.pdf",
    "source": "mate",
-   "captured": "2026-11-24T03:11:09Z",
+   "captured": "2026-11-24T03:35:26Z",
    "verified": true,
    "notes": "Promo needs code RIPPER20; new nbn services only."
   },
@@ -5605,7 +5605,7 @@
    "url": "https://www.letsbemates.com.au/nbn/",
    "cis_url": "https://mymate.letsbemates.com.au/cis/407.pdf",
    "source": "mate",
-   "captured": "2026-11-24T03:11:09Z",
+   "captured": "2026-11-24T03:35:26Z",
    "verified": true,
    "notes": "Promo needs code MATE25; new nbn services only."
   },
@@ -5647,7 +5647,7 @@
    "url": "https://www.letsbemates.com.au/nbn/",
    "cis_url": "https://mymate.letsbemates.com.au/cis/415.pdf",
    "source": "mate",
-   "captured": "2026-11-24T03:11:09Z",
+   "captured": "2026-11-24T03:35:26Z",
    "verified": true,
    "notes": "Promo needs code MATE25; new nbn services only."
   },
@@ -5690,7 +5690,7 @@
    "url": "https://www.letsbemates.com.au/nbn/",
    "cis_url": "https://mymate.letsbemates.com.au/cis/409.pdf",
    "source": "mate",
-   "captured": "2026-11-24T03:11:09Z",
+   "captured": "2026-11-24T03:35:26Z",
    "verified": true,
    "notes": "Promo needs code MATE25; new nbn services only."
   },
@@ -5732,7 +5732,7 @@
    "url": "https://www.letsbemates.com.au/nbn/",
    "cis_url": "https://mymate.letsbemates.com.au/cis/411.pdf",
    "source": "mate",
-   "captured": "2026-11-24T03:11:09Z",
+   "captured": "2026-11-24T03:35:26Z",
    "verified": true,
    "notes": "Promo needs code MATE25; new nbn services only."
   },
@@ -5774,7 +5774,7 @@
    "url": "https://www.letsbemates.com.au/nbn/",
    "cis_url": "https://mymate.letsbemates.com.au/cis/342.pdf",
    "source": "mate",
-   "captured": "2026-11-24T03:11:09Z",
+   "captured": "2026-11-24T03:35:26Z",
    "verified": true,
    "notes": "Promo needs code MATE25; new nbn services only."
   },
@@ -5815,7 +5815,7 @@
    "url": "https://www.letsbemates.com.au/nbn/",
    "cis_url": "https://mymate.letsbemates.com.au/cis/378.pdf",
    "source": "mate",
-   "captured": "2026-11-24T03:11:09Z",
+   "captured": "2026-11-24T03:35:26Z",
    "verified": true,
    "notes": "Promo needs code MATE25; new nbn services only."
   },
@@ -5856,7 +5856,7 @@
    "url": "https://www.letsbemates.com.au/nbn/",
    "cis_url": "https://mymate.letsbemates.com.au/cis/382.pdf",
    "source": "mate",
-   "captured": "2026-11-24T03:11:09Z",
+   "captured": "2026-11-24T03:35:26Z",
    "verified": true,
    "notes": "Promo needs code MATE25; new nbn services only."
   },
@@ -6166,7 +6166,7 @@
    "url": "https://www.more.com.au/personal/nbn-plans",
    "cis_url": "https://www.more.com.au/ResidentialNBNCIS",
    "source": "more",
-   "captured": "2026-11-24T03:11:10Z",
+   "captured": "2026-11-24T03:35:28Z",
    "verified": true,
    "notes": "Offer: CommBank customers that sign up to a new nbn® plan by 31/12/26 receive a $100 bill credit. Credit applied within 8 weeks of activation. Verify your identity with ConnectID® & pay using a CommBank card. See full T&Cs."
   },
@@ -6200,7 +6200,7 @@
    "url": "https://www.more.com.au/personal/nbn-plans",
    "cis_url": "https://www.more.com.au/ResidentialNBNCIS",
    "source": "more",
-   "captured": "2026-11-24T03:11:10Z",
+   "captured": "2026-11-24T03:35:28Z",
    "verified": true,
    "notes": "Offer: CommBank customers that sign up to a new nbn® plan by 31/12/26 receive a $100 bill credit. Credit applied within 8 weeks of activation. Verify your identity with ConnectID® & pay using a CommBank card. See full T&Cs."
   },
@@ -6231,7 +6231,7 @@
    "url": "https://www.more.com.au/personal/nbn-plans",
    "cis_url": "https://www.more.com.au/ResidentialNBNCIS",
    "source": "more",
-   "captured": "2026-11-24T03:11:10Z",
+   "captured": "2026-11-24T03:35:28Z",
    "verified": true,
    "notes": "Offer: CommBank customers that sign up to a new nbn® plan by 31/12/26 receive a $100 bill credit. Credit applied within 8 weeks of activation. Verify your identity with ConnectID® & pay using a CommBank card. See full T&Cs."
   },
@@ -6262,7 +6262,7 @@
    "url": "https://www.more.com.au/personal/nbn-plans",
    "cis_url": "https://www.more.com.au/ResidentialNBNCIS",
    "source": "more",
-   "captured": "2026-11-24T03:11:10Z",
+   "captured": "2026-11-24T03:35:28Z",
    "verified": true,
    "notes": "Offer: CommBank customers that sign up to a new nbn® plan by 31/12/26 receive a $100 bill credit. Credit applied within 8 weeks of activation. Verify your identity with ConnectID® & pay using a CommBank card. See full T&Cs."
   },
@@ -7192,7 +7192,7 @@
    "url": "https://www.optus.com.au/internet/5g-home-internet",
    "cis_url": null,
    "source": "optus",
-   "captured": "2026-11-24T03:11:10Z",
+   "captured": "2026-11-24T03:35:28Z",
    "verified": true,
    "notes": "Intro price for new services; forfeited if you change or cancel the plan. Optus modem $0 if you stay 36 months, else pay out the rest of $468."
   },
@@ -7225,7 +7225,7 @@
    "url": "https://www.optus.com.au/internet/5g-home-internet",
    "cis_url": null,
    "source": "optus",
-   "captured": "2026-11-24T03:11:10Z",
+   "captured": "2026-11-24T03:35:28Z",
    "verified": true,
    "notes": "Intro price for new services; forfeited if you change or cancel the plan. Optus modem $0 if you stay 36 months, else pay out the rest of $468."
   },
@@ -7264,7 +7264,7 @@
    "url": "https://www.optus.com.au/internet/nbn",
    "cis_url": null,
    "source": "optus",
-   "captured": "2026-11-24T03:11:10Z",
+   "captured": "2026-11-24T03:35:28Z",
    "verified": true,
    "notes": "Intro price for new services; forfeited if you change or cancel the plan. Optus modem $0 if you stay 24 months, else pay out the rest of $306; BYO modem at the same price."
   },
@@ -7303,7 +7303,7 @@
    "url": "https://www.optus.com.au/internet/nbn",
    "cis_url": null,
    "source": "optus",
-   "captured": "2026-11-24T03:11:10Z",
+   "captured": "2026-11-24T03:35:28Z",
    "verified": true,
    "notes": "Intro price for new services; forfeited if you change or cancel the plan. Optus modem $0 if you stay 24 months, else pay out the rest of $306; BYO modem at the same price."
   },
@@ -7340,7 +7340,7 @@
    "url": "https://www.optus.com.au/internet/nbn",
    "cis_url": null,
    "source": "optus",
-   "captured": "2026-11-24T03:11:10Z",
+   "captured": "2026-11-24T03:35:28Z",
    "verified": true,
    "notes": "Intro price for new services; forfeited if you change or cancel the plan. Optus modem $0 if you stay 24 months, else pay out the rest of $306; BYO modem at the same price."
   },
@@ -7376,7 +7376,7 @@
    "url": "https://www.optus.com.au/internet/nbn",
    "cis_url": null,
    "source": "optus",
-   "captured": "2026-11-24T03:11:10Z",
+   "captured": "2026-11-24T03:35:28Z",
    "verified": true,
    "notes": "Intro price for new services; forfeited if you change or cancel the plan. Optus modem $0 if you stay 24 months, else pay out the rest of $306; BYO modem at the same price."
   },
@@ -7409,7 +7409,7 @@
    "url": "https://www.optus.com.au/internet/5g-home-internet",
    "cis_url": null,
    "source": "optus",
-   "captured": "2026-11-24T03:11:10Z",
+   "captured": "2026-11-24T03:35:28Z",
    "verified": true,
    "notes": "Intro price for new services; forfeited if you change or cancel the plan. Optus modem $0 if you stay 36 months, else pay out the rest of $468. Includes a Netflix subscription."
   },
@@ -7445,7 +7445,7 @@
    "url": "https://www.optus.com.au/internet/nbn",
    "cis_url": null,
    "source": "optus",
-   "captured": "2026-11-24T03:11:10Z",
+   "captured": "2026-11-24T03:35:28Z",
    "verified": true,
    "notes": "Intro price for new services; forfeited if you change or cancel the plan. Optus modem $0 if you stay 24 months, else pay out the rest of $306; BYO modem at the same price."
   },
@@ -7888,7 +7888,7 @@
    "url": "https://www.spintel.net.au/home-internet/nbn",
    "cis_url": "https://www.spintel.net.au/static/critical_summary/NBN_CIS_v2.07.pdf",
    "source": "spintel",
-   "captured": "2026-11-24T03:11:12Z",
+   "captured": "2026-11-24T03:35:33Z",
    "verified": true,
    "notes": "Intro discount for new customers."
   },
@@ -7917,7 +7917,7 @@
    "url": "https://www.spintel.net.au/home-internet/wireless-internet",
    "cis_url": "https://www.spintel.net.au/storage/files/shares/CIS/Wireless%20Broadband_CIS_v1.39.pdf",
    "source": "spintel",
-   "captured": "2026-11-24T03:11:12Z",
+   "captured": "2026-11-24T03:35:33Z",
    "verified": true,
    "notes": "Needs Spintel's rental 5G modem (Optus - Ultra 5G GEN3): $10/month plus $25 postage, on top of the plan price (counted in the costs here). Speeds as published on the plan card (Spintel describes them as typical busy-period speeds)."
   },
@@ -7954,7 +7954,7 @@
    "url": "https://www.spintel.net.au/home-internet/nbn",
    "cis_url": "https://www.spintel.net.au/static/critical_summary/NBN_CIS_v2.07.pdf",
    "source": "spintel",
-   "captured": "2026-11-24T03:11:12Z",
+   "captured": "2026-11-24T03:35:33Z",
    "verified": true,
    "notes": "Intro discount for new customers."
   },
@@ -7990,7 +7990,7 @@
    "url": "https://www.spintel.net.au/home-internet/nbn",
    "cis_url": "https://www.spintel.net.au/static/critical_summary/NBN_CIS_v2.07.pdf",
    "source": "spintel",
-   "captured": "2026-11-24T03:11:12Z",
+   "captured": "2026-11-24T03:35:33Z",
    "verified": true,
    "notes": "Intro discount for new customers. Also offered with a free fibre upgrade to eligible FTTN/FTTC premises."
   },
@@ -8026,7 +8026,7 @@
    "url": "https://www.spintel.net.au/home-internet/nbn",
    "cis_url": "https://www.spintel.net.au/static/critical_summary/NBN_CIS_v2.07.pdf",
    "source": "spintel",
-   "captured": "2026-11-24T03:11:12Z",
+   "captured": "2026-11-24T03:35:33Z",
    "verified": true,
    "notes": "Intro discount for new customers. Also offered with a free fibre upgrade to eligible FTTN/FTTC premises."
   },
@@ -8062,7 +8062,7 @@
    "url": "https://www.spintel.net.au/home-internet/nbn",
    "cis_url": "https://www.spintel.net.au/static/critical_summary/NBN_CIS_v2.07.pdf",
    "source": "spintel",
-   "captured": "2026-11-24T03:11:12Z",
+   "captured": "2026-11-24T03:35:33Z",
    "verified": true,
    "notes": "Intro discount for new customers."
   },
@@ -8240,7 +8240,7 @@
    "url": "https://www.superloop.com/internet/nbn/",
    "cis_url": "https://files.superloop.com/cis/residential/nbn/2026-07/SL_CIS_Residential_nbn.pdf",
    "source": "superloop",
-   "captured": "2026-11-24T03:11:14Z",
+   "captured": "2026-11-24T03:35:36Z",
    "verified": true,
    "notes": "Intro discount for new customers only."
   },
@@ -8285,7 +8285,7 @@
    "url": "https://www.superloop.com/internet/nbn/",
    "cis_url": "https://files.superloop.com/cis/residential/nbn/2026-07/SL_CIS_Residential_nbn.pdf",
    "source": "superloop",
-   "captured": "2026-11-24T03:11:14Z",
+   "captured": "2026-11-24T03:35:36Z",
    "verified": true,
    "notes": "Intro discount for new customers only."
   },
@@ -8327,7 +8327,7 @@
    "url": "https://www.superloop.com/internet/nbn/",
    "cis_url": "https://files.superloop.com/cis/residential/nbn/2026-07/SL_CIS_Residential_nbn.pdf",
    "source": "superloop",
-   "captured": "2026-11-24T03:11:14Z",
+   "captured": "2026-11-24T03:35:36Z",
    "verified": true,
    "notes": "Intro discount for new customers only. Free modem if you stay connected for 24 months (payout fee if you leave earlier)."
   },
@@ -8364,7 +8364,7 @@
    "url": "https://www.superloop.com/internet/nbn/",
    "cis_url": "https://files.superloop.com/cis/residential/nbn/2026-07/SL_CIS_Residential_nbn.pdf",
    "source": "superloop",
-   "captured": "2026-11-24T03:11:14Z",
+   "captured": "2026-11-24T03:35:36Z",
    "verified": true,
    "notes": "Flat price. No promo. Sale ends 15 December."
   },
@@ -8407,7 +8407,7 @@
    "url": "https://www.superloop.com/internet/nbn/",
    "cis_url": "https://files.superloop.com/cis/residential/nbn/2026-07/SL_CIS_Residential_nbn.pdf",
    "source": "superloop",
-   "captured": "2026-11-24T03:11:14Z",
+   "captured": "2026-11-24T03:35:36Z",
    "verified": true,
    "notes": "Shown for FTTN/FTTC or HFC addresses; taken from the page's structured data. Intro discount for new customers only. Free modem if you stay connected for 24 months (payout fee if you leave earlier)."
   },
@@ -8449,7 +8449,7 @@
    "url": "https://www.superloop.com/internet/nbn/",
    "cis_url": "https://files.superloop.com/cis/residential/nbn/2026-07/SL_CIS_Residential_nbn.pdf",
    "source": "superloop",
-   "captured": "2026-11-24T03:11:14Z",
+   "captured": "2026-11-24T03:35:36Z",
    "verified": true,
    "notes": "Intro discount for new customers only. Free modem if you stay connected for 24 months (payout fee if you leave earlier)."
   },
@@ -8492,7 +8492,7 @@
    "url": "https://www.superloop.com/internet/nbn/",
    "cis_url": "https://files.superloop.com/cis/residential/nbn/2026-07/SL_CIS_Residential_nbn.pdf",
    "source": "superloop",
-   "captured": "2026-11-24T03:11:14Z",
+   "captured": "2026-11-24T03:35:36Z",
    "verified": true,
    "notes": "Shown for FTTN/FTTC or HFC addresses; taken from the page's structured data. Intro discount for new customers only. Free modem if you stay connected for 24 months (payout fee if you leave earlier)."
   },
@@ -8534,7 +8534,7 @@
    "url": "https://www.superloop.com/internet/nbn/",
    "cis_url": "https://files.superloop.com/cis/residential/nbn/2026-07/SL_CIS_Residential_nbn.pdf",
    "source": "superloop",
-   "captured": "2026-11-24T03:11:14Z",
+   "captured": "2026-11-24T03:35:36Z",
    "verified": true,
    "notes": "Intro discount for new customers only. Free modem if you stay connected for 24 months (payout fee if you leave earlier)."
   },
@@ -8575,7 +8575,7 @@
    "url": "https://www.superloop.com/internet/nbn/",
    "cis_url": "https://files.superloop.com/cis/residential/nbn/2026-07/SL_CIS_Residential_nbn.pdf",
    "source": "superloop",
-   "captured": "2026-11-24T03:11:14Z",
+   "captured": "2026-11-24T03:35:36Z",
    "verified": true,
    "notes": "Intro discount for new customers only."
   },
@@ -8616,7 +8616,7 @@
    "url": "https://www.superloop.com/internet/nbn/",
    "cis_url": "https://files.superloop.com/cis/residential/nbn/2026-07/SL_CIS_Residential_nbn.pdf",
    "source": "superloop",
-   "captured": "2026-11-24T03:11:14Z",
+   "captured": "2026-11-24T03:35:36Z",
    "verified": true,
    "notes": "Shown for FTTN/FTTC or HFC addresses; taken from the page's structured data. Intro discount for new customers only."
   },
@@ -8777,7 +8777,7 @@
    "url": "https://www.tangerine.com.au/nbn/nbn-broadband",
    "cis_url": "https://www.tangerine.com.au/unlimitednbncis",
    "source": "tangerine",
-   "captured": "2026-11-24T03:11:14Z",
+   "captured": "2026-11-24T03:35:41Z",
    "verified": true,
    "notes": "Discount for new customers only, on one nbn plan per account."
   },
@@ -8841,7 +8841,7 @@
    "url": "https://www.tangerine.com.au/nbn/nbn-broadband",
    "cis_url": "https://www.tangerine.com.au/unlimitednbncis",
    "source": "tangerine",
-   "captured": "2026-11-24T03:11:14Z",
+   "captured": "2026-11-24T03:35:41Z",
    "verified": true,
    "notes": "Discount for new customers only, on one nbn plan per account."
   },
@@ -8933,7 +8933,7 @@
    "url": "https://www.tangerine.com.au/nbn/nbn-broadband",
    "cis_url": "https://www.tangerine.com.au/unlimitednbncis",
    "source": "tangerine",
-   "captured": "2026-11-24T03:11:14Z",
+   "captured": "2026-11-24T03:35:41Z",
    "verified": true,
    "notes": "From 1 Dec, the RRP for this plan will become $98.90/mth for new customers and the honeymoon discount is ending for this plan. Discount for new customers only, on one nbn plan per account."
   },
@@ -8968,7 +8968,7 @@
    "url": "https://www.telstra.com.au/internet/plans",
    "cis_url": "https://www.telstra.com.au/help/critical-information-summaries/personal/home-internet/5g-internet-plan/5G-Internet-Plans",
    "source": "telstra",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:42Z",
    "verified": true,
    "notes": "Intro price for new services only; the discount may end early if you change plans. Modem included for use; return it or pay a $200 non-return fee if you leave within 24 months. 1000 GB a month, then slowed to 1.5 Mbps. Limited services per postcode."
   },
@@ -9003,7 +9003,7 @@
    "url": "https://www.telstra.com.au/internet/plans",
    "cis_url": "https://www.telstra.com.au/help/critical-information-summaries/personal/home-internet/5g-internet-plan/5G-Internet-Plans",
    "source": "telstra",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:42Z",
    "verified": true,
    "notes": "Intro price for new services only; the discount may end early if you change plans. Modem included for use; return it or pay a $200 non-return fee if you leave within 24 months. 1000 GB a month, then slowed to 1.5 Mbps. Limited services per postcode."
   },
@@ -9042,7 +9042,7 @@
    "url": "https://www.telstra.com.au/internet/plans",
    "cis_url": "https://www.telstra.com.au/help/critical-information-summaries/personal/home-internet/telstra-internet-only-plans/basic-internet-only",
    "source": "telstra",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:42Z",
    "verified": true,
    "notes": "Intro price for new services only; the discount may end early if you change plans. Internet only (no phone line); bring your own modem or buy Telstra's."
   },
@@ -9077,7 +9077,7 @@
    "url": "https://www.telstra.com.au/internet/plans",
    "cis_url": "https://www.telstra.com.au/help/critical-information-summaries/personal/home-internet/telstra-internet-only-plans/basic-internet-only",
    "source": "telstra",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:42Z",
    "verified": true,
    "notes": "Intro price for new services only; the discount may end early if you change plans. Internet only (no phone line); bring your own modem or buy Telstra's."
   },
@@ -9112,7 +9112,7 @@
    "url": "https://www.telstra.com.au/internet/plans",
    "cis_url": "https://www.telstra.com.au/help/critical-information-summaries/personal/home-internet/5g-internet-plan/5G-Internet-Plans",
    "source": "telstra",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:42Z",
    "verified": true,
    "notes": "Intro price for new services only; the discount may end early if you change plans. Modem included for use; return it or pay a $200 non-return fee if you leave within 24 months. 1000 GB a month, then slowed to 1.5 Mbps. Limited services per postcode."
   },
@@ -9149,7 +9149,7 @@
    "url": "https://www.telstra.com.au/internet/plans",
    "cis_url": "https://www.telstra.com.au/help/critical-information-summaries/personal/home-internet/telstra-upfront-internet-plans/telstra-upfront-internet-plans",
    "source": "telstra",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:42Z",
    "verified": true,
    "notes": "Intro price for new services only; the discount may end early if you change plans. Modem included for use; return it or pay a $200 non-return fee if you leave within 24 months."
   },
@@ -9190,7 +9190,7 @@
    "url": "https://www.telstra.com.au/internet/plans",
    "cis_url": "https://www.telstra.com.au/help/critical-information-summaries/personal/home-internet/telstra-upfront-internet-plans/telstra-upfront-internet-plans",
    "source": "telstra",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:42Z",
    "verified": true,
    "notes": "Intro price for new services only; the discount may end early if you change plans. Modem included for use; return it or pay a $200 non-return fee if you leave within 24 months."
   },
@@ -9229,7 +9229,7 @@
    "url": "https://www.telstra.com.au/internet/plans",
    "cis_url": "https://www.telstra.com.au/help/critical-information-summaries/personal/home-internet/telstra-internet-only-plans/essential-internet-only",
    "source": "telstra",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:42Z",
    "verified": true,
    "notes": "Intro price for new services only; the discount may end early if you change plans. Internet only (no phone line); bring your own modem or buy Telstra's."
   },
@@ -9264,7 +9264,7 @@
    "url": "https://www.telstra.com.au/internet/plans",
    "cis_url": "https://www.telstra.com.au/help/critical-information-summaries/personal/home-internet/telstra-internet-only-plans/essential-internet-only",
    "source": "telstra",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:42Z",
    "verified": true,
    "notes": "Intro price for new services only; the discount may end early if you change plans. Internet only (no phone line); bring your own modem or buy Telstra's."
   },
@@ -9301,7 +9301,7 @@
    "url": "https://www.telstra.com.au/internet/plans",
    "cis_url": "https://www.telstra.com.au/help/critical-information-summaries/personal/home-internet/telstra-internet-only-plans/premium-internet-only",
    "source": "telstra",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:42Z",
    "verified": true,
    "notes": "Intro price for new services only; the discount may end early if you change plans. Internet only (no phone line); bring your own modem or buy Telstra's. Sold on FTTC, FTTN, FTTB only."
   },
@@ -9336,7 +9336,7 @@
    "url": "https://www.telstra.com.au/internet/plans",
    "cis_url": "https://www.telstra.com.au/help/critical-information-summaries/personal/home-internet/telstra-internet-only-plans/premium-internet-only",
    "source": "telstra",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:42Z",
    "verified": true,
    "notes": "Intro price for new services only; the discount may end early if you change plans. Internet only (no phone line); bring your own modem or buy Telstra's."
   },
@@ -9372,7 +9372,7 @@
    "url": "https://www.telstra.com.au/internet/plans",
    "cis_url": "https://www.telstra.com.au/help/critical-information-summaries/personal/home-internet/telstra-internet-only-plans/premium-internet-only",
    "source": "telstra",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:42Z",
    "verified": true,
    "notes": "Intro price for new services only; the discount may end early if you change plans. Internet only (no phone line); bring your own modem or buy Telstra's."
   },
@@ -9413,7 +9413,7 @@
    "url": "https://www.telstra.com.au/internet/plans",
    "cis_url": "https://www.telstra.com.au/help/critical-information-summaries/personal/home-internet/telstra-upfront-internet-plans/telstra-upfront-internet-plans",
    "source": "telstra",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:42Z",
    "verified": true,
    "notes": "Intro price for new services only; the discount may end early if you change plans. Modem included for use; return it or pay a $200 non-return fee if you leave within 24 months."
   },
@@ -9450,7 +9450,7 @@
    "url": "https://www.telstra.com.au/internet/plans",
    "cis_url": "https://www.telstra.com.au/help/critical-information-summaries/personal/home-internet/telstra-upfront-internet-plans/telstra-upfront-internet-plans",
    "source": "telstra",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:42Z",
    "verified": true,
    "notes": "Intro price for new services only; the discount may end early if you change plans. Modem included for use; return it or pay a $200 non-return fee if you leave within 24 months."
   },
@@ -9489,7 +9489,7 @@
    "url": "https://www.telstra.com.au/internet/plans",
    "cis_url": "https://www.telstra.com.au/help/critical-information-summaries/personal/home-internet/telstra-upfront-internet-plans/telstra-upfront-internet-plans",
    "source": "telstra",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:42Z",
    "verified": true,
    "notes": "Intro price for new services only; the discount may end early if you change plans. Modem included for use; return it or pay a $200 non-return fee if you leave within 24 months. Sold on FTTC, FTTN, FTTB only."
   },
@@ -9526,7 +9526,7 @@
    "url": "https://www.telstra.com.au/internet/plans",
    "cis_url": "https://www.telstra.com.au/help/critical-information-summaries/personal/home-internet/telstra-upfront-internet-plans/telstra-upfront-internet-plans",
    "source": "telstra",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:42Z",
    "verified": true,
    "notes": "Intro price for new services only; the discount may end early if you change plans. Modem included for use; return it or pay a $200 non-return fee if you leave within 24 months."
   },
@@ -9564,7 +9564,7 @@
    "url": "https://www.telstra.com.au/internet/plans",
    "cis_url": "https://www.telstra.com.au/help/critical-information-summaries/personal/home-internet/telstra-upfront-internet-plans/telstra-upfront-internet-plans",
    "source": "telstra",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:42Z",
    "verified": true,
    "notes": "Intro price for new services only; the discount may end early if you change plans. Modem included for use; return it or pay a $200 non-return fee if you leave within 24 months."
   },
@@ -9599,7 +9599,7 @@
    "url": "https://www.telstra.com.au/internet/plans",
    "cis_url": "https://www.telstra.com.au/help/critical-information-summaries/personal/home-internet/telstra-internet-only-plans/ultimate-internet-only",
    "source": "telstra",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:42Z",
    "verified": true,
    "notes": "Intro price for new services only; the discount may end early if you change plans. Internet only (no phone line); bring your own modem or buy Telstra's."
   },
@@ -9635,7 +9635,7 @@
    "url": "https://www.telstra.com.au/internet/plans",
    "cis_url": "https://www.telstra.com.au/help/critical-information-summaries/personal/home-internet/telstra-internet-only-plans/ultimate-internet-only",
    "source": "telstra",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:42Z",
    "verified": true,
    "notes": "Intro price for new services only; the discount may end early if you change plans. Internet only (no phone line); bring your own modem or buy Telstra's."
   },
@@ -9672,7 +9672,7 @@
    "url": "https://www.telstra.com.au/internet/plans",
    "cis_url": "https://www.telstra.com.au/help/critical-information-summaries/personal/home-internet/telstra-upfront-internet-plans/telstra-upfront-ultimate-plan",
    "source": "telstra",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:42Z",
    "verified": true,
    "notes": "Intro price for new services only; the discount may end early if you change plans. Modem included for use; return it or pay a $200 non-return fee if you leave within 24 months."
   },
@@ -9710,7 +9710,7 @@
    "url": "https://www.telstra.com.au/internet/plans",
    "cis_url": "https://www.telstra.com.au/help/critical-information-summaries/personal/home-internet/telstra-upfront-internet-plans/telstra-upfront-ultimate-plan",
    "source": "telstra",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:42Z",
    "verified": true,
    "notes": "Intro price for new services only; the discount may end early if you change plans. Modem included for use; return it or pay a $200 non-return fee if you leave within 24 months."
   },
@@ -9746,7 +9746,7 @@
    "url": "https://www.telstra.com.au/internet/plans",
    "cis_url": "https://www.telstra.com.au/help/critical-information-summaries/personal/home-internet/telstra-internet-only-plans/ultrafast-internet-only",
    "source": "telstra",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:42Z",
    "verified": true,
    "notes": "Intro price for new services only; the discount may end early if you change plans. Internet only (no phone line); bring your own modem or buy Telstra's."
   },
@@ -9784,7 +9784,7 @@
    "url": "https://www.telstra.com.au/internet/plans",
    "cis_url": "https://www.telstra.com.au/help/critical-information-summaries/personal/home-internet/telstra-upfront-internet-plans/upfront-ultrafast-plan",
    "source": "telstra",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:42Z",
    "verified": true,
    "notes": "Intro price for new services only; the discount may end early if you change plans. Modem included for use; return it or pay a $200 non-return fee if you leave within 24 months."
   },
@@ -9823,7 +9823,7 @@
    "url": "https://www.tpg.com.au/fttb",
    "cis_url": "https://www.tpg.com.au/terms_conditions/CIS",
    "source": "tpg",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:45Z",
    "verified": true,
    "notes": "TPG Fibre (TPG's own FTTB network): only in buildings TPG's network serves. 24-month discount for new customers at newly connected premises only. $0 refurbished modem provided; return it if you cancel."
   },
@@ -9862,7 +9862,7 @@
    "url": "https://www.tpg.com.au/5g-home-broadband",
    "cis_url": "https://www.tpg.com.au/terms_conditions/CIS",
    "source": "tpg",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:45Z",
    "verified": true,
    "notes": "Promo for new connections only. TPG 5G modem required; $0 if you stay 36 months or return it (else $300)."
   },
@@ -9901,7 +9901,7 @@
    "url": "https://www.tpg.com.au/5g-home-broadband",
    "cis_url": "https://www.tpg.com.au/terms_conditions/CIS",
    "source": "tpg",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:45Z",
    "verified": true,
    "notes": "Promo for new connections only. TPG 5G modem required; $0 if you stay 36 months or return it (else $300)."
   },
@@ -9940,7 +9940,7 @@
    "url": "https://www.tpg.com.au/fttb",
    "cis_url": "https://www.tpg.com.au/terms_conditions/CIS",
    "source": "tpg",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:45Z",
    "verified": true,
    "notes": "TPG Fibre (TPG's own FTTB network): only in buildings TPG's network serves. 24-month discount for new customers at newly connected premises only. $0 refurbished modem provided; return it if you cancel."
   },
@@ -9981,7 +9981,7 @@
    "url": "https://www.tpg.com.au/nbn",
    "cis_url": "https://www.tpg.com.au/terms_conditions/CIS",
    "source": "tpg",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:45Z",
    "verified": true,
    "notes": "Promo for new connections only; forfeited if you change or cancel in the first 6 months. TPG modem $0 if you stay 24 months or return it (else $200); $10 modem delivery; BYO modem allowed with no delivery fee."
   },
@@ -10026,7 +10026,7 @@
    "url": "https://www.tpg.com.au/nbn",
    "cis_url": "https://www.tpg.com.au/terms_conditions/CIS",
    "source": "tpg",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:45Z",
    "verified": true,
    "notes": "Promo for new connections only; forfeited if you change or cancel in the first 6 months. TPG modem $0 if you stay 24 months or return it (else $200); $10 modem delivery; BYO modem allowed with no delivery fee."
   },
@@ -10065,7 +10065,7 @@
    "url": "https://www.tpg.com.au/fttb",
    "cis_url": "https://www.tpg.com.au/terms_conditions/CIS",
    "source": "tpg",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:45Z",
    "verified": true,
    "notes": "TPG Fibre (TPG's own FTTB network): only in buildings TPG's network serves. 24-month discount for new customers at newly connected premises only. Only at G.fast-enabled buildings. $0 refurbished modem provided; return it if you cancel."
   },
@@ -10110,7 +10110,7 @@
    "url": "https://www.tpg.com.au/nbn",
    "cis_url": "https://www.tpg.com.au/terms_conditions/CIS",
    "source": "tpg",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:45Z",
    "verified": true,
    "notes": "Promo for new connections only; forfeited if you change or cancel in the first 6 months. TPG modem $0 if you stay 24 months or return it (else $200); $10 modem delivery; BYO modem allowed with no delivery fee."
   },
@@ -10153,7 +10153,7 @@
    "url": "https://www.tpg.com.au/nbn",
    "cis_url": "https://www.tpg.com.au/terms_conditions/CIS",
    "source": "tpg",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:45Z",
    "verified": true,
    "notes": "Promo for new connections only; forfeited if you change or cancel in the first 6 months. TPG modem $0 if you stay 24 months or return it (else $200); $10 modem delivery; BYO modem allowed with no delivery fee."
   },
@@ -10195,7 +10195,7 @@
    "url": "https://www.tpg.com.au/nbn",
    "cis_url": "https://www.tpg.com.au/terms_conditions/CIS",
    "source": "tpg",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:45Z",
    "verified": true,
    "notes": "Promo for new connections only; forfeited if you change or cancel in the first 6 months. TPG modem $0 if you stay 24 months or return it (else $200); $10 modem delivery; BYO modem allowed with no delivery fee."
   },
@@ -10237,7 +10237,7 @@
    "url": "https://www.tpg.com.au/nbn",
    "cis_url": "https://www.tpg.com.au/terms_conditions/CIS",
    "source": "tpg",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:45Z",
    "verified": true,
    "notes": "Promo for new connections only; forfeited if you change or cancel in the first 6 months. TPG modem $0 if you stay 24 months or return it (else $200); $10 modem delivery; BYO modem allowed with no delivery fee."
   },
@@ -10279,7 +10279,7 @@
    "url": "https://www.tpg.com.au/nbn",
    "cis_url": "https://www.tpg.com.au/terms_conditions/CIS",
    "source": "tpg",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:45Z",
    "verified": true,
    "notes": "Promo for new connections only; forfeited if you change or cancel in the first 6 months. TPG modem $0 if you stay 24 months or return it (else $200); $10 modem delivery; BYO modem allowed with no delivery fee."
   },
@@ -10653,7 +10653,7 @@
    "url": "https://www.vodafone.com.au/home-internet/4g-5g-plans",
    "cis_url": "https://www.vodafone.com.au/cis/home-internet-plans/vodafone-home-wireless-month-to-month-plans/au13059-au13060-au13061.pdf",
    "source": "vodafone",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:45Z",
    "verified": true,
    "notes": "Promo for new connections (select areas); forfeited if you cancel early. Vodafone modem $0 if you stay 36 months, else the rest of $396; modem required."
   },
@@ -10693,7 +10693,7 @@
    "url": "https://www.vodafone.com.au/home-internet/4g-5g-plans",
    "cis_url": "https://www.vodafone.com.au/cis/home-internet-plans/vodafone-home-wireless-month-to-month-plans/au13059-au13060-au13061.pdf",
    "source": "vodafone",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:45Z",
    "verified": true,
    "notes": "Promo for new connections (select areas); forfeited if you cancel early. Vodafone modem $0 if you stay 36 months, else the rest of $396; modem required."
   },
@@ -10733,7 +10733,7 @@
    "url": "https://www.vodafone.com.au/home-internet/4g-5g-plans",
    "cis_url": "https://www.vodafone.com.au/cis/home-internet-plans/vodafone-home-wireless-month-to-month-plans/au13059-au13060-au13061.pdf",
    "source": "vodafone",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:45Z",
    "verified": true,
    "notes": "Promo for new connections (select areas); forfeited if you cancel early. Vodafone modem $0 if you stay 36 months, else the rest of $396; modem required."
   },
@@ -10774,7 +10774,7 @@
    "url": "https://www.vodafone.com.au/home-internet/nbn",
    "cis_url": "https://www.vodafone.com.au/cis/nbn-plans/month-to-month-plans/aug2026.pdf",
    "source": "vodafone",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:45Z",
    "verified": true,
    "notes": "Vodafone modem $0 if you stay 24 months, else the rest of $336; BYO modem allowed."
   },
@@ -10815,7 +10815,7 @@
    "url": "https://www.vodafone.com.au/home-internet/nbn",
    "cis_url": "https://www.vodafone.com.au/cis/nbn-plans/month-to-month-plans/aug2026.pdf",
    "source": "vodafone",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:45Z",
    "verified": true,
    "notes": "Vodafone modem $0 if you stay 24 months, else the rest of $336; BYO modem allowed."
   },
@@ -10859,7 +10859,7 @@
    "url": "https://www.vodafone.com.au/home-internet/nbn",
    "cis_url": "https://www.vodafone.com.au/cis/nbn-plans/month-to-month-plans/aug2026.pdf",
    "source": "vodafone",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:45Z",
    "verified": true,
    "notes": "Promo for new connections (select areas); forfeited if you cancel early. Vodafone modem $0 if you stay 24 months, else the rest of $336; BYO modem allowed."
   },
@@ -10902,7 +10902,7 @@
    "url": "https://www.vodafone.com.au/home-internet/nbn",
    "cis_url": "https://www.vodafone.com.au/cis/nbn-plans/month-to-month-plans/aug2026.pdf",
    "source": "vodafone",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:45Z",
    "verified": true,
    "notes": "Promo for new connections (select areas); forfeited if you cancel early. Vodafone modem $0 if you stay 24 months, else the rest of $336; BYO modem allowed."
   },
@@ -10945,7 +10945,7 @@
    "url": "https://www.vodafone.com.au/home-internet/nbn",
    "cis_url": "https://www.vodafone.com.au/cis/nbn-plans/month-to-month-plans/aug2026.pdf",
    "source": "vodafone",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:45Z",
    "verified": true,
    "notes": "Promo for new connections (select areas); forfeited if you cancel early. Vodafone modem $0 if you stay 24 months, else the rest of $336; BYO modem allowed."
   },
@@ -10988,7 +10988,7 @@
    "url": "https://www.vodafone.com.au/home-internet/nbn",
    "cis_url": "https://www.vodafone.com.au/cis/nbn-plans/month-to-month-plans/aug2026.pdf",
    "source": "vodafone",
-   "captured": "2026-11-24T03:11:15Z",
+   "captured": "2026-11-24T03:35:45Z",
    "verified": true,
    "notes": "Promo for new connections (select areas); forfeited if you cancel early. Vodafone modem $0 if you stay 24 months, else the rest of $336; BYO modem allowed."
   },
@@ -11596,7 +11596,7 @@
    "contract": 0,
    "url": "https://www.amaysim.com.au/mobile/cart/7-day-10gb",
    "source": "amaysim",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": null
   },
@@ -11617,7 +11617,7 @@
    "contract": 0,
    "url": "https://www.amaysim.com.au/sim-plans/data-plans/data-30gb",
    "source": "amaysim",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": "Current offer (coupon needed): Ongoing is $25 for 30GB/28 days. Ends 2026-11-25. New online services only. T&Cs and Fair Go Policy apply."
   },
@@ -11638,7 +11638,7 @@
    "contract": 0,
    "url": "https://www.amaysim.com.au/sim-plans/28-day-sim-plans/unlimited-15gb",
    "source": "amaysim",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": "Current offer (coupon needed): Ongoing is $30 for 15GB/28 days. Ends 2026-12-11. New online services only. T&Cs and Fair Go Policy apply."
   },
@@ -11659,7 +11659,7 @@
    "contract": 0,
    "url": "https://www.amaysim.com.au/sim-plans/28-day-sim-plans/unlimited-42gb",
    "source": "amaysim",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": null
   },
@@ -11680,7 +11680,7 @@
    "contract": 0,
    "url": "https://www.amaysim.com.au/sim-plans/28-day-sim-plans/unlimited-80gb",
    "source": "amaysim",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": "Current offer (coupon needed): Ongoing is $40 for 80GB/28 days. Ends 2027-01-22. Activate by 10/02/2027. New online services only. T&Cs and Fair Go Policy apply."
   },
@@ -11701,7 +11701,7 @@
    "contract": 0,
    "url": "https://www.amaysim.com.au/sim-plans/28-day-sim-plans/unlimited-95gb",
    "source": "amaysim",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": "Current offer (coupon needed): Ongoing is $45 for 95GB/28 days. Ends 2027-01-06. Activate by 30/01/2027. New online services only. T&Cs and Fair Go Policy apply."
   },
@@ -11722,7 +11722,7 @@
    "contract": 0,
    "url": "https://www.amaysim.com.au/sim-plans/data-plans/data-100gb",
    "source": "amaysim",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": "Current offer (coupon needed): Ongoing is $50 for 100GB/28 days. Ends 2027-01-05. New online services only. T&Cs and Fair Go Policy apply."
   },
@@ -11743,7 +11743,7 @@
    "contract": 0,
    "url": "https://www.amaysim.com.au/sim-plans/28-day-sim-plans/unlimited-120gb",
    "source": "amaysim",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": null
   },
@@ -11764,7 +11764,7 @@
    "contract": 0,
    "url": "https://www.amaysim.com.au/mobile/cart/long-expiry-150gb",
    "source": "amaysim",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": "Current offer (coupon needed): Ongoing is $150 for 150GB/184 days. Ends 2026-12-10. New online services only. T&Cs and Fair Go Policy apply."
   },
@@ -11785,7 +11785,7 @@
    "contract": 0,
    "url": "https://www.amaysim.com.au/mobile/cart/long-expiry-200gb",
    "source": "amaysim",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": "Current offer (coupon needed): Ongoing is $270 for 200GB/365 days. Ends 2026-11-30. New online services only. T&Cs and Fair Go Policy apply."
   },
@@ -11806,7 +11806,7 @@
    "contract": 0,
    "url": "https://www.amaysim.com.au/mobile/cart/long-expiry-240gb",
    "source": "amaysim",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": null
   },
@@ -11827,7 +11827,7 @@
    "contract": 0,
    "url": "https://www.amaysim.com.au/sim-plans/data-plans/data-365gb",
    "source": "amaysim",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": "Current offer (coupon needed): Ongoing is $350 for 365GB/365 days. Ends 2026-12-16. New online services only. T&Cs and Fair Go Policy apply."
   },
@@ -11848,7 +11848,7 @@
    "contract": 0,
    "url": "https://www.amaysim.com.au/mobile/cart/long-expiry-350gb",
    "source": "amaysim",
-   "captured": "2026-11-24T03:10:52Z",
+   "captured": "2026-11-24T03:34:53Z",
    "verified": true,
    "notes": "Current offer (coupon needed): Ongoing is $350 for 350GB/365 days. Ends 2026-11-30. New online services only. T&Cs and Fair Go Policy apply."
   },
