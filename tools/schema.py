@@ -41,8 +41,16 @@ Mobile plan:
   calls         str    unlimited | limited | none | unknown
   five_g        bool?
   intl          [str]? ISO country codes with included international calls
-  promo         {price, periods, until, text}?  intro price for the first `periods` recharges
+  promo         {price, periods, until, text, requires?}?  intro price for the first `periods`
+                recharges; requires = "internet" | "energy" when only bundled customers get it
   contract      int    months
+  rollover      bool?  unused data carries over (or banks) to later periods
+  bundle        [{with, off, text, during_promo?}]  $ per period off this SIM when you also take
+                the provider's "internet" or "energy"
+  credit        float? one-off sign-up credit
+  cis_url       str?
+  requires      str?   "internet" | "energy" when the plan is only sold with that service
+Account-level discounts (extra lines, family plans) live in overrides/bundles.toml, not here.
 """
 
 KINDS = {"nbn", "fixed_wireless", "satellite", "5g", "starlink", "private"}
@@ -132,6 +140,18 @@ def check_mobile(r):
         errs.append(f"bad calls {r.get('calls')}")
     if not isinstance(r.get("data_only"), bool):
         errs.append("data_only must be bool")
+    if r.get("requires") not in (None, "internet", "energy"):
+        errs.append(f"bad requires {r.get('requires')}")
+    if r.get("rollover") not in (None, True, False):
+        errs.append(f"bad rollover {r.get('rollover')}")
+    if not _num(r.get("credit"), nullable=True) or (r.get("credit") or 0) < 0:
+        errs.append(f"bad credit {r.get('credit')}")
+    for b in r.get("bundle") or []:
+        if b.get("with") not in ("internet", "energy") or not _num(b.get("off")):
+            errs.append(f"bad bundle {b}")
+    intl = r.get("intl")
+    if intl is not None and not (isinstance(intl, list) and all(isinstance(c, str) and len(c) == 2 and c.isupper() for c in intl)):
+        errs.append(f"intl must be a list of ISO 3166 alpha-2 codes, got {intl}")
     p = r.get("promo")
     if p is not None:
         if not (_num(p.get("price")) and isinstance(p.get("periods"), int) and p["periods"] >= 1):

@@ -4,18 +4,24 @@ A static website that ranks Australian home internet (NBN, 5G home, Starlink) an
 against a household's needs at their true cost over time. Companion to Melbourne Energy
 Compare. See [PLAN.md](PLAN.md) for the research, design and build phases.
 
-**Status:** phase 2 (home internet comparison) built. Mobile, bundles and phones are phases 3–4.
+**Status:** phases 1–3 built: home internet, mobile lines, and the whole household with bundle
+discounts. Phones on plans are phase 4.
 
 ## Layout
 
 - `site/`: everything GitHub Pages serves.
-  - `index.html`, `css/style.css`, `js/app.js`: the comparison page. The household settings
-    autosave in the browser (`localStorage` key `atc-state-v1`) and can be saved to or loaded
-    from a file. The stylesheet started as a copy of Melbourne Energy Compare's.
+  - `index.html`, `css/style.css`, `js/app.js`: the comparison page, with three tabs (Home
+    internet, Mobile, Household). The household settings autosave in the browser
+    (`localStorage` key `atc-state-v1`) and can be saved to or loaded from a file. On
+    plasky.github.io the page also reads Melbourne Energy Compare's saved plan
+    (`mec-state-v1`) to know the energy retailer. The stylesheet started as a copy of
+    Melbourne Energy Compare's.
   - `js/engine.js`: cost engine (browser + Node). Covers needed speed, technology and
     availability checks (5G networks, Starlink, private networks), hardware cost, internet cost
-    with promos/setup/modem/bundles, promo-chasing, the best-value frontier, and mobile cost per
-    line.
+    with promos/setup/modem/bundles, promo-chasing, the best-value frontier, mobile cost per
+    line, account-level discounts, and `household()`, which finds the cheapest way to buy
+    internet plus every line (it tries every split of the lines between each provider and the
+    cheapest plans elsewhere).
   - `data/plans.js`: generated data (`window.TELCO_DATA`); `plans.json` is the same data for
     diffs and fallback; `report.json` is the last build report.
 - `sources/`: one adapter per data source, each writing `data-raw/normalised/<source>.json`.
@@ -29,16 +35,24 @@ Compare. See [PLAN.md](PLAN.md) for the research, design and build phases.
     wireless, TPG's own FTTB network), `vodafone.py` (NBN, 5G), `aussie_broadband.py`,
     `superloop.py`, `exetel.py`, `spintel.py` (NBN, 5G), `dodo.py`, `iprimus.py`, `mate.py`,
     `more.py`, `flip.py`, `tangerine.py` (only the plans shown before an address check).
+  - Mobile (SIM-only) adapters, `<provider>_mobile.py`: Telstra, Boost, Optus, TPG and iiNet
+    (`tpg_mobile.py`), Felix, Aussie Broadband, Superloop, Spintel, Mate, Tangerine, More,
+    Exetel, ALDI, Lebara, Moose and Coles. They emit only mobile records, so a broken mobile
+    page never takes a provider's internet plans with it.
 - Entered by hand in `overrides/plans.toml` (sites that need JavaScript or refuse automated
-  clients): Starlink, Belong, iiNet, Internode, AGL and Tangerine's copper-only plans. Each
+  clients): Starlink, Belong, iiNet, Internode, AGL and Tangerine's copper-only plans, and
+  Lycamobile's SIM plans. Circles.Life is excluded (it has left Australia). Each
   entry has an expiry date; re-check those plans when the build report flags them.
 - Not covered yet, so still on Bill Hero's data (marked "not yet checked" on the site): Origin
-  (refuses our client), Leaptel (Cloudflare challenge), Kogan Internet (DataDome challenge),
-  Launtel (prices only after an address check) and the long tail.
+  (refuses our client), Leaptel (Cloudflare challenge), Kogan Internet and Kogan Mobile
+  (DataDome challenge), Launtel (prices only after an address check), Belong mobile, Vodafone
+  mobile (site was down for maintenance when probed), Everyday Mobile/Woolworths (robots.txt
+  asks for visits between 04:00 and 08:45 UTC only, outside the nightly run) and the long tail.
 - `overrides/plans.toml`: manual excludes, patches and added plans, each with a reason, a
   source URL and (for patches and additions) an expiry date.
-- `overrides/bundles.toml`: provider bundle discounts (phase 3). The current entries are
-  candidates still to be checked.
+- `overrides/bundles.toml`: account-level bundle rules the per-plan records can't express
+  (Superloop's tiered internet discount, Tangerine's 10% off mobile with its nbn), plus notes
+  on which discounts live in the adapters' records and which aren't modelled yet.
 - `providers.toml`: provider ids, display names, own-network and host-network hints.
 - `tools/`
   - `refresh.py`: runs every adapter (each in its own process), then the build and tests.

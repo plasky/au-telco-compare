@@ -851,3 +851,219 @@ verified = true
 reason = "Tangerine shows these copper-only plans only after an address check (POST); facts from its CIS dated 8 Sep 2026"
 source_url = "https://www.tangerine.com.au/unlimitednbncis"
 expires = "2027-01-31"
+
+# ---- Circles.Life has left Australia: www.circles.life/au/ redirects to its Singapore site
+# (checked 25 Nov 2026). Bill Hero still lists its plans.
+[[exclude_provider]]
+provider = "circles-life"
+kind = "mobile"
+reason = "Circles.Life no longer sells in Australia; /au/ redirects to /sg/"
+source = "https://www.circles.life/au/"
+
+# ---- Lycamobile (Vodafone network). The plan list shows only the price charged now; ongoing
+# prices are on each plan's page, so an adapter would need ~8 requests a run. Facts from Lyca's
+# consolidated CIS (valid from 12 Nov 2026) and its plan pages, read 25 Nov 2026. Offers run
+# 12 Nov - 31 Dec 2026 for new online purchases.
+
+[[mobile]]
+id = "lycamobile-xs"
+provider = "lycamobile"
+name = "LycaPlan XS"
+network = "vodafone"
+type = "prepaid"
+period_days = 28
+price = 25.0
+promo = { price = 12.5, periods = 1, until = "2026-12-31", text = "Half price for the first 28 days, new online purchases" }
+data_gb = 30.0
+data_only = false
+calls = "unlimited"
+five_g = false
+intl = ["BR", "CA", "CN", "CO", "HK", "IN", "MY", "MX", "NZ", "SG", "GB", "US", "UA"]
+contract = 0
+rollover = true
+bundle = []
+url = "https://www.lycamobile.com.au/en/bundle/lyca-plan-xs-new/"
+cis_url = "https://cms-assets.ldsvcplatform.com/AU/s3fs-public/2026-11/LycaMobile_All_Plans_CIS_Consolidated_12_Nov_2026_FINAL%201.pdf"
+notes = "Data rolls over up to 500GB; speeds capped at 100 Mbps. 4 to 5 services per customer."
+captured = "2026-11-25T00:00:00Z"
+verified = true
+reason = "Ongoing prices are only on each plan page (about 8 requests a run)"
+source_url = "https://cms-assets.ldsvcplatform.com/AU/s3fs-public/2026-11/LycaMobile_All_Plans_CIS_Consolidated_12_Nov_2026_FINAL%201.pdf"
+expires = "2027-01-31"
+
+[[mobile]]
+id = "lycamobile-s"
+provider = "lycamobile"
+name = "LycaPlan S"
+network = "vodafone"
+type = "prepaid"
+period_days = 28
+price = 30.0
+promo = { price = 15.0, periods = 6, until = "2026-12-31", text = "$15 for the first 6 renewals, new online purchases" }
+data_gb = 50.0
+data_only = false
+calls = "unlimited"
+five_g = true
+intl = ["AR", "BR", "CA", "CL", "CN", "CO", "FR", "DE", "GU", "HK", "HU", "IN", "ID", "JP", "KR", "MY", "MT", "MX", "NZ", "PE", "PR", "RO", "SG", "SE", "TW", "TH", "GB", "US", "VE", "PH", "IS", "IE", "SI", "NO", "FI"]
+contract = 0
+rollover = true
+bundle = []
+url = "https://www.lycamobile.com.au/en/bundle/unlimited-plan-s/"
+cis_url = "https://cms-assets.ldsvcplatform.com/AU/s3fs-public/2026-11/LycaMobile_All_Plans_CIS_Consolidated_12_Nov_2026_FINAL%201.pdf"
+notes = "Data rolls over up to 500GB; speeds capped at 100 Mbps. 4 to 5 services per customer."
+captured = "2026-11-25T00:00:00Z"
+verified = true
+reason = "Ongoing prices are only on each plan page (about 8 requests a run)"
+source_url = "https://cms-assets.ldsvcplatform.com/AU/s3fs-public/2026-11/LycaMobile_All_Plans_CIS_Consolidated_12_Nov_2026_FINAL%201.pdf"
+expires = "2027-01-31"
+
+[[mobile]]
+id = "lycamobile-sm"
+provider = "lycamobile"
+name = "LycaPlan SM"
+network = "vodafone"
+type = "prepaid"
+period_days = 28
+price = 35.0
+data_gb = 60.0
+data_only = false
+calls = "unlimited"
+five_g = true
+intl = ["AR", "BR", "CA", "CL", "CN", "CO", "FR", "DE", "GU", "HK", "HU", "IN", "ID", "JP", "KR", "MY", "MT", "MX", "NZ", "PE", "PR", "RO", "SG", "SE", "TW", "TH", "GB", "US", "VE", "PH", "IS", "IE", "SI", "NO", "FI"]
+contract = 0
+rollover = true
+bundle = []
+url = "https://www.lycamobile.com.au/en/bundle/lycaplan-sm/"
+cis_url = "https://cms-assets.ldsvcplatform.com/AU/s3fs-public/2026-11/LycaMobile_All_Plans_CIS_Consolidated_12_Nov_2026_FINAL%201.pdf"
+notes = "100GB for the first 6 renewals. Data rolls over up to 500GB; speeds capped at 100 Mbps. 4 to 5 services per customer."
+captured = "2026-11-25T00:00:00Z"
+verified = true
+reason = "Ongoing prices are only on each plan page (about 8 requests a run)"
+source_url = "https://cms-assets.ldsvcplatform.com/AU/s3fs-public/2026-11/LycaMobile_All_Plans_CIS_Consolidated_12_Nov_2026_FINAL%201.pdf"
+expires = "2027-01-31"
+
+[[mobile]]
+id = "lycamobile-m"
+provider = "lycamobile"
+name = "LycaPlan M"
+network = "vodafone"
+type = "prepaid"
+period_days = 28
+price = 40.0
+promo = { price = 13.0, periods = 1, until = "2026-12-31", text = "$13 for the first 28 days, new online purchases" }
+data_gb = 80.0
+data_only = false
+calls = "unlimited"
+five_g = true
+intl = ["AR", "BR", "CA", "CL", "CN", "CO", "FR", "DE", "GU", "HK", "HU", "IN", "ID", "JP", "KR", "MY", "MT", "MX", "NZ", "PE", "PR", "RO", "SG", "SE", "TW", "TH", "GB", "US", "VE", "PH", "IS", "IE", "SI", "NO", "FI"]
+contract = 0
+rollover = true
+bundle = []
+url = "https://www.lycamobile.com.au/en/bundle/lyca-plan-m-new/"
+cis_url = "https://cms-assets.ldsvcplatform.com/AU/s3fs-public/2026-11/LycaMobile_All_Plans_CIS_Consolidated_12_Nov_2026_FINAL%201.pdf"
+notes = "140GB for the first 3 renewals. Data rolls over up to 500GB; speeds capped at 100 Mbps. 4 to 5 services per customer."
+captured = "2026-11-25T00:00:00Z"
+verified = true
+reason = "Ongoing prices are only on each plan page (about 8 requests a run)"
+source_url = "https://cms-assets.ldsvcplatform.com/AU/s3fs-public/2026-11/LycaMobile_All_Plans_CIS_Consolidated_12_Nov_2026_FINAL%201.pdf"
+expires = "2027-01-31"
+
+[[mobile]]
+id = "lycamobile-l"
+provider = "lycamobile"
+name = "LycaPlan L"
+network = "vodafone"
+type = "prepaid"
+period_days = 28
+price = 50.0
+data_gb = 150.0
+data_only = false
+calls = "unlimited"
+five_g = true
+contract = 0
+rollover = true
+bundle = []
+url = "https://www.lycamobile.com.au/en/bundle/unlimited-plan-xl/"
+cis_url = "https://cms-assets.ldsvcplatform.com/AU/s3fs-public/2026-11/LycaMobile_All_Plans_CIS_Consolidated_12_Nov_2026_FINAL%201.pdf"
+notes = "300GB for the first 4 renewals. Unlimited calls to 59 countries (list not recorded here). Data rolls over up to 500GB; speeds capped at 100 Mbps. 4 to 5 services per customer."
+captured = "2026-11-25T00:00:00Z"
+verified = true
+reason = "Ongoing prices are only on each plan page (about 8 requests a run)"
+source_url = "https://cms-assets.ldsvcplatform.com/AU/s3fs-public/2026-11/LycaMobile_All_Plans_CIS_Consolidated_12_Nov_2026_FINAL%201.pdf"
+expires = "2027-01-31"
+
+[[mobile]]
+id = "lycamobile-long-term-small"
+provider = "lycamobile"
+name = "Long Term Small"
+network = "vodafone"
+type = "prepaid"
+period_days = 180
+price = 120.0
+data_gb = 120.0
+data_only = false
+calls = "unlimited"
+five_g = true
+intl = ["AR", "BR", "CA", "CL", "CN", "CO", "FR", "DE", "GU", "HK", "HU", "IN", "ID", "JP", "KR", "MY", "MT", "MX", "NZ", "PE", "PR", "RO", "SG", "SE", "TW", "TH", "GB", "US", "VE", "PH", "IS", "IE", "SI", "NO", "FI"]
+contract = 0
+rollover = true
+bundle = []
+url = "https://www.lycamobile.com.au/en/bundles/sim-only-plans/"
+cis_url = "https://cms-assets.ldsvcplatform.com/AU/s3fs-public/2026-11/LycaMobile_All_Plans_CIS_Consolidated_12_Nov_2026_FINAL%201.pdf"
+notes = "Data comes as 20GB every 30 days. Data rolls over up to 500GB; speeds capped at 100 Mbps. 4 to 5 services per customer."
+captured = "2026-11-25T00:00:00Z"
+verified = true
+reason = "Ongoing prices are only on each plan page (about 8 requests a run)"
+source_url = "https://cms-assets.ldsvcplatform.com/AU/s3fs-public/2026-11/LycaMobile_All_Plans_CIS_Consolidated_12_Nov_2026_FINAL%201.pdf"
+expires = "2027-01-31"
+
+[[mobile]]
+id = "lycamobile-long-term-medium"
+provider = "lycamobile"
+name = "Long Term Medium"
+network = "vodafone"
+type = "prepaid"
+period_days = 360
+price = 200.0
+promo = { price = 169.0, periods = 1, until = "2026-12-31", text = "$169 for the first 360 days, new online purchases" }
+data_gb = 220.0
+data_only = false
+calls = "unlimited"
+five_g = true
+intl = ["AR", "BR", "CA", "CL", "CN", "CO", "FR", "DE", "GU", "HK", "HU", "IN", "ID", "JP", "KR", "MY", "MT", "MX", "NZ", "PE", "PR", "RO", "SG", "SE", "TW", "TH", "GB", "US", "VE", "PH", "IS", "IE", "SI", "NO", "FI"]
+contract = 0
+rollover = true
+bundle = []
+url = "https://www.lycamobile.com.au/en/bundle/medium-plan/"
+cis_url = "https://cms-assets.ldsvcplatform.com/AU/s3fs-public/2026-11/LycaMobile_All_Plans_CIS_Consolidated_12_Nov_2026_FINAL%201.pdf"
+notes = "Data comes as 18.33GB every 30 days. Data rolls over up to 500GB; speeds capped at 100 Mbps. 4 to 5 services per customer."
+captured = "2026-11-25T00:00:00Z"
+verified = true
+reason = "Ongoing prices are only on each plan page (about 8 requests a run)"
+source_url = "https://cms-assets.ldsvcplatform.com/AU/s3fs-public/2026-11/LycaMobile_All_Plans_CIS_Consolidated_12_Nov_2026_FINAL%201.pdf"
+expires = "2027-01-31"
+
+[[mobile]]
+id = "lycamobile-long-term-large"
+provider = "lycamobile"
+name = "Long Term Large"
+network = "vodafone"
+type = "prepaid"
+period_days = 360
+price = 480.0
+data_gb = 600.0
+data_only = false
+calls = "unlimited"
+five_g = true
+intl = ["AR", "BR", "CA", "CL", "CN", "CO", "FR", "DE", "GU", "HK", "HU", "IN", "ID", "JP", "KR", "MY", "MT", "MX", "NZ", "PE", "PR", "RO", "SG", "SE", "TW", "TH", "GB", "US", "VE", "PH", "IS", "IE", "SI", "NO", "FI"]
+contract = 0
+rollover = true
+bundle = []
+url = "https://www.lycamobile.com.au/en/bundles/sim-only-plans/"
+cis_url = "https://cms-assets.ldsvcplatform.com/AU/s3fs-public/2026-11/LycaMobile_All_Plans_CIS_Consolidated_12_Nov_2026_FINAL%201.pdf"
+notes = "Data comes as 50GB every 30 days. Data rolls over up to 500GB; speeds capped at 100 Mbps. 4 to 5 services per customer."
+captured = "2026-11-25T00:00:00Z"
+verified = true
+reason = "Ongoing prices are only on each plan page (about 8 requests a run)"
+source_url = "https://cms-assets.ldsvcplatform.com/AU/s3fs-public/2026-11/LycaMobile_All_Plans_CIS_Consolidated_12_Nov_2026_FINAL%201.pdf"
+expires = "2027-01-31"

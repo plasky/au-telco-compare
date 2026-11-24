@@ -129,6 +129,10 @@ def main():
     for k in KINDS:   # a provider entered by hand replaces its Bill Hero records, as an adapter does
         hand = {e["provider"] for e in ov.get(k, []) if e.get("expires", "9999") >= today}
         merged[k] = [r for r in merged[k] if not (r["source"] == BACKBONE and r["provider"] in hand)]
+    for e in ov.get("exclude_provider", []):
+        kinds = [e["kind"]] if e.get("kind") in KINDS else list(KINDS)
+        for k in kinds:
+            merged[k] = [r for r in merged[k] if r["provider"] != e["provider"]]
     ex = {e["id"] for e in ov.get("exclude", [])}
     for p in ov.get("patch", []):
         if p.get("expires", "9999") < today:
@@ -195,10 +199,18 @@ def main():
                          "fetched": m.get("fetched"), "generated": m.get("generated"),
                          "licence": m.get("licence"), "attribution": m.get("attribution"),
                          "records": {k: sum(1 for r in merged[k] if r["source"] == s) for k in KINDS}})
+    bundles = {}
+    for r in tomllib.loads((ROOT / "overrides" / "bundles.toml").read_text()).get("bundle", []):
+        if not r.get("verified"):
+            continue
+        if r.get("expires", "9999") < today:
+            issues.append(f"bundle rule for {r.get('provider')} expired {r['expires']}; re-check it")
+            continue
+        bundles.setdefault(r["provider"], []).append({k: v for k, v in r.items() if k not in ("provider", "verified", "expires")})
     out = {"meta": {"built": now_iso(), "built_date_aest": today, "sources": src_meta,
                     "counts": {k: len(merged[k]) for k in KINDS},
                     "verified": {k: sum(1 for r in merged[k] if r["verified"]) for k in KINDS}},
-           "providers": providers, **merged}
+           "providers": providers, "bundles": bundles, **merged}
     SITE_DATA.mkdir(parents=True, exist_ok=True)
     (SITE_DATA / "plans.json").write_text(json.dumps(out, indent=1, ensure_ascii=False))
     (SITE_DATA / "plans.js").write_text("window.TELCO_DATA=" + json.dumps(out, separators=(",", ":"), ensure_ascii=False) + ";\n")

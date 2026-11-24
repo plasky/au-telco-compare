@@ -9,6 +9,8 @@
  *   reswitchCost(plan, pool, need, opts) the same, re-switching to the best promo each time one ends
  *   frontier(items)                      plans no other plan beats on both price and speed
  *   mobileCost(plan, line, opts)         per-line cost over a horizon, or why the plan doesn't fit
+ *   accountDiscount(rules, ctx)          multi-line and bundle rules for one provider's account
+ *   household(input)                     cheapest mix of internet + mobile lines, best per provider
  * Prices in the data already include GST. Months are averaged (365.25 / 12 days).
  */
 (function (root) {
@@ -126,12 +128,14 @@
    * sign-up credits), bundleDuringPromo (apply bundle discounts during promo months too). */
   /* An intro offer that needs a bundle (promo.requires = "energy" | "mobile") only counts when
    * bundle discounts are being counted. */
-  const activePromo = (plan, o) => (plan.promo && (!plan.promo.requires || (o && o.bundled)) ? plan.promo : null);
+  // opts.bundled: true = assume every bundle condition is met; or a list such as ["mobile", "energy"]
+  const hasBundle = (o, kind) => !!o && (o.bundled === true || (Array.isArray(o.bundled) && o.bundled.includes(kind)));
+  const activePromo = (plan, o) => (plan.promo && (!plan.promo.requires || hasBundle(o, plan.promo.requires)) ? plan.promo : null);
   function internetCost(plan, opts) {
     const o = Object.assign({ months: 12, bundled: false, modemPrice: 0, credits: false, bundleDuringPromo: false }, opts);
     const promo = activePromo(plan, o), pm = promo ? Math.min(promo.months, o.months) : 0;
     // Bundle discounts apply after any intro offer, unless the provider says they stack with it.
-    const bundles = o.bundled ? (plan.bundle || []) : [];
+    const bundles = (plan.bundle || []).filter(b => hasBundle(o, b.with));
     const offAfter = bundles.reduce((a, b) => a + (b.off || 0), 0);
     const offDuring = bundles.reduce((a, b) => a + (b.during_promo || o.bundleDuringPromo ? (b.off || 0) : 0), 0);
     const rent = hardwareMonthly(plan, o.modemPrice);
@@ -217,26 +221,190 @@
   }
 
   /* line: { dataGB (per month), dataOnly (false), networks (allowed host networks or null),
-   *         intl (ISO codes that need included calls), allowUnknownData (false) }
-   * opts: { months (12) } */
+   *         intl (ISO codes that need included calls), style ("any" | "short": 31 days or less |
+   *         "postpaid"), allowUnknownData (false) }
+   * opts: { months (12), with: services also taken from this provider, e.g. ["internet"] } */
   function mobileCost(plan, line, opts) {
-    const o = Object.assign({ months: 12 }, opts);
-    const L = Object.assign({ dataGB: 0, dataOnly: false, networks: null, intl: [], allowUnknownData: false }, line);
+    const o = Object.assign({ months: 12, with: [] }, opts);
+    const L = Object.assign({ dataGB: 0, dataOnly: false, networks: null, intl: [], style: "any", allowUnknownData: false }, line);
     const why = [];
     if (!!plan.data_only !== !!L.dataOnly) why.push(plan.data_only ? "Data-only plan (no calls)" : "Includes calls (looking for data-only)");
     if (L.networks && L.networks.length && !L.networks.includes(plan.network)) why.push(`On the ${plan.network || "unknown"} network`);
+    if (plan.requires && !o.with.includes(plan.requires)) why.push(`Only sold with the provider's ${plan.requires}`);
+    if (L.style === "short" && plan.period_days > 31) why.push(`${plan.period_days}-day recharge (you asked for monthly)`);
+    if (L.style === "postpaid" && plan.type !== "postpaid") why.push("Prepaid (you asked for a monthly bill)");
     const md = monthlyData(plan);
     if (md == null && !L.allowUnknownData) why.push("Data allowance not published");
     else if (md != null && md < L.dataGB) why.push(`${Math.round(md)} GB a month is less than the ${L.dataGB} GB needed`);
     const missing = (L.intl || []).filter(c => !(plan.intl || []).includes(c));
     if (missing.length) why.push(`No included calls to ${missing.join(", ")}`);
     const recharges = o.months * DAYS_PER_MONTH / plan.period_days;     // continuous, e.g. 13.04 a year on 28 days
-    const promoN = plan.promo ? Math.min(plan.promo.periods, recharges) : 0;
-    const total = promoN * (plan.promo ? plan.promo.price : 0) + (recharges - promoN) * plan.price;
-    return { ok: why.length === 0, why, total, perMonth: total / o.months, recharges, monthlyGB: md };
+    const promo = plan.promo && (!plan.promo.requires || o.with.includes(plan.promo.requires)) ? plan.promo : null;
+    const promoN = promo ? Math.min(promo.periods, recharges) : 0;
+    const offs = (plan.bundle || []).filter(b => o.with.includes(b.with));
+    const offAfter = offs.reduce((a, b) => a + (b.off || 0), 0);
+    const offDuring = offs.reduce((a, b) => a + (b.during_promo ? (b.off || 0) : 0), 0);
+    const promoEach = promo ? promo.price - Math.min(offDuring, promo.price) : 0;
+    const ongoingEach = plan.price - Math.min(offAfter, plan.price);
+    const total = promoN * promoEach + (recharges - promoN) * ongoingEach;
+    const save = promoN * (promo ? promo.price : 0) + (recharges - promoN) * plan.price - total;
+    return { ok: why.length === 0, why, total, perMonth: total / o.months, recharges, monthlyGB: md, bundleSave: save };
   }
 
-  const api = { neededSpeed, techOk, meets, activePromo, hardwareCost, hardwareMonthly, internetCost, reswitchCost, atLeastAsFast, frontier, mobileCost, monthlyData,
+  /* Account-level discounts for the lines (and internet) taken with one provider, from
+   * overrides/bundles.toml rules. lineTotals: costs over the horizon of the provider's lines.
+   * Rule fields: applies_to ("mobile" | "internet"), with ("mobile": other lines on the account,
+   * "internet", "energy"), then one of pct (% off each qualifying line or the internet bill),
+   * off ($ a month per qualifying line, or per account for internet) or tiers ($ a month off the
+   * internet by number of mobile services: [1 service, 2 services, ...]); extra_only: only lines
+   * after the first (the dearest line pays full price). Returns { total, items: [{text, amount}] }. */
+  function accountDiscount(rules, ctx) {
+    const { lineTotals, internetTotal, hasInternet, hasEnergy, months } = ctx;
+    const items = [];
+    const sorted = lineTotals.slice().sort((a, b) => b - a);
+    for (const r of rules || []) {
+      let amt = 0;
+      if (r.applies_to === "mobile") {
+        if ((r.with === "internet" && !hasInternet) || (r.with === "energy" && !hasEnergy)) continue;
+        const lines = (r.with === "mobile" || r.extra_only) ? sorted.slice(1) : sorted;
+        if (r.with === "mobile" && sorted.length < (r.min_lines || 2)) continue;
+        for (const t of lines) amt += r.pct ? t * r.pct / 100 : Math.min((r.off || 0) * months, t);
+      } else if (r.applies_to === "internet" && hasInternet) {
+        if (r.with === "energy" && !hasEnergy) continue;
+        if (r.with === "mobile") {
+          const n = sorted.length;
+          if (!n) continue;
+          const perMonth = r.tiers ? r.tiers[Math.min(n, r.tiers.length) - 1] : r.pct ? 0 : (r.off || 0);
+          amt = r.pct ? internetTotal * r.pct / 100 : perMonth * months;
+        } else {
+          amt = r.pct ? internetTotal * r.pct / 100 : (r.off || 0) * months;
+        }
+        amt = Math.min(amt, internetTotal);
+      }
+      if (amt > 0) items.push({ text: r.text || "Bundle discount", amount: amt, applies_to: r.applies_to });
+    }
+    return { total: items.reduce((a, x) => a + x.amount, 0), items };
+  }
+
+  /* The cheapest way to buy internet plus every mobile line, and the best deal with each
+   * provider.
+   * input: { internet: fitting internet plans (or [] to leave internet out), lines: [line],
+   *          mobile: mobile plans, rules: { provider: [rule] }, energy: provider id of your
+   *          energy retailer or null, months, internetOpts: extra internetCost options (modem,
+   *          credits) }
+   * For each provider P, every split of the lines between P and the cheapest plan elsewhere is
+   * tried (2^lines, at most 256), with P's or the cheapest other internet, counting P's
+   * per-plan bundle discounts and account rules. "single" means internet and every line with P.
+   * Returns { lines (per-line options, cheapest first), independent, best, byProvider, singles }. */
+  function household(input) {
+    const H = Object.assign({ internet: [], lines: [], mobile: [], rules: {}, energy: null, months: 12, internetOpts: {} }, input);
+    const months = H.months, prov = p => p.provider;
+    const iCost = (p, withMobile) => {
+      const bundled = [];
+      if (withMobile) bundled.push("mobile");
+      if (H.energy && p.provider === H.energy) bundled.push("energy");
+      return internetCost(p, Object.assign({}, H.internetOpts, { months, bundled }));
+    };
+    // per-line options: lineAll includes plans only sold with another service (costed with it);
+    // lineOpts, used when buying the line on its own, leaves them out
+    const lineAll = H.lines.map(L => H.mobile.map(p => ({ p, c: mobileCost(p, L, { months, with: p.requires ? [p.requires] : [] }) }))
+      .filter(x => x.c.ok));
+    const lineOpts = lineAll.map(o => o.filter(x => !x.p.requires).sort((a, b) => a.c.total - b.c.total));
+    // cheapest per provider per line, plain and with that provider's internet
+    const providers = [...new Set([...H.internet.map(prov), ...H.mobile.map(prov)])];
+    const bestBy = H.lines.map((L, i) => {
+      const m = {};
+      for (const x of lineOpts[i]) {
+        const k = prov(x.p);
+        if (!m[k] || x.c.total < m[k].c.total) m[k] = x;
+      }
+      return m;
+    });
+    const bestWith = (i, P, withInternet) => {
+      let best = null;
+      for (const x of lineAll[i]) {
+        if (prov(x.p) !== P) continue;
+        if (x.p.requires === "internet" && !withInternet) continue;
+        if (x.p.requires === "energy" && H.energy !== P) continue;
+        const wi = [];
+        if (withInternet) wi.push("internet");
+        if (H.energy === P) wi.push("energy");
+        const c = wi.length ? mobileCost(x.p, H.lines[i], { months, with: wi }) : x.c;
+        if (!best || c.total < best.c.total) best = { p: x.p, c };
+      }
+      return best;
+    };
+    const cheapestExcept = (i, P) => {
+      for (const x of lineOpts[i]) if (prov(x.p) !== P) return x;
+      return null;
+    };
+    const iPlain = H.internet.map(p => ({ p, c: iCost(p, false) })).sort((a, b) => a.c.total - b.c.total);
+    const iBestBy = (P, withMobile) => {
+      let best = null;
+      for (const p of H.internet) if (prov(p) === P) { const c = iCost(p, withMobile); if (!best || c.total < best.c.total) best = { p, c }; }
+      return best;
+    };
+    const iCheapestExcept = P => iPlain.find(x => prov(x.p) !== P) || null;
+    const wantInternet = H.internet.length > 0;
+
+    // Independent: cheapest of everything, no cross-service bundles.
+    const indLines = lineOpts.map(o => o[0] || null);
+    const independent = {
+      internet: wantInternet ? iPlain[0] || null : null, lines: indLines, discount: { total: 0, items: [] },
+      total: (wantInternet && iPlain[0] ? iPlain[0].c.total : 0) + indLines.reduce((a, x) => a + (x ? x.c.total : Infinity), 0),
+    };
+
+    const byProvider = [], singles = [];
+    const n = H.lines.length;
+    for (const P of providers) {
+      const rules = H.rules[P] || [];
+      let best = null, bestSingle = null;
+      const pInt = { plain: iBestBy(P, false), withMob: iBestBy(P, true) };
+      const extInt = iCheapestExcept(P);
+      // P's best plan for each line (with and without P's internet) and the cheapest elsewhere
+      const onPlain = H.lines.map((L, i) => bestWith(i, P, false));
+      const onWithInt = H.lines.map((L, i) => bestWith(i, P, true));
+      const ext = H.lines.map((L, i) => cheapestExcept(i, P));
+      if (!onPlain.some(Boolean) && !pInt.plain) continue;
+      for (let mask = 0; mask < (1 << n); mask++) {
+        for (const useP of wantInternet ? [true, false] : [false]) {
+          if (useP && !pInt.plain) continue;
+          const onP = [];
+          for (let i = 0; i < n; i++) if (mask & (1 << i)) onP.push(i);
+          const lines = [];
+          let ok = true, total = 0;
+          for (let i = 0; i < n; i++) {
+            const x = (mask & (1 << i)) ? (useP ? onWithInt[i] : onPlain[i]) : ext[i];
+            if (!x) { ok = false; break; }
+            lines.push(Object.assign({ onP: !!(mask & (1 << i)) }, x));
+            total += x.c.total;
+          }
+          if (!ok) continue;
+          let internet = null;
+          if (wantInternet) {
+            internet = useP ? (onP.length ? pInt.withMob : pInt.plain) : extInt;
+            if (!internet) continue;
+            total += internet.c.total;
+          }
+          if (!useP && !onP.length) continue;       // nothing with P: that's the independent case
+          const disc = accountDiscount(rules, { lineTotals: onP.map(i => lines[i].c.total), internetTotal: useP ? internet.c.total : 0,
+            hasInternet: useP, hasEnergy: H.energy === P, months });
+          total -= disc.total;
+          const sol = { provider: P, internet, internetWithP: useP, lines, discount: disc, total, single: (!wantInternet || useP) && onP.length === n };
+          if (!best || total < best.total - 1e-9) best = sol;
+          if (sol.single && (!bestSingle || total < bestSingle.total - 1e-9)) bestSingle = sol;
+        }
+      }
+      if (best) byProvider.push(best);
+      if (bestSingle) singles.push(bestSingle);
+    }
+    byProvider.sort((a, b) => a.total - b.total);
+    singles.sort((a, b) => a.total - b.total);
+    const bestSol = byProvider.length && byProvider[0].total < independent.total - 1e-9 ? byProvider[0] : independent;
+    return { lines: lineOpts, independent, best: bestSol, byProvider, singles };
+  }
+
+  const api = { neededSpeed, techOk, meets, activePromo, hardwareCost, hardwareMonthly, internetCost, reswitchCost, atLeastAsFast, frontier, mobileCost, accountDiscount, household, monthlyData,
     RATES, HEADROOM, NBN_TIERS, FIXED_LINE, DAYS_PER_MONTH };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.TelcoEngine = api;

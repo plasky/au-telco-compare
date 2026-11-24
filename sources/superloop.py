@@ -114,8 +114,9 @@ def main():
         sale_end = date(int(sm.group(3)), MONTHS[sm.group(2).lower()], int(sm.group(1))).isoformat()
     bm = re.search(r"Add mobile, save \$(\d+(?:\.\d+)?)/mth on home internet", text) \
         or re.search(r"extra \$(\d+(?:\.\d+)?)/mth off your monthly internet bill", text)
-    bundle = [{"with": "mobile", "off": float(bm.group(1)),
-               "text": f"Bundle & Save: ${bm.group(1)}/mth off internet with a Superloop mobile plan"}] if bm else []
+    # Bundle & Save is tiered by the number of extra services ($5 for one, up to $15), so it is
+    # an account-level rule in overrides/bundles.toml rather than a flat per-plan discount.
+    bundle = []
 
     internet, seen = [], set()
     for o in offers:

@@ -1,27 +1,43 @@
 {
- "built": "2026-11-24T22:47:17Z",
+ "built": "2026-11-24T23:25:41Z",
  "issues": [
   "dodo: kept previously published data (adapter failed: urllib.error.HTTPError: HTTP Error 403: Forbidden)",
   "iprimus: kept previously published data (adapter failed: urllib.error.HTTPError: HTTP Error 403: Forbidden)",
   "vodafone: kept previously published data (adapter failed: urllib.error.HTTPError: HTTP Error 503: Service Temporarily Unavailable)"
  ],
- "notes": [],
+ "notes": [
+  "3 price moves over 30%: vodafone-prepaid-plus-180: $14.79 -> $180.0; vodafone-prepaid-plus-250: $20.55 -> $250.0; vodafone-prepaid-plus-350: $28.77 -> $350.0"
+ ],
  "counts": {
   "internet": 328,
-  "mobile": 301
+  "mobile": 282
  },
  "verified": {
   "internet": 160,
-  "mobile": 13
+  "mobile": 134
  },
  "sources": [
+  {
+   "id": "aldi_mobile",
+   "name": "ALDI Mobile product feed (Shopify products.json)",
+   "url": "https://www.aldimobile.com.au/products.json?limit=250",
+   "status": "ok",
+   "fetched": "2026-11-24T23:23:10Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 0,
+    "mobile": 9
+   }
+  },
   {
    "id": "amaysim",
    "name": "amaysim plan catalogue",
    "url": "https://www.amaysim.com.au/products/catalogue/plans",
    "status": "ok",
-   "fetched": "2026-11-24T22:46:06Z",
-   "generated": "2026-11-24 22:01:19",
+   "fetched": "2026-11-24T23:23:11Z",
+   "generated": "2026-11-24 08:00:48",
    "licence": null,
    "attribution": null,
    "records": {
@@ -34,13 +50,27 @@
    "name": "Aussie Broadband nbn plans page",
    "url": "https://www.aussiebroadband.com.au/internet/nbn-plans/",
    "status": "ok",
-   "fetched": "2026-11-24T22:46:06Z",
+   "fetched": "2026-11-24T23:23:12Z",
    "generated": null,
    "licence": null,
    "attribution": null,
    "records": {
     "internet": 14,
     "mobile": 0
+   }
+  },
+  {
+   "id": "aussie_broadband_mobile",
+   "name": "Aussie Broadband mobile SIM and data-only plans",
+   "url": "https://www.aussiebroadband.com.au/mobile/sim-only-plans/",
+   "status": "ok",
+   "fetched": "2026-11-24T23:23:19Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 0,
+    "mobile": 7
    }
   },
   {
@@ -54,7 +84,35 @@
    "attribution": "Data via Bill Hero (billhero.com.au)",
    "records": {
     "internet": 173,
-    "mobile": 288
+    "mobile": 148
+   }
+  },
+  {
+   "id": "boost_mobile",
+   "name": "Boost Mobile prepaid plans",
+   "url": "https://boost.com.au/prepaid-plans",
+   "status": "ok",
+   "fetched": "2026-11-24T23:23:25Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 0,
+    "mobile": 9
+   }
+  },
+  {
+   "id": "coles_mobile",
+   "name": "Coles Mobile plan catalogue (site JSON)",
+   "url": "https://www.colesmobile.com.au/api/v1/ui/catalog/product",
+   "status": "ok",
+   "fetched": "2026-11-24T23:23:33Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 0,
+    "mobile": 7
    }
   },
   {
@@ -62,7 +120,7 @@
    "name": "Dodo nbn plans page",
    "url": "https://www.dodo.com/nbn",
    "status": "fallback",
-   "fetched": "2026-11-24T03:35:08Z",
+   "fetched": "2026-11-24T03:11:01Z",
    "generated": null,
    "licence": null,
    "attribution": null,
@@ -76,7 +134,7 @@
    "name": "Exetel nbn plan page",
    "url": "https://www.exetel.com.au/broadband/nbn",
    "status": "ok",
-   "fetched": "2026-11-24T22:46:31Z",
+   "fetched": "2026-11-24T23:23:34Z",
    "generated": null,
    "licence": null,
    "attribution": null,
@@ -86,11 +144,39 @@
    }
   },
   {
+   "id": "exetel_mobile",
+   "name": "Exetel eSIM plan page",
+   "url": "https://www.exetel.com.au/mobilephone",
+   "status": "ok",
+   "fetched": "2026-11-24T23:23:35Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 0,
+    "mobile": 1
+   }
+  },
+  {
+   "id": "felix_mobile",
+   "name": "Felix Mobile home page plan carousel (__NEXT_DATA__)",
+   "url": "https://felixmobile.com.au/",
+   "status": "ok",
+   "fetched": "2026-11-24T23:23:36Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 0,
+    "mobile": 4
+   }
+  },
+  {
    "id": "flip",
    "name": "Flip per-tier nbn pages (prerendered)",
    "url": "https://flipconnect.com.au",
    "status": "ok",
-   "fetched": "2026-11-24T22:46:31Z",
+   "fetched": "2026-11-24T23:23:36Z",
    "generated": null,
    "licence": null,
    "attribution": null,
@@ -104,7 +190,7 @@
    "name": "iPrimus nbn plans page and CIS",
    "url": "https://www.iprimus.com.au/nbn-plans",
    "status": "fallback",
-   "fetched": "2026-11-24T03:35:22Z",
+   "fetched": "2026-11-24T03:11:07Z",
    "generated": null,
    "licence": null,
    "attribution": null,
@@ -114,11 +200,25 @@
    }
   },
   {
+   "id": "lebara_mobile",
+   "name": "Lebara plan pages",
+   "url": "https://www.lebara.com.au/prepaid-plans/28-day/",
+   "status": "ok",
+   "fetched": "2026-11-24T23:23:49Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 0,
+    "mobile": 11
+   }
+  },
+  {
    "id": "mate",
    "name": "MATE nbn plans page",
    "url": "https://www.letsbemates.com.au/nbn/",
    "status": "ok",
-   "fetched": "2026-11-24T22:46:51Z",
+   "fetched": "2026-11-24T23:24:03Z",
    "generated": null,
    "licence": null,
    "attribution": null,
@@ -128,11 +228,39 @@
    }
   },
   {
+   "id": "mate_mobile",
+   "name": "MATE SIM-only mobile plans page",
+   "url": "https://www.letsbemates.com.au/mobile/",
+   "status": "ok",
+   "fetched": "2026-11-24T23:24:03Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 0,
+    "mobile": 4
+   }
+  },
+  {
+   "id": "moose_mobile",
+   "name": "Moose Mobile plan feed (WordPress ACF REST)",
+   "url": "https://moosemobile.com.au/wp-json/acf/v3/cpq-mobile-plan",
+   "status": "ok",
+   "fetched": "2026-11-24T23:24:04Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 0,
+    "mobile": 4
+   }
+  },
+  {
    "id": "more",
    "name": "More nbn plans page",
    "url": "https://www.more.com.au/personal/nbn-plans",
    "status": "ok",
-   "fetched": "2026-11-24T22:46:53Z",
+   "fetched": "2026-11-24T23:24:05Z",
    "generated": null,
    "licence": null,
    "attribution": null,
@@ -142,17 +270,45 @@
    }
   },
   {
+   "id": "more_mobile",
+   "name": "More mobile plans and mobile broadband pages",
+   "url": "https://www.more.com.au/personal/mobile-plans",
+   "status": "ok",
+   "fetched": "2026-11-24T23:24:05Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 0,
+    "mobile": 6
+   }
+  },
+  {
    "id": "optus",
    "name": "Optus nbn and 5G Home Internet pages",
    "url": "https://www.optus.com.au/internet/nbn",
    "status": "ok",
-   "fetched": "2026-11-24T22:46:53Z",
+   "fetched": "2026-11-24T23:24:09Z",
    "generated": null,
    "licence": null,
    "attribution": null,
    "records": {
     "internet": 8,
     "mobile": 0
+   }
+  },
+  {
+   "id": "optus_mobile",
+   "name": "Optus SIM-only, data-only and prepaid plan cards",
+   "url": "https://www.optus.com.au/mobile/plans/shop",
+   "status": "ok",
+   "fetched": "2026-11-24T23:24:13Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 0,
+    "mobile": 14
    }
   },
   {
@@ -166,7 +322,7 @@
    "attribution": null,
    "records": {
     "internet": 33,
-    "mobile": 0
+    "mobile": 8
    }
   },
   {
@@ -174,7 +330,7 @@
    "name": "Spintel home internet pages",
    "url": "https://www.spintel.net.au/home-internet/nbn",
    "status": "ok",
-   "fetched": "2026-11-24T22:46:58Z",
+   "fetched": "2026-11-24T23:24:20Z",
    "generated": null,
    "licence": null,
    "attribution": null,
@@ -184,11 +340,25 @@
    }
   },
   {
+   "id": "spintel_mobile",
+   "name": "Spintel mobile, nbn and mobile internet pages",
+   "url": "https://www.spintel.net.au/home-mobile/plans",
+   "status": "ok",
+   "fetched": "2026-11-24T23:24:22Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 0,
+    "mobile": 7
+   }
+  },
+  {
    "id": "superloop",
    "name": "Superloop nbn plans page",
    "url": "https://www.superloop.com/internet/nbn/",
    "status": "ok",
-   "fetched": "2026-11-24T22:47:01Z",
+   "fetched": "2026-11-24T23:24:29Z",
    "generated": null,
    "licence": null,
    "attribution": null,
@@ -198,11 +368,25 @@
    }
   },
   {
+   "id": "superloop_mobile",
+   "name": "Superloop SIM-only plans page",
+   "url": "https://www.superloop.com/mobile/",
+   "status": "ok",
+   "fetched": "2026-11-24T23:24:30Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 0,
+    "mobile": 5
+   }
+  },
+  {
    "id": "tangerine",
    "name": "Tangerine nbn plans page (plans shown before an address check)",
    "url": "https://www.tangerine.com.au/nbn/nbn-broadband",
    "status": "ok",
-   "fetched": "2026-11-24T22:47:04Z",
+   "fetched": "2026-11-24T23:24:32Z",
    "generated": null,
    "licence": null,
    "attribution": null,
@@ -212,11 +396,25 @@
    }
   },
   {
+   "id": "tangerine_mobile",
+   "name": "Tangerine SIM-only and mobile broadband pages",
+   "url": "https://www.tangerine.com.au/mobile/sim-only-mobile-plans",
+   "status": "ok",
+   "fetched": "2026-11-24T23:24:32Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 0,
+    "mobile": 6
+   }
+  },
+  {
    "id": "telstra",
    "name": "Telstra home internet plans",
    "url": "https://www.telstra.com.au/internet/plans",
    "status": "ok",
-   "fetched": "2026-11-24T22:47:04Z",
+   "fetched": "2026-11-24T23:24:39Z",
    "generated": null,
    "licence": null,
    "attribution": null,
@@ -226,11 +424,25 @@
    }
   },
   {
+   "id": "telstra_mobile",
+   "name": "Telstra SIM-only, data and Pre-Paid plans",
+   "url": "https://www.telstra.com.au/mobile-phones/sim-only-plans",
+   "status": "ok",
+   "fetched": "2026-11-24T23:24:45Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 0,
+    "mobile": 13
+   }
+  },
+  {
    "id": "tpg",
    "name": "TPG nbn plan catalogue (setVars JSON on the nbn page)",
    "url": "https://www.tpg.com.au/nbn",
    "status": "ok",
-   "fetched": "2026-11-24T22:47:07Z",
+   "fetched": "2026-11-24T23:24:46Z",
    "generated": null,
    "licence": null,
    "attribution": null,
@@ -240,11 +452,25 @@
    }
   },
   {
+   "id": "tpg_mobile",
+   "name": "TPG and iiNet SIM-only pages (JSON-LD and offer terms)",
+   "url": "https://www.tpg.com.au/mobile",
+   "status": "ok",
+   "fetched": "2026-11-24T23:24:46Z",
+   "generated": null,
+   "licence": null,
+   "attribution": null,
+   "records": {
+    "internet": 0,
+    "mobile": 6
+   }
+  },
+  {
    "id": "vodafone",
    "name": "Vodafone home internet pages (__NEXT_DATA__)",
    "url": "https://www.vodafone.com.au/home-internet/nbn",
    "status": "fallback",
-   "fetched": "2026-11-24T03:35:45Z",
+   "fetched": "2026-11-24T03:11:15Z",
    "generated": null,
    "licence": null,
    "attribution": null,

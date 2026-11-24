@@ -384,3 +384,27 @@ table.src th { color: var(--ink-2); font-weight: 600; }
 table.src .r { text-align: right; font-variant-numeric: tabular-nums; }
 footer a { color: inherit; }
 table.rank tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+/* ---------- phase 3: tabs, mobile lines, household */
+.tabs a { cursor: pointer; }
+.tabs a:hover { color: var(--ink); }
+.tabs a:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.tabpanel { display: grid; gap: 18px; min-width: 0; }
+.tabpanel[hidden] { display: none; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips:empty { display: none; }
+.chip .x { border: 0; background: transparent; color: var(--muted); cursor: pointer; padding: 0 0 0 2px; font-size: 14px; line-height: 1; }
+.chip .x:hover { color: var(--ink); }
+.usage-readout .mob { margin-top: 6px; }
+table.rank.lines td.need { color: var(--ink-2); font-size: 12.5px; }
+.setup .kv td:first-child small { display: block; color: var(--ink-2); font-size: 12.5px; }
+.setup .alt { margin-top: 10px; font-size: 13.5px; color: var(--ink-2); }
+.chart .seg-rect { shape-rendering: geometricPrecision; }
+@container (max-width: 560px) {
+  table.rank.lines th:nth-child(3), table.rank.lines td:nth-child(3),
+  table.rank.lines th:nth-child(4), table.rank.lines td:nth-child(4) { display: none; }
+  #mrank th:nth-child(5), #mrank td:nth-child(5) { display: none; }
+}
+@container (max-width: 460px) {
+  table.rank.lines th:nth-child(5), table.rank.lines td:nth-child(5) { display: table-cell; }
+}

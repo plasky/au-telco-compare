@@ -1,4 +1,5 @@
-/* Australian Telco Compare: page logic for home internet (inputs, ranking, charts). */
+/* Australian Telco Compare: page logic (inputs, three result tabs: home internet, mobile lines,
+ * and the whole household with bundles). */
 (function () {
   "use strict";
   const D = window.TELCO_DATA, E = window.TelcoEngine;
@@ -50,6 +51,34 @@
     return [25, 50, 100, 500, 1000, 2000];
   }
   const provName = id => (D.providers[id] || {}).name || id;
+  const MAX_LINES = 8;
+  const DATA_STEPS = [1, 2, 3, 5, 8, 10, 15, 20, 25, 30, 40, 50, 60, 80, 100, 150, 200, 300];
+  const LINE_STYLES = [["any", "Any"], ["short", "No long expiry"], ["postpaid", "Monthly bill"]];
+  const COUNTRIES = [["BD", "Bangladesh"], ["CA", "Canada"], ["CN", "China"], ["FJ", "Fiji"], ["FR", "France"], ["DE", "Germany"],
+    ["GR", "Greece"], ["HK", "Hong Kong"], ["IN", "India"], ["ID", "Indonesia"], ["IE", "Ireland"], ["IT", "Italy"], ["JP", "Japan"],
+    ["LB", "Lebanon"], ["MY", "Malaysia"], ["NP", "Nepal"], ["NL", "Netherlands"], ["NZ", "New Zealand"], ["PK", "Pakistan"],
+    ["PH", "Philippines"], ["SG", "Singapore"], ["ZA", "South Africa"], ["KR", "South Korea"], ["ES", "Spain"], ["LK", "Sri Lanka"],
+    ["TW", "Taiwan"], ["TH", "Thailand"], ["GB", "United Kingdom"], ["US", "United States"], ["VN", "Vietnam"]];
+  const countryName = c => (COUNTRIES.find(x => x[0] === c) || [c, c])[1];
+  const TABS = ["internet", "mobile", "household"];
+  function newLine(gb) { return { name: "", dataGB: gb || 10, nets: [], intl: [], style: "any" }; }
+
+  /* Energy retailer: read from Melbourne Energy Compare's saved settings when both sites share a
+   * browser origin (plasky.github.io). Its plan ids start with the retailer's CDR brand code. */
+  const ENERGY_OPTIONS = [["auto", "From Melbourne Energy Compare"], ["none", "Another retailer, or not sure"],
+    ["agl", "AGL"], ["origin-broadband", "Origin"], ["dodo", "Dodo"]];
+  const ENERGY_DETECTED = (function () {
+    try {
+      const st = JSON.parse(localStorage.getItem("mec-state-v1") || "null");
+      const ids = st && st.ui ? [st.ui.selE, st.ui.selG].filter(Boolean) : [];
+      for (const id of ids) {
+        if (/^AG/.test(id)) return { found: true, provider: "agl" };
+        if (/^OR/.test(id)) return { found: true, provider: "origin-broadband" };
+        if (/^DOD/.test(id)) return { found: true, provider: "dodo" };
+      }
+      return { found: ids.length > 0, provider: null };
+    } catch (e) { return { found: false, provider: null }; }
+  })();
 
   /* ------------------------------------------------------------------ state */
   const DEFAULTS = {
@@ -57,8 +86,10 @@
     use: { people: 4, uhd: 1, hd: 2, calls: 1, gamers: 1, uploadGB: 0, uploadHours: 6 },
     speed: { pick: 0 },     // 0 = from usage; otherwise the NBN tier picked
     cost: { months: 12, reswitch: false, needModem: false, modemPrice: 150, credits: false, bundles: false, unverified: true },
-    current: { price: 0 },
-    ui: { sel: null, bestPer: true, sort: "cost", shown: 25 },
+    current: { price: 0, mobile: 0 },
+    mobile: { count: 4, lines: [newLine(30), newLine(20), newLine(10), newLine(5), newLine(10), newLine(10), newLine(10), newLine(10)] },
+    energy: { retailer: "auto" },
+    ui: { tab: "internet", sel: null, bestPer: true, sort: "cost", shown: 25, line: 0, mBestPer: true, mShown: 15, pShown: 15 },
   };
   const KEY = "atc-state-v1", KEY_AT = "atc-saved-at", FILE_APP = "au-telco-compare";
   const clone = o => JSON.parse(JSON.stringify(o));
@@ -74,7 +105,20 @@
     st.conn.nets = Array.isArray(st.conn.nets) ? st.conn.nets.filter(n => NETS.some(x => x[0] === n)) : clone(DEFAULTS.conn.nets);
     if (![12, 24, 36].includes(st.cost.months)) st.cost.months = 12;
     if (st.speed.pick && !TIER_PICKS.includes(st.speed.pick)) st.speed.pick = 0;
-    st.ui.shown = 25;
+    const savedLines = saved && saved.mobile && Array.isArray(saved.mobile.lines) ? saved.mobile.lines : [];
+    st.mobile.lines = DEFAULTS.mobile.lines.map((d, i) => {
+      const L = merge(clone(d), savedLines[i] || {});
+      L.nets = Array.isArray(L.nets) ? L.nets.filter(n => NETS.some(x => x[0] === n)) : [];
+      L.intl = Array.isArray(L.intl) ? L.intl.filter(c => typeof c === "string" && /^[A-Z]{2}$/.test(c)) : [];
+      if (!LINE_STYLES.some(x => x[0] === L.style)) L.style = "any";
+      if (!(L.dataGB > 0)) L.dataGB = 10;
+      return L;
+    });
+    st.mobile.count = Number.isInteger(st.mobile.count) ? Math.max(0, Math.min(MAX_LINES, st.mobile.count)) : DEFAULTS.mobile.count;
+    if (!ENERGY_OPTIONS.some(x => x[0] === st.energy.retailer)) st.energy.retailer = "auto";
+    if (!TABS.includes(st.ui.tab)) st.ui.tab = "internet";
+    st.ui.shown = 25; st.ui.mShown = 15; st.ui.pShown = 15;
+    st.ui.line = Math.max(0, Math.min(st.mobile.count - 1, st.ui.line | 0));
     return st;
   }
   let S = clone(DEFAULTS), savedAt = null, storageOk = true;
@@ -100,10 +144,17 @@
     return S.speed.pick ? Object.assign({}, n, { minTier: S.speed.pick }) : n;
   };
   const avail = () => ({ fiveG: S.conn.fiveG ? S.conn.nets : false, starlink: S.conn.starlink, privateNet: S.conn.privateNet });
+  const energyProvider = () => S.energy.retailer === "auto" ? ENERGY_DETECTED.provider
+    : S.energy.retailer === "none" ? null : S.energy.retailer;
   const costOpts = () => ({
     months: S.cost.months, modemPrice: S.cost.needModem ? S.cost.modemPrice : 0, credits: S.cost.credits,
     bundled: S.cost.bundles, tech: S.conn.tech, avail: avail(),
   });
+  // Per plan: "count bundle discounts" assumes every bundle; otherwise only the energy bundle of
+  // the retailer you're actually with.
+  const optsFor = (p, o) => Object.assign({}, o, { bundled: S.cost.bundles ? true : (energyProvider() && p.provider === energyProvider() ? ["energy"] : []) });
+  const lineLabel = i => (S.mobile.lines[i].name || "").trim() || `Line ${i + 1}`;
+  const activeLines = () => S.mobile.lines.slice(0, S.mobile.count);
   function kindLine(p) {
     if (p.kind === "nbn") return `NBN ${p.tier}`;
     if (p.kind === "5g") return p.network ? `5G home internet on ${netName(p.network)}` : "5G home internet";
@@ -176,6 +227,80 @@
     return `Adds up to ${fmtNum(n.parts.reduce((a, p) => a + p.down, 0))}/${fmtNum(n.parts.reduce((a, p) => a + p.up, 0), 1)} Mbps (${bits.join(", ")}), plus ${Math.round((n.headroom - 1) * 100)}% headroom because shared connections never run flat out.`;
   }
 
+  function lineName(i) {
+    const inp = h("input", { class: "txt", type: "text", maxlength: 24, placeholder: `Line ${i + 1}`, "aria-label": `Name for line ${i + 1}` });
+    inp.addEventListener("input", () => { S.mobile.lines[i].name = inp.value; changed(); });
+    fields.push({ update() { if (document.activeElement !== inp) inp.value = S.mobile.lines[i].name || ""; } });
+    return inp;
+  }
+  function dataSlider(i) {
+    const out = h("output");
+    const inp = h("input", { type: "range", min: 0, max: DATA_STEPS.length - 1, step: 1, "aria-label": `Data a month for line ${i + 1}` });
+    inp.addEventListener("input", () => { S.mobile.lines[i].dataGB = DATA_STEPS[+inp.value]; upd(); changed(); });
+    function upd() {
+      const v = S.mobile.lines[i].dataGB;
+      let k = DATA_STEPS.findIndex(x => x >= v); if (k < 0) k = DATA_STEPS.length - 1;
+      inp.value = k; out.textContent = `${v} GB a month`; inp.setAttribute("aria-valuetext", out.textContent); sliderPct(inp);
+    }
+    fields.push({ update: upd });
+    return h("div", { class: "field" }, h("div", { class: "lab" }, h("span", {}, "Data"), out), inp);
+  }
+  function lineNets(i) {
+    const box = h("div", { class: "checks cols3" });
+    for (const [id, name] of NETS) {
+      const inp = h("input", { type: "checkbox" });
+      inp.addEventListener("change", () => {
+        const L = S.mobile.lines[i], set = new Set(L.nets);
+        inp.checked ? set.add(id) : set.delete(id);
+        L.nets = NETS.map(n => n[0]).filter(n => set.has(n)); changed();
+      });
+      fields.push({ update() { inp.checked = S.mobile.lines[i].nets.includes(id); } });
+      box.append(h("label", { class: "check" }, inp, name));
+    }
+    return h("div", { class: "field" }, h("div", { class: "lab" }, h("span", {}, "Networks with good coverage for you")), box,
+      note(() => S.mobile.lines[i].nets.length ? "" : "None ticked: any network."));
+  }
+  function countryPicker(i) {
+    const chips = h("div", { class: "chips" });
+    const sel = h("select", { "aria-label": `Add a country line ${i + 1} calls` },
+      h("option", { value: "" }, "Add a country…"), COUNTRIES.map(([c, n]) => h("option", { value: c }, n)));
+    sel.addEventListener("change", () => {
+      const L = S.mobile.lines[i];
+      if (sel.value && !L.intl.includes(sel.value)) L.intl = [...L.intl, sel.value];
+      sel.value = ""; changed();
+    });
+    fields.push({ update() {
+      const L = S.mobile.lines[i];
+      chips.innerHTML = "";
+      for (const c of L.intl) chips.append(h("span", { class: "chip" }, countryName(c),
+        h("button", { type: "button", class: "x", "aria-label": `Remove ${countryName(c)}`, onclick: () => { L.intl = L.intl.filter(x => x !== c); changed(); } }, "×")));
+    } });
+    return h("div", { class: "field" }, h("div", { class: "lab" }, h("span", {}, "Included international calls to")), chips, sel);
+  }
+  function lineRow(i) {
+    const remove = h("button", { type: "button", class: "btn sm", "aria-label": `Remove line ${i + 1}`, onclick: () => {
+      S.mobile.lines.splice(i, 1); S.mobile.lines.push(newLine(10));
+      S.mobile.count = Math.max(0, S.mobile.count - 1);
+      S.ui.line = Math.max(0, Math.min(S.ui.line, S.mobile.count - 1)); changed();
+    } }, "Remove");
+    return showIf(h("div", { class: "list-row" },
+      h("div", { class: "row-head" }, lineName(i), remove),
+      dataSlider(i), lineNets(i),
+      seg(`mobile.lines.${i}.style`, "Plan type", LINE_STYLES),
+      countryPicker(i)), () => i < S.mobile.count);
+  }
+  function addLineButton() {
+    const b = h("button", { type: "button", class: "btn add", onclick: () => { S.mobile.lines[S.mobile.count] = newLine(10); S.mobile.count++; changed(); } });
+    fields.push({ update() { b.textContent = S.mobile.count ? "+ Add another line" : "+ Add a mobile line"; b.hidden = S.mobile.count >= MAX_LINES; } });
+    return b;
+  }
+  function energyNote() {
+    if (S.energy.retailer !== "auto") return "Unlocks energy + internet bundles such as AGL's $15 a month off.";
+    if (!ENERGY_DETECTED.found) return "No Melbourne Energy Compare settings in this browser. Pick your retailer if it's listed.";
+    return ENERGY_DETECTED.provider ? `Your saved energy plan is with ${provName(ENERGY_DETECTED.provider)}.`
+      : "Your saved energy plan's retailer doesn't offer internet bundles.";
+  }
+
   const SECTIONS = [
     { id: "conn", title: "Your connection", open: true,
       sum: () => TECH_SHORT[S.conn.tech] + (S.conn.fiveG && S.conn.nets.length ? " · 5G" : "") + (S.conn.starlink ? " · Starlink" : ""),
@@ -206,6 +331,13 @@
           note(() => S.speed.pick ? `Showing NBN ${S.speed.pick} plans and faster, and other services with evening speeds of at least ${fmtNum(0.8 * S.speed.pick)} Mbps.`
             : "Picks plans whose typical evening speed covers what your household needs. Choose a tier to set it yourself.")),
       ] },
+    { id: "lines", title: "Mobile lines", open: false,
+      sum: () => S.mobile.count ? `${S.mobile.count} line${S.mobile.count > 1 ? "s" : ""} · ${activeLines().reduce((a, L) => a + L.dataGB, 0)} GB` : "None",
+      body: () => [
+        h("div", { class: "hint" }, "One per phone or tablet SIM. Check each one's monthly data use in its app or on the bill, then add a bit."),
+        ...Array.from({ length: MAX_LINES }, (_, i) => lineRow(i)),
+        addLineButton(),
+      ] },
     { id: "cost", title: "Costs to count", open: false,
       sum: () => `${S.cost.months} months${S.cost.reswitch ? " · re-switch" : ""}${S.cost.needModem ? " · modem" : ""}`,
       body: () => [
@@ -216,14 +348,16 @@
         showIf(slider("cost.modemPrice", "A modem of your own would cost", 50, 400, 10, v => "$" + v,
           "Used for plans that don't include or sell one."), () => S.cost.needModem),
         toggle("cost.credits", "Count sign-up credits"),
-        toggle("cost.bundles", "Count bundle discounts", "Discounts for also taking the provider's mobile or energy. Mobile plans are costed separately (coming soon)."),
+        toggle("cost.bundles", "On the Home internet tab, assume every bundle", "Counts discounts for also taking the provider's mobile or energy. The Household tab works bundles out for real."),
+        select("energy.retailer", "Your electricity or gas retailer", ENERGY_OPTIONS, note(energyNote)),
         toggle("cost.unverified", "Include plans not yet checked with the provider",
           "These come from Bill Hero's open data and sometimes show an intro price as the ongoing price."),
       ] },
     { id: "current", title: "What you pay now", open: false,
-      sum: () => S.current.price ? price(S.current.price) + "/month" : "Not set",
+      sum: () => (S.current.price || S.current.mobile) ? price(S.current.price + S.current.mobile) + "/month" : "Not set",
       body: () => [
         slider("current.price", "Your internet bill each month", 0, 250, 1, v => v ? "$" + v : "Not set", "Shows how much switching would save."),
+        slider("current.mobile", "Your mobile bills each month, all lines", 0, 500, 5, v => v ? "$" + v : "Not set"),
       ] },
     { id: "save", title: "Save & restore", open: false, sum: () => (storageOk ? "Saved in this browser" : "Not saving"), body: () => saveSection() },
   ];
@@ -307,8 +441,9 @@
     const fits = shown.filter(r => r.m.ok);
     const fitPlans = fits.map(r => r.p);
     for (const r of shown) {
-      r.stay = E.internetCost(r.p, o);
-      r.chase = r.m.ok && r.p.promo ? E.reswitchCost(r.p, fitPlans, N, o) : null;
+      const op = optsFor(r.p, o);
+      r.stay = E.internetCost(r.p, op);
+      r.chase = r.m.ok && r.p.promo ? E.reswitchCost(r.p, fitPlans, N, op) : null;
       r.c = S.cost.reswitch && r.chase ? r.chase : r.stay;
       r.speed = speedOf(r.p);
     }
@@ -319,12 +454,36 @@
     return { N, A, rows, shown, fits, byCost, front, frontIds, excluded, byId: new Map(shown.map(r => [r.p.id, r])) };
   }
 
+  function buildMobile() {
+    const months = S.cost.months, pool = D.mobile.filter(p => S.cost.unverified || p.verified);
+    const lines = activeLines().map(L => ({ dataGB: L.dataGB, networks: L.nets, intl: L.intl, style: L.style }));
+    const energy = energyProvider(), rules = D.bundles || {};
+    const internetOpts = { modemPrice: S.cost.needModem ? S.cost.modemPrice : 0, credits: S.cost.credits };
+    const hh = E.household({ internet: M.fits.map(r => r.p), lines, mobile: pool, rules, energy, months, internetOpts });
+    const mo = E.household({ internet: [], lines, mobile: pool, rules, energy, months });
+    return { lines, pool, hh, mo, energy };
+  }
+
   function recompute() {
     M = buildModel();
     let sel = M.byId.get(S.ui.sel);
     if (!sel) { sel = M.byCost[0] || null; S.ui.sel = sel ? sel.p.id : null; }
     M.sel = sel;
-    renderReadout(); renderTiles(); renderPlanCard(); renderScatter(); renderRank(); renderMbar();
+    M.mob = buildMobile();
+    renderReadout(); renderTiles(); renderMbar();
+    renderPlanCard(); renderScatter(); renderRank();
+    renderLines(); renderMRank();
+    renderSetup(); renderStack(); renderProviders();
+  }
+
+  function setTab(t, fromHash) {
+    if (!TABS.includes(t)) t = "internet";
+    S.ui.tab = t; save();
+    for (const x of TABS) $("#tab-" + x).hidden = x !== t;
+    for (const a of document.querySelectorAll("#tabs a")) a.setAttribute("aria-current", a.dataset.tab === t ? "page" : "false");
+    if (t !== "internet") { const d = $('#inputs details[data-sec="lines"]'); if (d && !d.open && S.mobile.count) d.open = true; }
+    if (!fromHash && location.hash !== "#" + t) history.replaceState(null, "", "#" + t);
+    if (M) { renderTiles(); renderMbar(); if (t === "household") renderStack(); }
   }
 
   /* ------------------------------------------------------------------ readout + tiles */
@@ -333,8 +492,11 @@
     const speedBit = n.minTier
       ? `<b>NBN ${n.minTier}</b> or faster`
       : `about <b>${fmtNum(n.down)} Mbps</b> down and <b>${fmtNum(n.up)} Mbps</b> up`;
+    const L = activeLines();
+    const mob = L.length ? `${L.length} mobile line${L.length > 1 ? "s" : ""}: ${L.map(x => x.dataGB + " GB").join(", ")} a month` : "No mobile lines";
     $("#readout").innerHTML = `<div>Your household needs ${speedBit} in the evening (7–11pm), when networks are busiest.</div>
-      <div class="bench">${M.fits.length} of ${M.rows.length} plans fit · connection: ${esc(TECH_SHORT[S.conn.tech])}</div>`;
+      <div class="bench">${M.fits.length} of ${M.rows.length} internet plans fit · connection: ${esc(TECH_SHORT[S.conn.tech])}</div>
+      <div class="bench mob">${esc(mob)}${M.mob && M.mob.energy ? ` · energy with ${esc(provName(M.mob.energy))}` : ""}</div>`;
   }
 
   function tile(label, value, what, delta, r) {
@@ -348,6 +510,8 @@
   }
   const horizon = () => `${S.cost.months} months`;
   function renderTiles() {
+    if (S.ui.tab === "mobile") return renderMobileTiles();
+    if (S.ui.tab === "household") return renderHouseholdTiles();
     const el = $("#tiles"); el.innerHTML = "";
     const best = M.byCost[0];
     if (!best) {
@@ -387,7 +551,15 @@
     }
   }
   function renderMbar() {
-    const el = $("#mbar"), best = M.byCost[0];
+    const el = $("#mbar");
+    if (S.ui.tab !== "internet") {
+      const sol = S.ui.tab === "mobile" ? M.mob.mo.independent : M.mob.hh.best;
+      if (!sol || !isFinite(sol.total)) { el.hidden = true; return; }
+      el.hidden = false;
+      el.innerHTML = `<span>${S.ui.tab === "mobile" ? "All lines" : "Everything"}: <b>${money(sol.total / S.cost.months)}/month</b></span><span>over ${S.cost.months} months</span>`;
+      return;
+    }
+    const best = M.byCost[0];
     if (!best) { el.hidden = true; return; }
     el.hidden = false;
     el.innerHTML = `<span>Cheapest that fits: <b>${money(best.c.perMonth)}/month</b></span><span>${esc(provName(best.p.provider))} · ${esc(best.p.name)}</span>`;
@@ -677,11 +849,253 @@
     }
   }
 
+  /* ------------------------------------------------------------------ mobile tab */
+  const periodText = p => p.period_days === 30 || p.period_days === 31 ? "month" : `${p.period_days} days`;
+  const dataText = p => p.data_gb === -1 ? "Unlimited" : p.data_gb == null ? "Not published" : `${fmtNum(p.data_gb, p.data_gb % 1 ? 1 : 0)} GB`;
+  function planLine(p) {
+    const bits = [provName(p.provider)];
+    if (p.network) bits.push(netName(p.network) + " network");
+    bits.push(p.type === "prepaid" ? "prepaid" : "monthly bill");
+    return bits.join(" · ");
+  }
+  function lineNeed(i) {
+    const L = S.mobile.lines[i], bits = [`${L.dataGB} GB`];
+    bits.push(L.nets.length ? L.nets.map(netName).join(" or ") : "any network");
+    if (L.style !== "any") bits.push(L.style === "short" ? "no long expiry" : "monthly bill");
+    if (L.intl.length) bits.push("calls to " + L.intl.map(countryName).join(", "));
+    return bits.join(" · ");
+  }
+  function sumLines(sol) { return sol.lines.reduce((a, x) => a + (x ? x.c.total : Infinity), 0); }
+
+  function renderMobileTiles() {
+    const el = $("#tiles"); el.innerHTML = "";
+    const mo = M.mob.mo, n = M.mob.lines.length, H = horizon();
+    if (!n) { el.append(tile("Mobile", "–", "No mobile lines yet", "Add your lines in Mobile lines on the left.")); return; }
+    const ind = mo.independent;
+    if (!isFinite(ind.total)) {
+      const bad = mo.lines.map((o, i) => o.length ? null : lineLabel(i)).filter(Boolean);
+      el.append(tile("Cheapest for every line", "–", `No plan fits ${bad.join(", ")}`, "Try less data, another network or fewer countries."));
+      return;
+    }
+    const provs = [...new Set(ind.lines.map(x => provName(x.p.provider)))];
+    el.append(tile(`Cheapest for your ${n} line${n > 1 ? "s" : ""}`, `${money(ind.total)} <small>over ${H}</small>`,
+      provs.length === 1 ? provs[0] : `${provs.length} providers: ${provs.join(", ")}`, `${money(ind.total / S.cost.months)}/month for all lines`, null));
+    const one = mo.singles[0];
+    if (one && n > 1) {
+      el.append(tile("Everyone with one provider", `${money(one.total)} <small>over ${H}</small>`, provName(one.provider),
+        one.total - ind.total > 0.5 ? `+${money((one.total - ind.total) / S.cost.months)}/month for one bill${one.discount.total ? `, after ${money(one.discount.total)} of multi-line discounts` : ""}` : "Same as mixing providers", null));
+    } else if (n === 1) {
+      const alt = mo.lines[0].find(x => x.p.provider !== ind.lines[0].p.provider);
+      if (alt) el.append(tile("Runner-up", `${money(alt.c.total)} <small>over ${H}</small>`, `${provName(alt.p.provider)} · ${alt.p.name}`, planLine(alt.p), null));
+    }
+    if (S.current.mobile > 0) {
+      const now = S.current.mobile * S.cost.months, save = now - ind.total;
+      el.append(tile("Versus what you pay now", save > 0 ? `<b class="good">${money(save)}</b> <small>saved over ${H}</small>` : `${money(-save)} <small>more</small>`,
+        "Cheapest plan for each line", `You pay ${money(now)} over ${H} at ${price(S.current.mobile)}/month`, null));
+    } else {
+      const tel = mo.lines.map(o => o.find(x => x.p.network === "telstra") || null);
+      if (tel.every(Boolean)) {
+        const t = tel.reduce((a, x) => a + x.c.total, 0);
+        el.append(tile("Everyone on the Telstra network", `${money(t)} <small>over ${H}</small>`,
+          [...new Set(tel.map(x => provName(x.p.provider)))].join(", "), `+${money(Math.max(0, t - ind.total) / S.cost.months)}/month for the widest coverage`, null));
+      }
+    }
+  }
+
+  function renderLines() {
+    const card = $("#lines-card"), mo = M.mob.mo, n = M.mob.lines.length;
+    if (!n) { card.innerHTML = `<h2>Your lines</h2><p class="empty">No mobile lines yet. Add them under Mobile lines on the left.</p>`; return; }
+    if (S.ui.line >= n) S.ui.line = 0;
+    const rows = mo.lines.map((o, i) => {
+      const b = o[0];
+      return `<tr data-i="${i}" class="${i === S.ui.line ? "sel" : ""}" tabindex="0">
+        <td><div class="pn">${esc(lineLabel(i))}</div><div class="pr">${esc(lineNeed(i))}</div></td>
+        ${b ? `<td><div class="pn">${esc(b.p.name)}</div><div class="pr">${esc(planLine(b.p))}${b.p.verified ? "" : ' · <span class="warn-t">not yet checked</span>'}</div></td>
+        <td class="r">${esc(dataText(b.p))}<span class="pr"> / ${esc(periodText(b.p))}</span></td>
+        <td class="r">${price(b.p.price)}<span class="pr"> / ${esc(periodText(b.p))}</span></td>
+        <td class="r"><b>${money(b.c.total)}</b><div class="pr">${money(b.c.perMonth)}/month</div></td>`
+        : `<td colspan="4" class="warn-t">No plan fits this line</td>`}</tr>`;
+    }).join("");
+    card.innerHTML = `<h2>Cheapest plan for each line</h2>
+      <p class="card-sub">Each line costed over ${horizon()}, including intro offers. 28-day plans count 13 recharges a year. Click a line to see every plan that fits it.</p>
+      <div class="table-wrap"><table class="rank lines"><thead><tr><th>Line</th><th>Cheapest plan</th><th class="r">Data</th><th class="r">Price</th><th class="r">Total</th></tr></thead><tbody>${rows}</tbody>
+      <tfoot><tr><td colspan="4"><b>All lines</b></td><td class="r"><b>${isFinite(mo.independent.total) ? money(mo.independent.total) : "–"}</b></td></tr></tfoot></table></div>`;
+    for (const tr of card.querySelectorAll("tbody tr")) {
+      const go = () => { S.ui.line = +tr.dataset.i; S.ui.mShown = 15; save(); renderLines(); renderMRank(); };
+      tr.addEventListener("click", go);
+      tr.addEventListener("keydown", ev => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); go(); } });
+    }
+  }
+
+  function renderMRank() {
+    const n = M.mob.lines.length, tbl = $("#mrank");
+    if (!n) { $("#mrank-title").textContent = "Plans for this line"; $("#mrank-sub").textContent = ""; tbl.innerHTML = ""; $("#mrank-more").hidden = true; return; }
+    const i = Math.min(S.ui.line, n - 1);
+    let list = M.mob.mo.lines[i].slice();
+    if (S.ui.mBestPer) { const seen = new Set(); list = list.filter(x => !seen.has(x.p.provider) && seen.add(x.p.provider)); }
+    const shown = list.slice(0, S.ui.mShown);
+    $("#mrank-title").textContent = `Plans for ${lineLabel(i)}`;
+    const total = M.mob.pool.filter(p => !p.data_only).length;
+    $("#mrank-sub").textContent = `${M.mob.mo.lines[i].length} of ${total} phone plans fit ${lineNeed(i)}. Total cost over ${horizon()}, cheapest first.`;
+    const maxT = Math.max(...shown.map(x => x.c.total), 1);
+    tbl.innerHTML = `<thead><tr><th class="rk">#</th><th>Plan</th><th class="r">Data</th><th class="r">Price</th><th class="r">Intro offer</th><th class="r">Total</th><th class="bar-cell"></th></tr></thead><tbody>` +
+      shown.map((x, k) => { const p = x.p; return `<tr>
+        <td class="rk">${k + 1}</td>
+        <td><div class="pn">${esc(p.name)}</div><div class="pr">${esc(planLine(p))}${p.rollover ? " · data rollover" : ""}${p.verified ? "" : ' · <span class="warn-t">not yet checked</span>'}</div>${p.notes ? `<div class="pr">${esc(p.notes.length > 140 ? p.notes.slice(0, 137) + "…" : p.notes)}</div>` : ""}</td>
+        <td class="r">${esc(dataText(p))}</td>
+        <td class="r">${price(p.price)}<span class="pr"> / ${esc(periodText(p))}</span></td>
+        <td class="r">${p.promo ? `${price(p.promo.price)} <span class="pr">× ${p.promo.periods}</span>` : '<span class="pr">–</span>'}</td>
+        <td class="r"><b>${money(x.c.total)}</b><div class="pr">${money(x.c.perMonth)}/month</div></td>
+        <td class="bar-cell"><div class="bar" style="width:${(x.c.total / maxT * 100).toFixed(1)}%"></div></td></tr>`; }).join("") + "</tbody>";
+    for (const [k, tr] of [...tbl.tBodies[0].rows].entries()) {
+      const p = shown[k].p;
+      if (p.url) { tr.title = "Open the plan page"; tr.addEventListener("click", () => window.open(p.url, "_blank", "noopener")); }
+    }
+    const more = $("#mrank-more");
+    more.hidden = list.length <= S.ui.mShown;
+    more.textContent = `Show more (${list.length - S.ui.mShown} left)`;
+  }
+
+  /* ------------------------------------------------------------------ household tab */
+  function solSummary(sol) {
+    const bits = [];
+    if (sol.internet) bits.push(`Internet: ${provName(sol.internet.p.provider)}`);
+    const mp = [...new Set(sol.lines.filter(Boolean).map(x => provName(x.p.provider)))];
+    if (mp.length) bits.push(`Mobile: ${mp.join(", ")}`);
+    return bits.join(" · ");
+  }
+  function renderHouseholdTiles() {
+    const el = $("#tiles"); el.innerHTML = "";
+    const hh = M.mob.hh, H = horizon(), best = hh.best;
+    if (!best || !isFinite(best.total)) {
+      el.append(tile("Cheapest overall", "–", "Something doesn't fit", "Check the Home internet and Mobile tabs for what's missing."));
+      return;
+    }
+    el.append(tile("Cheapest overall", `${money(best.total)} <small>over ${H}</small>`, solSummary(best),
+      `${money(best.total / S.cost.months)}/month for everything`, null));
+    const one = hh.singles[0];
+    if (one) el.append(tile("Everything with one provider", `${money(one.total)} <small>over ${H}</small>`, provName(one.provider),
+      one.total - best.total > 0.5 ? `+${money((one.total - best.total) / S.cost.months)}/month for one bill` : "Also the cheapest overall", null));
+    else el.append(tile("Everything with one provider", "–", "No provider covers it all", "No single provider has a plan for every line plus your internet.", null));
+    const now = (S.current.price + S.current.mobile) * S.cost.months;
+    if (now > 0) {
+      const save = now - best.total;
+      el.append(tile("Versus what you pay now", save > 0 ? `<b class="good">${money(save)}</b> <small>saved over ${H}</small>` : `${money(-save)} <small>more</small>`,
+        "Cheapest overall", `You pay ${money(now)} over ${H}`, null));
+    } else {
+      const gain = hh.independent.total - best.total;
+      el.append(tile("What bundling is worth", gain > 0.5 ? `<b class="good">${money(gain)}</b> <small>over ${H}</small>` : "$0",
+        gain > 0.5 ? `Taking more with ${provName(best.provider)}` : "Mixing providers is cheapest",
+        gain > 0.5 ? "Versus the cheapest plans bought separately" : "No bundle beats the cheapest plans bought separately", null));
+    }
+  }
+
+  function solRows(sol) {
+    const rows = [];
+    const lineSave = x => x.c.bundleSave || 0;
+    if (sol.internet) {
+      const p = sol.internet.p, bs = sol.internet.c.parts.bundleSave || 0;
+      rows.push([`<b>Internet</b><small>${esc(provName(p.provider))} · ${esc(p.name)} · ${esc(kindLine(p))}${bs ? ` · includes ${money(bs)} bundle discount` : ""}${p.verified ? "" : ' · <span class="warn-t">price not yet checked</span>'}</small>`, sol.internet.c.total]);
+    }
+    sol.lines.forEach((x, i) => {
+      if (!x) return;
+      const s = lineSave(x);
+      rows.push([`<b>${esc(lineLabel(i))}</b><small>${esc(provName(x.p.provider))} · ${esc(x.p.name)} · ${esc(dataText(x.p))} / ${esc(periodText(x.p))}${s ? ` · includes ${money(s)} bundle discount` : ""}${x.p.verified ? "" : ' · <span class="warn-t">price not yet checked</span>'}</small>`, x.c.total]);
+    });
+    for (const d of (sol.discount && sol.discount.items) || []) rows.push([`${esc(d.text)}`, -d.amount]);
+    return rows;
+  }
+  function renderSetup() {
+    const card = $("#setup-card"), hh = M.mob.hh, best = hh.best;
+    if (!best || !isFinite(best.total)) {
+      card.innerHTML = `<h2>Your cheapest setup</h2><p class="empty">No complete setup fits yet: check that every mobile line has a plan (Mobile tab) and that an internet plan fits (Home internet tab).</p>`;
+      return;
+    }
+    const kv = solRows(best).map(([t, v]) => `<tr><td>${t}</td><td class="${v < 0 ? "neg" : ""}">${money(v)}</td></tr>`).join("");
+    const one = hh.singles[0];
+    const alt = one && one !== best ? `<p class="alt">Everything with <b>${esc(provName(one.provider))}</b> instead: ${money(one.total)} (${money((one.total - best.total) / S.cost.months)}/month more).</p>` : "";
+    const why = best.provider
+      ? `Taking ${best.internetWithP ? "your internet and " : ""}${best.lines.filter(x => x && x.onP).length} line${best.lines.filter(x => x && x.onP).length === 1 ? "" : "s"} with ${esc(provName(best.provider))} unlocks bundle discounts worth more than shopping around.`
+      : "The cheapest plans bought separately beat every bundle on offer.";
+    card.innerHTML = `<h2>Your cheapest setup</h2>
+      <p class="card-sub">${why} Total over ${horizon()}, staying on each plan after its intro offer.${M.mob.energy ? ` Your energy retailer (${esc(provName(M.mob.energy))}) is counted for energy bundles.` : ""}</p>
+      <div class="setup"><table class="kv">${kv}<tr class="total"><td>Total over ${horizon()}</td><td>${money(best.total)}</td></tr>
+      <tr><td>Per month on average</td><td>${money(best.total / S.cost.months)}</td></tr></table>${alt}</div>`;
+  }
+
+  function splitSol(sol) {
+    let internet = sol.internet ? sol.internet.c.total : 0, mobile = sol.lines.reduce((a, x) => a + (x ? x.c.total : 0), 0);
+    for (const d of (sol.discount && sol.discount.items) || []) { if (d.applies_to === "internet") internet -= d.amount; else mobile -= d.amount; }
+    return { internet, mobile };
+  }
+  function renderStack() {
+    const box = $("#stack"), hh = M.mob.hh;
+    const rows = [];
+    if (hh.best && isFinite(hh.best.total)) rows.push({ label: "Cheapest setup", ...splitSol(hh.best) });
+    if (hh.singles[0] && hh.singles[0] !== hh.best) rows.push({ label: `All with ${provName(hh.singles[0].provider)}`, ...splitSol(hh.singles[0]) });
+    if (S.current.price || S.current.mobile) rows.push({ label: "What you pay now", internet: S.current.price * S.cost.months, mobile: S.current.mobile * S.cost.months });
+    $("#stack-sub").textContent = rows.length ? `Total over ${horizon()}, split into home internet and mobile.` : "";
+    box.innerHTML = ""; $("#stack-legend").innerHTML = ""; $("#stack-table").innerHTML = "";
+    if (!rows.length || $("#tab-household").hidden) return;
+    const W = Math.max(300, box.clientWidth || 600), lw = Math.min(170, W * 0.32), barH = 20, gap = 16, mt = 4;
+    const H = mt + rows.length * (barH + gap) + 16;
+    const max = niceMax(Math.max(...rows.map(r => r.internet + r.mobile)) * 1.08);
+    const x = v => lw + v / max * (W - lw - 60);
+    const svg = sv("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Cost by service" });
+    const cols = { internet: "var(--s1)", mobile: "var(--s2)" }, names = { internet: "Home internet", mobile: "Mobile" };
+    rows.forEach((r, k) => {
+      const y = mt + k * (barH + gap);
+      const t = sv("text", { x: 0, y: y + barH / 2 + 4, class: "ink" }); t.textContent = r.label; svg.append(t);
+      let x0 = lw;
+      const segs = ["internet", "mobile"].filter(s => r[s] > 0.5);
+      segs.forEach((s, j) => {
+        const w = Math.max(1, x(x0 - lw + r[s]) - x0 - (j < segs.length - 1 ? 2 : 0));
+        const last = j === segs.length - 1;
+        const el = last ? sv("path", { d: roundedRight(x0, y, w, barH, 4), fill: cols[s], class: "seg-rect" })
+          : sv("rect", { x: x0, y, width: w, height: barH, fill: cols[s], class: "seg-rect" });
+        el.addEventListener("mousemove", ev => showTip(ev, `<div class="t-h">${esc(r.label)}</div><div class="t-r"><span><i style="background:${cols[s]}"></i>${names[s]}</span><span>${money(r[s])}</span></div><div class="t-r"><span>Total</span><span>${money(r.internet + r.mobile)}</span></div>`));
+        el.addEventListener("mouseleave", hideTip);
+        svg.append(el);
+        x0 += w + (last ? 0 : 2);
+      });
+      const tl = sv("text", { x: x0 + 6, y: y + barH / 2 + 4, class: "ink" }); tl.textContent = money(r.internet + r.mobile); svg.append(tl);
+    });
+    box.append(svg);
+    $("#stack-legend").innerHTML = ["internet", "mobile"].map(s => `<span><i style="background:${cols[s]}"></i>${names[s]}</span>`).join("");
+    $("#stack-table").innerHTML = `<div class="tv-scroll"><table><tr><th></th><th>Home internet</th><th>Mobile</th><th>Total</th></tr>` +
+      rows.map(r => `<tr><td>${esc(r.label)}</td><td>${money(r.internet)}</td><td>${money(r.mobile)}</td><td>${money(r.internet + r.mobile)}</td></tr>`).join("") + `</table></div>`;
+  }
+  function roundedRight(x, y, w, hgt, r) {
+    r = Math.min(r, w / 2, hgt / 2);
+    return `M${x},${y}H${x + w - r}Q${x + w},${y} ${x + w},${y + r}V${y + hgt - r}Q${x + w},${y + hgt} ${x + w - r},${y + hgt}H${x}Z`;
+  }
+
+  function renderProviders() {
+    const hh = M.mob.hh, list = hh.byProvider, tbl = $("#prov");
+    const bestT = hh.best && isFinite(hh.best.total) ? hh.best.total : null;
+    $("#prov-sub").textContent = list.length
+      ? `For each provider, the cheapest way to use it: its internet, some or all of your lines, or both, with everything else bought wherever it's cheapest. Total over ${horizon()}.`
+      : "No provider deals to compare yet.";
+    const shown = list.slice(0, S.ui.pShown);
+    tbl.innerHTML = `<thead><tr><th class="rk">#</th><th>Provider</th><th>What you'd take with them</th><th class="r">Total</th><th class="r">vs cheapest</th></tr></thead><tbody>` +
+      shown.map((sol, k) => {
+        const onP = sol.lines.filter(x => x && x.onP).length;
+        const what = [sol.internetWithP ? "Internet" : null, onP ? `${onP} of ${sol.lines.length} line${sol.lines.length > 1 ? "s" : ""}` : null].filter(Boolean).join(" + ");
+        const disc = sol.discount.total + (sol.internetWithP && sol.internet ? sol.internet.c.parts.bundleSave || 0 : 0) + sol.lines.reduce((a, x) => a + (x && x.onP ? x.c.bundleSave || 0 : 0), 0);
+        return `<tr><td class="rk">${k + 1}</td><td><div class="pn">${esc(provName(sol.provider))}</div>${sol.single ? '<div class="pr">Everything with them</div>' : ""}</td>
+          <td>${esc(what)}${disc > 0.5 ? `<div class="pr">${money(disc)} in bundle discounts</div>` : ""}</td>
+          <td class="r"><b>${money(sol.total)}</b></td><td class="r">${bestT != null ? (sol.total - bestT < 0.5 ? "Cheapest" : "+" + money(sol.total - bestT)) : "–"}</td></tr>`;
+      }).join("") + "</tbody>";
+    const more = $("#prov-more");
+    more.hidden = list.length <= S.ui.pShown;
+    more.textContent = `Show more (${list.length - S.ui.pShown} left)`;
+  }
+
   /* ------------------------------------------------------------------ notes, footer */
   function renderNotes() {
     const m = D.meta;
     const src = m.sources.map(s => `<tr><td>${s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>` : esc(s.name)}</td>
-      <td>${s.status === "ok" ? "Up to date" : "Using the last good copy"}</td><td class="r">${s.records.internet}</td><td>${s.fetched ? fmtDate(s.fetched) : "–"}</td></tr>`).join("");
+      <td>${s.status === "ok" ? "Up to date" : "Using the last good copy"}</td><td class="r">${s.records.internet}</td><td class="r">${s.records.mobile}</td><td>${s.fetched ? fmtDate(s.fetched) : "–"}</td></tr>`).join("");
     $("#notes").innerHTML = `
       <p>Each plan is costed over the period you pick: intro-offer months at the intro price, the rest at the ongoing price, plus any setup fee and the modem or hardware you'd need. "Average per month" is that total divided by the number of months.</p>
       <h3>Speeds</h3>
@@ -690,9 +1104,13 @@
       <p>Most intro offers are for new customers and last 6 months. With "switch again" on, the cost assumes that when each offer ends you move to the cheapest new-customer offer of the same speed or faster from a provider you haven't used. It's a real saving, but it means changing provider a couple of times a year.</p>
       <h3>5G home internet and Starlink</h3>
       <p>5G home internet runs over a mobile network, so whether you can get it, and how fast it is, depends on your address. Starlink works almost anywhere but costs more and needs its own dish. Both need the provider's hardware, which is always counted.</p>
+      <h3>Mobile</h3>
+      <p>Each line is matched to plans with enough data each month, on a network you've ticked (any if none), with included calls to the countries you add. Recharges are counted as they fall: a 28-day plan is 13 recharges a year, a 365-day plan is one. Intro offers count for the recharges they cover.</p>
+      <h3>Household and bundles</h3>
+      <p>The Household tab tries every way of splitting your lines between each provider and the cheapest plans elsewhere, with that provider's internet or the cheapest other internet. It counts bundle discounts only when their conditions are met: a mobile line with the same provider, its internet, or your energy retailer. Bundles assume you stay put, so promo-chasing is left out here.</p>
       <h3>Where the data comes from</h3>
-      <div class="table-wrap"><table class="src"><tr><th>Source</th><th>Status</th><th class="r">Plans</th><th>Fetched</th></tr>${src}</table></div>
-      <p>${m.verified.internet} of ${m.counts.internet} plans come straight from the provider's own published plan data; the rest come from Bill Hero's open data and are marked "not yet checked". Prices refresh every night. Always check the provider's Critical Information Summary before you sign up: offers change often and some have conditions.</p>
+      <div class="table-wrap"><table class="src"><tr><th>Source</th><th>Status</th><th class="r">Internet</th><th class="r">Mobile</th><th>Fetched</th></tr>${src}</table></div>
+      <p>${m.verified.internet} of ${m.counts.internet} internet plans and ${m.verified.mobile} of ${m.counts.mobile} mobile plans come straight from the provider's own published plan data or were checked by hand; the rest come from Bill Hero's open data and are marked "not yet checked". Prices refresh every night. Always check the provider's Critical Information Summary before you sign up: offers change often and some have conditions.</p>
       <p>${esc([...new Set(m.sources.map(s => s.attribution).filter(Boolean))].join(" · "))}</p>
       <p>Comparing electricity and gas too? <a href="${ENERGY_SITE}">Melbourne Energy Compare</a> does the same for Victorian energy plans.</p>`;
     $("#data-date").innerHTML = `Prices checked <b>${esc(fmtDate(m.built_date_aest || m.built))}</b>`;
@@ -713,6 +1131,15 @@
     bp.checked = S.ui.bestPer;
     bp.addEventListener("change", () => { S.ui.bestPer = bp.checked; S.ui.shown = 25; save(); renderRank(); });
     $("#rank-more").addEventListener("click", () => { S.ui.shown += 25; renderRank(); });
+    const mb = $("#m-best-per");
+    mb.checked = S.ui.mBestPer;
+    mb.addEventListener("change", () => { S.ui.mBestPer = mb.checked; S.ui.mShown = 15; save(); renderMRank(); });
+    $("#mrank-more").addEventListener("click", () => { S.ui.mShown += 15; renderMRank(); });
+    $("#prov-more").addEventListener("click", () => { S.ui.pShown += 15; renderProviders(); });
+    for (const a of document.querySelectorAll("#tabs a")) a.addEventListener("click", ev => { ev.preventDefault(); setTab(a.dataset.tab); });
+    window.addEventListener("hashchange", () => setTab(location.hash.slice(1), true));
+    const fromHash = location.hash.slice(1);
+    setTab(TABS.includes(fromHash) ? fromHash : S.ui.tab, true);
     renderNotes();
     updateInputs();
     recompute();
@@ -720,7 +1147,7 @@
     let rz = 0, lastW = innerWidth;
     window.addEventListener("resize", () => {
       if (innerWidth === lastW) return; lastW = innerWidth;
-      clearTimeout(rz); rz = setTimeout(() => { if (M) { renderScatter(); if (M.sel) renderMonth(M.sel); } }, 150);
+      clearTimeout(rz); rz = setTimeout(() => { if (M) { renderScatter(); if (M.sel) renderMonth(M.sel); renderStack(); } }, 150);
     });
   }
   boot();

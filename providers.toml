@@ -21,7 +21,7 @@ boost-mobile = { name = "Boost Mobile", mvno_of = "telstra" }
 catch-connect = { name = "Catch Connect" }
 circles-life = { name = "Circles.Life", mvno_of = "optus" }
 cmobile = { name = "CMobile" }
-coles-mobile = { name = "Coles Mobile" }
+coles-mobile = { name = "Coles Mobile", mvno_of = "optus" }
 crisp-wireless = { name = "Crisp Wireless", own_network = true }
 dodo = { name = "Dodo" }
 escapenet = { name = "Escapenet" }
@@ -43,10 +43,10 @@ launtel = { name = "Launtel" }
 leaptel = { name = "Leaptel" }
 lebara = { name = "Lebara", mvno_of = "vodafone" }
 lightning-broadband = { name = "Lightning Broadband", own_network = true }
-lycamobile = { name = "Lycamobile" }
+lycamobile = { name = "Lycamobile", mvno_of = "vodafone" }
 mate = { name = "Mate" }
 mint-telecom = { name = "Mint Telecom" }
-moose-mobile = { name = "Moose Mobile" }
+moose-mobile = { name = "Moose Mobile", mvno_of = "vodafone" }
 more-telecom = { name = "More" }
 neptune = { name = "Neptune" }
 nodeone = { name = "NodeOne" }
@@ -70,6 +70,6 @@ uniti = { name = "Uniti" }
 uniti-internet = { name = "Uniti Internet" }
 uptime-isp = { name = "Uptime ISP" }
 vodafone = { name = "Vodafone" }
-woolworths-mobile = { name = "Woolworths Mobile", mvno_of = "telstra" }
+woolworths-mobile = { name = "Everyday Mobile (Woolworths)", mvno_of = "telstra" }
 yless4u = { name = "Yless4U" }
 yomojo = { name = "Yomojo" }

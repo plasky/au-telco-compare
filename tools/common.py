@@ -1,9 +1,11 @@
 """Shared helpers for the data pipeline: paths, polite HTTP, provider registry, NBN tiers."""
+import gzip
 import json
 import pathlib
 import re
 import time
 import tomllib
+import urllib.error
 import urllib.request
 from datetime import datetime, timezone
 
@@ -24,8 +26,9 @@ def now_iso():
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
-def fetch(url, dest=None, min_interval=1.0, retries=3, timeout=60):
-    """GET a URL with an identifiable client name, at most one request per second per host.
+def fetch(url, dest=None, min_interval=2.0, retries=3, timeout=60):
+    """GET a URL with an identifiable client name, at most one request every 2 seconds per host.
+    Retries network errors and server errors, but never a refusal (403, 404, 410, 429, 451).
     Saves the body to `dest` (a path) when given. Returns the body as bytes."""
     host = url.split("/")[2]
     wait = _last_request.get(host, 0) + min_interval - time.time()
@@ -37,11 +40,18 @@ def fetch(url, dest=None, min_interval=1.0, retries=3, timeout=60):
             with urllib.request.urlopen(req, timeout=timeout) as r:
                 body = r.read()
             break
+        except urllib.error.HTTPError as e:
+            if e.code in (403, 404, 410, 429, 451) or attempt == retries - 1:
+                raise
+            time.sleep(3 * (attempt + 1))
+            continue
         except Exception:
             if attempt == retries - 1:
                 raise
             time.sleep(3 * (attempt + 1))
     _last_request[host] = time.time()
+    if body[:2] == b"\x1f\x8b":          # gzip sent without being asked for
+        body = gzip.decompress(body)
     if dest:
         dest = pathlib.Path(dest)
         dest.parent.mkdir(parents=True, exist_ok=True)

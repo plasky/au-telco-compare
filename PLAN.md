@@ -318,6 +318,23 @@ tools/test_engine.js         cost-model tests
     plasky.github.io/melbourne-energy-compare/, the same origin, so the energy-settings link
     in phase 3 can read its saved settings.
 
+- **Phase 3 (25 Nov 2026):** mobile and household built.
+  - Mobile tab: up to 8 lines (data, networks, plan type, international calls), cheapest plan
+    per line and a ranked list per line. Household tab: cheapest setup, best single provider,
+    cost by service, and each provider's best deal, from `household()` in the engine.
+  - 16 mobile adapters plus Lycamobile by hand: 134 of 282 mobile plans now come from the
+    provider. Circles.Life excluded (left Australia).
+  - Bundles modelled: per-plan discounts (Vodafone $10 off nbn with mobile; TPG/iiNet $5 off
+    Medium/Large SIMs with internet; Aussie Broadband $5 off each SIM; Mate $10 off nbn; amaysim
+    $10 off nbn; AGL $15 off with energy), plans only sold with internet (Spintel), and account
+    rules (Superloop tiers, Tangerine 10%). Energy retailer read from the energy site's saved
+    plan on the same origin, or picked by hand.
+  - Not modelled: Telstra Bundle Plans (extra lines that need an Essential/Premium line), ALDI
+    family plans (shared data), bonus-data offers (in notes only), capped international minutes.
+  - Bill Hero: behind a Cloudflare challenge since 25 Nov; the adapter uses a committed snapshot
+    refreshed by hand (`tools/import-billhero.sh`). Its long-expiry mobile plans are now read as
+    365/180/90-day recharges when the plan name's price gives them away.
+
 ## 7. Risks
 
 - **Scraper breakage and bot protection.** This is the main ongoing cost. Mitigations: Bill

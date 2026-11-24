@@ -77,6 +77,41 @@ const slow = { id: "s", provider: "s", kind: "nbn", tier: 50, techs: E.FIXED_LIN
 c = E.reswitchCost(nbn100, [nbn100, slow, B], { down: 40, up: 10 }, { months: 12 });
 ok(c.path.join(",") === "a-100,b", `re-switch never drops to a slower tier (path ${c.path})`);
 
+// --- Household: bundles and the optimiser --------------------------------------------------
+const R = 365.25 / 12 * 12 / 30;   // monthly recharges in a year = 12.175
+const mA = { id: "mA", provider: "A", network: "optus", type: "postpaid", period_days: 30, price: 30, data_gb: 50, data_only: false, intl: [] };
+ok(near(E.mobileCost({ ...mA, bundle: [{ with: "internet", off: 5 }] }, { dataGB: 10 }, { with: ["internet"] }).total, 25 * R)
+  && near(E.mobileCost({ ...mA, bundle: [{ with: "internet", off: 5 }] }, { dataGB: 10 }).total, 30 * R), "SIM bundle discount only with the provider's internet");
+ok(!E.mobileCost({ ...mA, period_days: 365, price: 300 }, { dataGB: 10, style: "short" }).ok && !E.mobileCost({ ...mA, type: "prepaid" }, { dataGB: 10, style: "postpaid" }).ok,
+  "plan style: long expiry and prepaid can be excluded");
+let ad = E.accountDiscount([{ applies_to: "mobile", with: "mobile", pct: 10 }], { lineTotals: [300, 200], internetTotal: 0, hasInternet: false, months: 12 });
+ok(near(ad.total, 20), `10% off additional lines: $20 on a $200 second line (got ${ad.total})`);
+ad = E.accountDiscount([{ applies_to: "internet", with: "mobile", tiers: [5, 7.5, 15] }], { lineTotals: [300, 200], internetTotal: 900, hasInternet: true, months: 12 });
+ok(near(ad.total, 90), `tiered internet discount for 2 services: $7.50 x 12 = $90 (got ${ad.total})`);
+ok(E.accountDiscount([{ applies_to: "internet", with: "mobile", off: 10 }], { lineTotals: [], internetTotal: 900, hasInternet: true, months: 12 }).total === 0,
+  "internet-with-mobile discount needs at least one line");
+
+const iA = { id: "iA", provider: "A", kind: "nbn", tier: 100, techs: E.FIXED_LINE, down: 100, up: 20, price: 80, setup: 0, modem: { offer: "byo" }, bundle: [{ with: "mobile", off: 10 }] };
+const iB = { id: "iB", provider: "B", kind: "nbn", tier: 100, techs: E.FIXED_LINE, down: 100, up: 20, price: 75, setup: 0, modem: { offer: "byo" } };
+const mB = { ...mA, id: "mB", provider: "B", price: 25 }, mC = { ...mA, id: "mC", provider: "C", price: 20, data_gb: 40 };
+const hhLines = [{ dataGB: 30 }, { dataGB: 45 }];
+let hh = E.household({ internet: [iA, iB], lines: hhLines, mobile: [mA, mB, mC], months: 12 });
+ok(near(hh.independent.total, 900 + 20 * R + 25 * R), `independent: cheapest internet + cheapest plan per line = $${hh.independent.total.toFixed(2)}`);
+ok(hh.best === hh.independent, "A's $10 internet bundle isn't worth moving a line to A's dearer SIM");
+hh = E.household({ internet: [iA, iB], lines: hhLines, mobile: [mA, mB, mC], months: 12, rules: { A: [{ applies_to: "mobile", with: "internet", pct: 10 }] } });
+ok(hh.best.provider === "A" && near(hh.best.total, 840 + 20 * R + 0.9 * 30 * R) && hh.best.lines.map(l => l.p.id).join(",") === "mC,mA",
+  `with 10% off A's SIM too: A internet + line 2 on A = $${hh.best.total.toFixed(2)} (${hh.best.lines.map(l => l.p.id)})`);
+const singleA = hh.singles.find(x => x.provider === "A");
+ok(singleA && near(singleA.total, 840 + 2 * 0.9 * 30 * R), `everything with A: $${singleA && singleA.total.toFixed(2)}`);
+const mBonly = { ...mA, id: "mBonly", provider: "B", price: 10, requires: "internet" };
+ok(!E.mobileCost(mBonly, { dataGB: 10 }).ok && E.mobileCost(mBonly, { dataGB: 10 }, { with: ["internet"] }).ok, "a plan only sold with internet needs that internet");
+hh = E.household({ internet: [iA, iB], lines: hhLines, mobile: [mA, mB, mC, mBonly], months: 12 });
+ok(hh.best.provider === "B" && hh.best.internetWithP && hh.best.lines.every(l => l.p.id === "mBonly"),
+  `B's internet-only SIM ($10) wins only together with B's internet (${hh.best.provider}: ${hh.best.lines.map(l => l.p.id)})`);
+ok(hh.lines[0].every(x => !x.p.requires), "bundle-only plans aren't offered for a line on its own");
+hh = E.household({ internet: [{ ...iB, bundle: [{ with: "energy", off: 15 }] }], lines: [], mobile: [], months: 12, energy: "B" });
+ok(near(hh.independent.total, 60 * 12), "energy bundle applies when your energy retailer is the internet provider");
+
 // --- Mobile -----------------------------------------------------------------------------
 const p28 = { id: "m28", network: "optus", type: "prepaid", period_days: 28, price: 35, data_gb: 42, data_only: false, intl: ["NZ", "GB"] };
 let mc = E.mobileCost(p28, { dataGB: 30 }, { months: 12 });

@@ -77,9 +77,9 @@ def fees(text):
                   r"If you cancel\s*early, the modem is \$(\d+)", text)
     f["5g_modem"] = (int(m.group(1)), float(m.group(2))) if m else None
     f["fttb_setup"] = 0.0 if re.search(r"FTTB\d*:? Promotional .{0,200}Total min charge = First month.s plan fee\.", text) else None
-    m = re.search(r"save \$(\d+(?:\.\d+)?)/mth on mobile fees from month (\d+)", text)
-    f["bundle"] = [{"with": "mobile", "off": float(m.group(1)),
-                    "text": f"${m.group(1)}/mth off an eligible TPG Medium or Large SIM-only mobile plan from month {m.group(2)}"}] if m else []
+    # TPG's internet + mobile bundle ("save $5/mth on mobile fees from month 7") comes off the
+    # mobile bill, so it is recorded on the Medium/Large SIM plans (tpg_mobile.py), not here.
+    f["bundle"] = []
     return f
 
 

@@ -20,3 +20,39 @@
 #   Origin    $10/month off internet with Origin electricity and/or gas
 #   Dodo      $12/month (NBN + 2 other services) or $15/month (NBN + mobile + electricity + gas)
 #   amaysim   handled by the adapter ($10/month off NBN with an active amaysim SIM)
+
+# ---- Checked 25 Nov 2026 (mobile phase). Per-plan discounts live in the adapters' records:
+#   Vodafone  $10/month off nbn with a postpaid mobile, applies during intro offers (vodafone.py)
+#   TPG/iiNet $5/month off Medium/Large SIM fees with linked internet, from month 7 (tpg_mobile.py)
+#   amaysim   $10/month off NBN with an active amaysim SIM (amaysim.py)
+#   AGL       $15/month off NBN with AGL energy, intro offer needs energy too (overrides/plans.toml)
+# Not modelled yet:
+#   Telstra   Bundle Plans: extra lines from $61/month (25GB) on accounts with an Upfront Essential
+#             or Premium plan (https://www.telstra.com.au/bundle-plans). Needs plans that depend
+#             on another line, which the optimiser doesn't support.
+#   Optus     "Bundle Bonus" ($15/month off each extra service for 12 months) appears only in a
+#             hidden modal with 2025 artwork, not on the rendered page. Treated as stale.
+
+# ---- Account-level rules (verified = true enables them on the site)
+
+[[bundle]]
+provider = "superloop"
+applies_to = "internet"
+with = "mobile"
+tiers = [5.0, 7.5, 10.0, 12.5, 15.0]
+text = "Superloop Bundle & Save: $5 to $15/month off internet with extra services"
+source = "https://www.superloop.com/internet/bundle-and-save/"
+checked = "2026-11-25"
+verified = true
+expires = "2027-02-28"
+
+[[bundle]]
+provider = "tangerine"
+applies_to = "mobile"
+with = "internet"
+pct = 10.0
+text = "Tangerine: 10% off mobile plans with Tangerine nbn"
+source = "https://www.tangerine.com.au/storage/policies/September2024/Z2ScyJ9jCcPrSBiJdRZt.pdf"
+checked = "2026-11-25"
+verified = true
+expires = "2027-02-28"

@@ -99,6 +99,17 @@ def norm_mobile(rows, registry, captured_default):
         if p.get("plan_type") == "postpaid" and period is None:
             period = 30
         if period is None:
+            # Long-expiry recharges named only by price ("Prepaid Plus $180"): the feed divides
+            # the price into 30-day months, so a name price ~12x, ~6x or ~3x the monthly figure
+            # means a 365-, 180- or 90-day recharge. (The feed's data figure is the whole period's.)
+            dm = re.search(r"\$(\d+(?:\.\d+)?)", name)
+            if dm and monthly:
+                ratio = float(dm.group(1)) / monthly
+                for days in (365, 180, 90):
+                    if abs(ratio - days / 30) / (days / 30) < 0.04:
+                        period = days
+                        break
+        if period is None:
             period = 30 if p.get("plan_type") != "prepaid" else 28 if "28" in n else 30
         # Price per period: the dollar figure in the name if it agrees with the feed's
         # 30-day-normalised price, otherwise reconstruct it from that price.
