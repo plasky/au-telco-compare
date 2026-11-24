@@ -20,7 +20,8 @@ Compare. See [PLAN.md](PLAN.md) for the research, design and build phases.
     diffs and fallback; `report.json` is the last build report.
 - `sources/`: one adapter per data source, each writing `data-raw/normalised/<source>.json`.
   Every `.py` file here is run as an adapter, so don't put helper modules in this folder.
-  - `billhero.py`: Bill Hero open data feeds (backbone for NBN and mobile).
+  - `billhero.py`: Bill Hero open data feeds (backbone for NBN and mobile), falling back to
+    the committed snapshot in `snapshots/billhero/` when the live fetch is refused.
   - `amaysim.py`: amaysim's machine-readable catalogue (NBN + SIM, with promos).
   - Provider plan pages (home internet only so far; each reads structured data such as
     JSON-LD, embedded JSON or data-* attributes from one or two server-rendered pages):
@@ -109,7 +110,11 @@ the last good data and the nightly job opens an issue, so check the first few ru
 ## Data sources and licences
 
 - Bill Hero open data (https://billhero.com.au/data), CC-BY-4.0. The site must show
-  "Data via Bill Hero (billhero.com.au)".
+  "Data via Bill Hero (billhero.com.au)". Since 25 Nov 2026 Bill Hero puts a Cloudflare
+  challenge in front of the feeds for automated clients, so the nightly job uses the snapshot
+  in `snapshots/billhero/` (valid for 8 days). Refresh it by downloading both feeds in a browser
+  and running `tools/import-billhero.sh <broadband file> <mobile file>`. Once the snapshot is
+  over 8 days old, the build keeps the last published Bill Hero records and opens an issue.
 - amaysim plan catalogue (https://www.amaysim.com.au/products/catalogue/plans), published by
   amaysim for automated readers.
 - NBN tiers: nbnco.com.au/residential/speed-plans. Evening speed labels: ACCC broadband speed

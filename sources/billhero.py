@@ -9,16 +9,32 @@ Known quirks handled here:
   - mobile monthly_price_aud is normalised to a 30-day month; the real recharge price and
     period are reconstructed from the plan name where possible;
   - junk is dropped: $0 prices, missing speeds, roaming packs, duplicate rows.
+
+Since 25 Nov 2026 Bill Hero puts a Cloudflare challenge in front of its feeds for automated
+clients (GitHub's servers and our own machines alike). We don't work around that. Instead the
+adapter falls back to a snapshot committed to snapshots/billhero/ when the live fetch fails, if
+the snapshot is under SNAPSHOT_MAX_DAYS old; otherwise it fails and the build's fail-safe keeps
+the last published records. Snapshots come from:
+  --save-snapshot                 fetch the live feeds (works only where Bill Hero allows it)
+  --import-snapshot FILE [FILE]   feeds a person downloaded in a browser from
+                                  https://billhero.com.au/data/broadband and /data/mobile
+The feeds are CC-BY-4.0, so redistributing them in the repo is allowed with attribution.
+
+Usage: python3 -I sources/billhero.py [--save-snapshot | --import-snapshot FILE [FILE]]
 """
+from datetime import datetime, timedelta, timezone
 import json
 import re
 import sys
 import pathlib
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent / "tools"))
-from common import RAW, fetch, load_providers, now_iso, slug, techs_for, tier_from, write_norm  # noqa: E402
+from common import RAW, ROOT, fetch, load_providers, now_iso, slug, techs_for, tier_from, write_norm  # noqa: E402
 
 BASE = "https://billhero.com.au/data/"
+FEEDS = ("broadband", "mobile")
+SNAPSHOT = ROOT / "snapshots" / "billhero"
+SNAPSHOT_MAX_DAYS = 8     # long enough for a weekly manual download
 MODEM = {"free_with_contract": "included_contract", "free_with_contract_includes_mesh": "included_contract",
          "free_unconditional": "included", "optional_purchase": "purchase", "byo_required": "byo", None: "unknown"}
 
@@ -127,16 +143,85 @@ def dedupe(recs):
     return out
 
 
-def main():
-    registry = load_providers()
+def fetch_live():
     raw = {}
-    for feed in ("broadband", "mobile"):
+    for feed in FEEDS:
         raw[feed] = json.loads(fetch(BASE + feed, RAW / "billhero" / f"{feed}.json"))
+        if not raw[feed].get("plans"):
+            raise RuntimeError(f"Bill Hero {feed} feed has no plans")
+    return raw
+
+
+def write_snapshot(raw, fetched, how):
+    SNAPSHOT.mkdir(parents=True, exist_ok=True)
+    for feed in FEEDS:
+        (SNAPSHOT / f"{feed}.json").write_text(json.dumps(raw[feed], ensure_ascii=False, separators=(",", ":")) + "\n")
+    info = {"fetched": fetched, "how": how, "generated": raw["broadband"]["_meta"].get("generated_at"),
+            "plans": {f: len(raw[f]["plans"]) for f in FEEDS},
+            "attribution": raw["broadband"]["_meta"].get("attribution"), "licence": raw["broadband"]["_meta"].get("license")}
+    (SNAPSHOT / "snapshot.json").write_text(json.dumps(info, indent=1) + "\n")
+    print(f"billhero snapshot ({how}, {fetched}): {info['plans']['broadband']} broadband, {info['plans']['mobile']} mobile plans")
+
+
+def save_snapshot():
+    """Fetch the live feeds and store them in snapshots/billhero/."""
+    write_snapshot(fetch_live(), now_iso(), "fetched")
+
+
+def import_snapshot(paths):
+    """Store feeds downloaded in a browser, after checking they are Bill Hero's feeds. Each file
+    is identified by its plans' fields; its generated_at time becomes the snapshot time."""
+    raw = {}
+    for path in paths:
+        d = json.loads(pathlib.Path(path).expanduser().read_text())
+        plans, m = d.get("plans") or [], d.get("_meta") or {}
+        if m.get("license") != "CC-BY-4.0" or len(plans) < 50:
+            raise SystemExit(f"{path}: doesn't look like a Bill Hero feed (licence {m.get('license')}, {len(plans)} plans)")
+        feed = "broadband" if "speed_down_mbps" in plans[0] else "mobile" if "data_gb" in plans[0] else None
+        if not feed:
+            raise SystemExit(f"{path}: can't tell whether this is the broadband or mobile feed")
+        raw[feed] = d
+    missing = [f for f in FEEDS if f not in raw]
+    if missing:
+        raise SystemExit(f"missing the {', '.join(missing)} feed")
+    gen = sorted(raw[f]["_meta"].get("generated_at") or "" for f in FEEDS)[0]
+    fetched = gen[:19] + "Z" if gen else now_iso()
+    write_snapshot(raw, fetched, "imported")
+
+
+def load_feeds():
+    """Live feeds, or the committed snapshot if the live fetch fails and the snapshot is fresh.
+    Returns (raw feeds, fetched time, how)."""
+    try:
+        return fetch_live(), now_iso(), "live"
+    except Exception as e:
+        info_file = SNAPSHOT / "snapshot.json"
+        if not info_file.exists():
+            raise RuntimeError(f"live fetch failed ({e}) and there is no snapshot") from e
+        info = json.loads(info_file.read_text())
+        age = datetime.now(timezone.utc) - datetime.fromisoformat(info["fetched"].replace("Z", "+00:00"))
+        if age > timedelta(days=SNAPSHOT_MAX_DAYS):
+            raise RuntimeError(f"live fetch failed ({e}) and the snapshot is {age.days} days old "
+                               f"(fetched {info['fetched']}); run tools/mac/billhero-snapshot.sh") from e
+        print(f"billhero: live fetch failed ({type(e).__name__}); using the snapshot fetched {info['fetched']}")
+        return {f: json.loads((SNAPSHOT / f"{f}.json").read_text()) for f in FEEDS}, info["fetched"], "snapshot"
+
+
+def main():
+    args = sys.argv[1:]
+    if "--save-snapshot" in args:
+        save_snapshot()
+        return
+    if "--import-snapshot" in args:
+        import_snapshot(args[args.index("--import-snapshot") + 1:])
+        return
+    registry = load_providers()
+    raw, fetched, how = load_feeds()
     meta_b, meta_m = raw["broadband"]["_meta"], raw["mobile"]["_meta"]
     internet, d1 = norm_internet(raw["broadband"]["plans"], registry, meta_b.get("generated_at") or now_iso())
     mobile, d2 = norm_mobile(raw["mobile"]["plans"], registry, meta_m.get("generated_at") or now_iso())
     internet, mobile = dedupe(internet), dedupe(mobile)
-    meta = {"name": "Bill Hero open data", "url": "https://billhero.com.au/data", "fetched": now_iso(),
+    meta = {"name": "Bill Hero open data", "url": "https://billhero.com.au/data", "fetched": fetched, "via": how,
             "generated": meta_b.get("generated_at"), "licence": meta_b.get("license"),
             "attribution": meta_b.get("attribution"), "dropped": d1 + d2,
             "raw_counts": {"internet": len(raw["broadband"]["plans"]), "mobile": len(raw["mobile"]["plans"])}}
