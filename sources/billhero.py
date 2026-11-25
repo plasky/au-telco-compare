@@ -167,7 +167,7 @@ def write_snapshot(raw, fetched, how):
     SNAPSHOT.mkdir(parents=True, exist_ok=True)
     for feed in FEEDS:
         (SNAPSHOT / f"{feed}.json").write_text(json.dumps(raw[feed], ensure_ascii=False, separators=(",", ":")) + "\n")
-    info = {"fetched": fetched, "how": how, "generated": raw["broadband"]["_meta"].get("generated_at"),
+    info = {"fetched": fetched, "how": how, "generated": {f: raw[f]["_meta"].get("generated_at") for f in FEEDS},
             "plans": {f: len(raw[f]["plans"]) for f in FEEDS},
             "attribution": raw["broadband"]["_meta"].get("attribution"), "licence": raw["broadband"]["_meta"].get("license")}
     (SNAPSHOT / "snapshot.json").write_text(json.dumps(info, indent=1) + "\n")
@@ -195,9 +195,11 @@ def import_snapshot(paths):
     missing = [f for f in FEEDS if f not in raw]
     if missing:
         raise SystemExit(f"missing the {', '.join(missing)} feed")
-    gen = sorted(raw[f]["_meta"].get("generated_at") or "" for f in FEEDS)[0]
-    fetched = gen[:19] + "Z" if gen else now_iso()
-    write_snapshot(raw, fetched, "imported")
+    # The snapshot's age is when it was downloaded (the files' modification time), not when
+    # Bill Hero generated each feed: it regenerates some feeds less often than daily.
+    newest = max(pathlib.Path(x).expanduser().stat().st_mtime for x in paths)
+    fetched = min(datetime.fromtimestamp(newest, timezone.utc), datetime.now(timezone.utc))
+    write_snapshot(raw, fetched.replace(microsecond=0).isoformat().replace("+00:00", "Z"), "imported")
 
 
 def load_feeds():
