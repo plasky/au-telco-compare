@@ -1,7 +1,10 @@
 {
- "fetched": "2026-11-24T03:11:00Z",
+ "fetched": "2026-11-25T00:00:55Z",
  "how": "imported",
- "generated": "2026-11-24T17:31:07.082Z",
+ "generated": {
+  "broadband": "2026-11-24T17:31:07.082Z",
+  "mobile": "2026-11-24T03:11:00.256Z"
+ },
  "plans": {
   "broadband": 276,
   "mobile": 322
